@@ -1,0 +1,64 @@
+@use "../helpers/mixins" as *;
+
+// start design roles
+
+body *,
+*::after,
+*::before {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+img {
+  max-width: 100%;
+}
+
+// start container roles
+.container {
+  @include one-value-more-properties(15px, padding-left, padding-right);
+  margin-inline: auto;
+}
+
+/* Small */
+@include medias("more mobile") {
+  .container {
+    width: 750px;
+  }
+}
+/* Medium */
+@include medias("more small") {
+  .container {
+    width: 970px;
+  }
+}
+@include medias("large") {
+  .container {
+    width: 1170px;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+.clear {
+  clear: both;
+}
+
+/* end global rules  */

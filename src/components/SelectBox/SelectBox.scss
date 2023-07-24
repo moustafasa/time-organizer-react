@@ -1,0 +1,50 @@
+@use "../../sass/helpers/mixins" as *;
+@use "../../sass/variables/colors" as *;
+@use "../../sass/variables/others" as *;
+
+.select-box {
+  width: fit-content;
+  .overlay {
+    position: relative;
+    cursor: pointer;
+    .drop-down-icon {
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      color: white;
+      translate: 0 -50%;
+    }
+    select {
+      border: none;
+      outline: none;
+      pointer-events: none;
+      width: 150px;
+      padding: 10px 20px 10px 25px;
+      font-size: 17px;
+      // background-color: $blue-3-color;
+      color: white;
+      border-radius: 5px;
+      appearance: none;
+      option {
+        display: none;
+      }
+    }
+  }
+  .options {
+    // background-color: $blue-2-color;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    color: white;
+    li {
+      cursor: pointer;
+      transition: 0.5s;
+      &:hover {
+        padding-right: 10px;
+        // background-color: $gold-color;
+        border-radius: 5px;
+        color: black;
+      }
+    }
+  }
+}

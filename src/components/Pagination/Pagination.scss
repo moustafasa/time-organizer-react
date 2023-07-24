@@ -1,0 +1,90 @@
+@use "../../sass/helpers/mixins" as *;
+@use "../../sass/variables/colors" as *;
+@use "../../sass/variables/others" as *;
+
+.pagination {
+  margin-block: 30px 50px;
+  margin-inline: auto;
+  width: fit-content;
+  .btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    button {
+      padding: 15px 30px;
+      cursor: pointer;
+      outline: none;
+      border: 1px solid black;
+      border-radius: 10px;
+      font-size: 18px;
+      @include medias("mobile") {
+        padding: 10px 20px;
+        font-size: 15px;
+      }
+      transition: 0.5s;
+
+      &:disabled {
+        background-color: #999;
+        cursor: default;
+      }
+
+      &:not(:disabled):hover {
+        border-color: $blue-3-color;
+        color: white;
+        background-color: $blue-3-color;
+      }
+    }
+    .pagi-info {
+      text-align: center;
+      font-size: 20px;
+      @include medias("mobile") {
+        font-size: 1rem;
+      }
+      .number {
+        color: $blue-2-color;
+      }
+    }
+  }
+  .inputs {
+    width: fit-content;
+    margin: auto;
+    position: relative;
+    input {
+      display: block;
+      padding-block: 10px;
+      padding-left: 20px;
+      max-width: 200px;
+      border-radius: 5px;
+      outline: none;
+      border: 1px solid $blue-3-color;
+      text-align: center;
+      &.error {
+        border-color: red;
+      }
+    }
+    .go {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      height: calc(100% - 2px);
+      padding: 5px 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: $blue-3-color;
+      &:disabled {
+        color: #999;
+      }
+    }
+    .errorMsg {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: calc(100% - 20px);
+      font-size: 14px;
+      text-align: center;
+      color: red;
+    }
+  }
+}
