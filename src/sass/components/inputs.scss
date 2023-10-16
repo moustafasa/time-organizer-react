@@ -1,0 +1,179 @@
+@use "../helpers/mixins" as *;
+@use "../variables/colors" as *;
+@use "../variables/others" as *;
+
+select,
+input,
+fieldset {
+  border: none;
+  outline: none;
+}
+
+// start add tasks inputs
+.select-box {
+  @include centerbyflex(null);
+  gap: 15px;
+  .select {
+    width: 100%;
+    position: relative;
+    &::before {
+      // to make cursor pointer on select
+      content: "";
+      @include position(null, absolute, 100%, 100%, $left: 0, $top: 0);
+      cursor: pointer;
+    }
+    &::after {
+      content: "";
+      @include arrow(
+        (
+          top: calc(100% + 12px),
+          right: 30px,
+        ),
+        7px,
+        "top reverse",
+        $grey-color
+      );
+      z-index: -1;
+      opacity: 0;
+      transition: 0.5s;
+    }
+    &.open {
+      .wrapper {
+        top: calc(100% + 12px);
+        scale: 1;
+        z-index: 1000;
+      }
+      @include oneValue("select", box-shadow, $blue-shadow);
+      &::after {
+        opacity: 1;
+        z-index: 1000;
+      }
+    }
+    select {
+      width: 100%;
+      padding: 10px 20px;
+      border-radius: 6px;
+      box-shadow: $black-shadow;
+      pointer-events: none;
+      transition: 0.5s;
+      background-color: $blue-2-color;
+      text-transform: capitalize;
+      color: $white-color;
+    }
+    .wrapper {
+      @include position(
+        null,
+        absolute,
+        max-content,
+        null,
+        $top: 100%,
+        $left: -10px
+      );
+      z-index: -1;
+      transform-origin: 50% 0%;
+      scale: 1 0 1;
+      transition: 0.5s;
+      color: $white-color;
+      min-width: calc(100% + 20px);
+      padding-inline: 15px;
+      overflow-y: auto;
+      max-height: 30vh;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      .options {
+        position: relative;
+        width: 100%;
+        padding-block: 14px;
+        border-radius: 6px;
+        box-shadow: $black-shadow;
+        background-color: $grey-color;
+
+        li {
+          padding: 10px 20px;
+          border-radius: 6px;
+          transition: 0.5s;
+          cursor: pointer;
+          &:hover,
+          &.active {
+            background-color: $blue-2-color;
+            box-sizing: $black-shadow inset;
+            scale: 1.1;
+          }
+        }
+      }
+    }
+  }
+}
+
+.input-box {
+  @include flex-gap(15px);
+  align-items: center;
+  transition: 0.5s;
+  @include oneValue("label", text-transform, capitalize);
+
+  &:has(input:focus) {
+    @include medias("more mobile") {
+      rotate: 5deg;
+      scale: 1.2;
+    }
+  }
+  input {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    transition: 0.5s;
+    background-color: $blue-2-color;
+    color: $yellow-color;
+    text-align: center;
+    font: {
+      family: $input-font;
+      weight: 500;
+    }
+    @include medias("mobile") {
+      width: 100%;
+    }
+    &:focus {
+      border-color: $green-2-color;
+      box-shadow: $blue-shadow;
+    }
+  }
+}
+// end add tasks inputs
+
+// input.text-input,
+// input.num-input {
+//   border: 1px solid transparent;
+//   outline: none;
+//   padding: 10px 30px;
+//   @include medias("mobile") {
+//     padding: 5px;
+//   }
+//   margin-bottom: 10px;
+//   border-radius: 10px;
+//   text-align: center;
+//   box-shadow: 0 2px 10px 0 $black-box-shadow;
+//   color: $blue-3-color;
+//   text-transform: capitalize;
+//   font-weight: bold;
+//   &:focus {
+//     border-color: $blue-3-color;
+//   }
+// }
+
+// table td {
+//   .edit-field {
+//     text-transform: capitalize;
+//     width: 100%;
+//     padding: 10px;
+//     text-align: center;
+//     border: 1px solid $blue-3-color;
+//     border-radius: 5px;
+//     font-weight: bold;
+//     &:focus {
+//       border: none;
+//       outline: 2px solid $add-color;
+//     }
+//   }
+// }

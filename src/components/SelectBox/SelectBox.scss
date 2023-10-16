@@ -3,47 +3,58 @@
 @use "../../sass/variables/others" as *;
 
 .select-box {
-  width: fit-content;
+  width: 100%;
+  position: relative;
+  color: white;
   .overlay {
     position: relative;
     cursor: pointer;
     .drop-down-icon {
-      position: absolute;
-      left: 5px;
-      top: 50%;
-      color: white;
+      @include position(null, absolute, null, null, $left: 5px, $top: 50%);
       translate: 0 -50%;
     }
     select {
-      border: none;
-      outline: none;
-      pointer-events: none;
-      width: 150px;
+      width: 100%;
+      background-color: $blue-2-color;
       padding: 10px 20px 10px 25px;
-      font-size: 17px;
-      // background-color: $blue-3-color;
-      color: white;
+      border: none;
       border-radius: 5px;
+      outline: none;
       appearance: none;
+      pointer-events: none;
+      font-size: 1.1rem;
+      color: inherit;
       option {
         display: none;
       }
     }
   }
   .options {
-    // background-color: $blue-2-color;
+    @include flex-gap(2px);
+    @include position(
+      $grey-color,
+      absolute,
+      100%,
+      null,
+      $right: 0,
+      $top: calc(100% + 10px)
+    );
+    max-height: 300px;
     padding: 10px;
-    margin-top: 10px;
     border-radius: 5px;
+    overflow-y: auto;
+    z-index: 10000;
     color: white;
     li {
       cursor: pointer;
       transition: 0.5s;
-      &:hover {
+      padding: 10px;
+      &:hover,
+      &.active {
+        background-color: $blue-2-color;
         padding-right: 10px;
-        // background-color: $gold-color;
         border-radius: 5px;
-        color: black;
+        // color: $yellow-color;
       }
     }
   }

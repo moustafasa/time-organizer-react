@@ -1,5 +1,6 @@
 @use "../helpers/mixins" as *;
-
+@use "../variables/colors" as *;
+@use "../variables/others" as *;
 // start design roles
 
 body *,
@@ -13,7 +14,10 @@ body *,
 
 html {
   scroll-behavior: smooth;
+  font-family: $main-font;
   font-weight: 400;
+  background-color: $blue-1-color;
+  color: $white-color;
 }
 
 a {

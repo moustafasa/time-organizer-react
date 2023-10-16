@@ -1,0 +1,36 @@
+@use "../../../sass/helpers/mixins" as *;
+@use "../../../sass/variables/colors" as *;
+@use "../../../sass/variables/others" as *;
+
+.content {
+  background-color: $purple-1-color;
+  padding: 30px;
+  box-shadow: $black-shadow;
+  border-radius: 10px;
+  text-align: center;
+  .goDown {
+    margin-top: 30px;
+    @include oneValue("h2", text-transform, capitalize);
+    .goDownBtn {
+      margin: 30px auto 5px;
+      background-color: transparent;
+      font-size: 20px;
+      color: $orange-2-color;
+      animation: bouncing 2s linear infinite;
+    }
+  }
+  .mainHead {
+    position: relative;
+    margin-block-end: 20px;
+    padding: 15px 20px;
+    border: 2px solid $blue-3-color;
+    border-radius: 10px;
+    box-shadow: $blue-shadow;
+    text-transform: capitalize;
+    @include head-slide-animation(attr(data-content), $yellow-color);
+    span {
+      display: block;
+      visibility: hidden;
+    }
+  }
+}

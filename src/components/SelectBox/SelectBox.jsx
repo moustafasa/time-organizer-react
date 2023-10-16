@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./SelectBox.scss";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 /**
  * @param {options} param0 the options you need to be in select it should be like
- * [
- *     { value: "test", text: "test" },
- *     { value: "test 2", text: "test 2" },
- * ]
+    [
+        { value: "test", text: "test" },
+        { value: "test 2", text: "test 2" },
+    ]
  * @param {valueState} param1 the state which will contain choosed value of select and the function * to set the value it should be like [selectValue,setSelect]
  * @returns customize select box
  */
 const SelectBox = ({ options, valueState: [selectValue, setSelectValue] }) => {
-  //   const [selectValue, setSelectValue] = useState("test");
   const [optOpenClass, setOptOpenClass] = useState(false);
-  //   const optionsProtoType = [
-  //     { value: "test", text: "test" },
-  //     { value: "test 2", text: "test 2" },
-  //   ];
+
   const chooseHandler = (e) => {
     setSelectValue(e.target.dataset.value);
     setOptOpenClass(false);
@@ -61,7 +57,7 @@ const SelectBox = ({ options, valueState: [selectValue, setSelectValue] }) => {
             key={key}
             onClick={chooseHandler}
             data-value={opt.value}
-            className={`${selectValue === opt.value && "active"}`}
+            className={`${selectValue === opt.value ? "active" : ""}`}
           >
             {opt.text}
           </li>
@@ -71,4 +67,4 @@ const SelectBox = ({ options, valueState: [selectValue, setSelectValue] }) => {
   );
 };
 
-export default SelectBox;
+export default memo(SelectBox);

@@ -1,0 +1,16 @@
+@use "../helpers/mixins" as *;
+@include animation(bouncing) {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    translate: 0 0;
+  }
+  40% {
+    translate: 0 -15px;
+  }
+  60% {
+    translate: 0 -7.5px;
+  }
+}

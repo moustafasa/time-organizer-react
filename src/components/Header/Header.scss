@@ -1,3 +1,16 @@
 @use "../../sass/helpers/mixins" as *;
 @use "../../sass/variables/colors" as *;
 @use "../../sass/variables/others" as *;
+
+@use "sass:meta";
+@use "sass:map";
+
+header {
+  @include centerbyflex(null);
+  height: 100vh;
+  background: {
+    image: url("../../img/landing-background.png");
+    repeat: round space;
+    color: $blue-2-color;
+  }
+}

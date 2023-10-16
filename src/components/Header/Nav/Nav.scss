@@ -1,0 +1,159 @@
+@use "../../../sass/helpers/mixins" as *;
+@use "../../../sass/variables/colors" as *;
+@use "../../../sass/variables/others" as *;
+
+nav {
+  @include position($blue-3-color, absolute, 100%, null, $bottom: 0, $left: 0);
+  translate: 0 100%;
+  z-index: 3000;
+  &.scrolled {
+    position: fixed;
+    left: 0;
+    bottom: auto;
+    top: 0;
+    translate: 0;
+    transition: 0.5s;
+    @include medias("more mobile") {
+      opacity: 0.7;
+      &:hover {
+        opacity: 1;
+      }
+      @include oneValue(
+        "ul.parent>li:hover>a, ul.parent>li.active>a",
+        translate,
+        0 -5px
+      );
+
+      ul.parent li ul.child {
+        background-color: $purple-1-color;
+        border-radius: 10px;
+      }
+    }
+  }
+  ul.parent {
+    justify-content: space-evenly;
+    @include centerbyflex("vertical");
+    @include medias("mobile") {
+      @include position(
+        $purple-1-color,
+        absolute,
+        100%,
+        null,
+        $top: 100%,
+        $left: -200vw
+      );
+      row-gap: 10px;
+      flex-direction: column;
+      padding-block: 20px;
+      transition: 0.5s;
+      @include beforeBorder($yellow-color, 0%, 3px, 0.5s 0.5s);
+      &.clicked {
+        left: 0;
+        @include oneValue("&::before", width, 100%);
+      }
+    }
+    > li {
+      position: relative;
+      &:hover,
+      &.active {
+        > a {
+          background-color: $purple-1-color;
+          color: $yellow-color;
+          @include medias("mobile") {
+            background-color: $blue-2-color;
+          }
+        }
+      }
+    }
+    li {
+      width: inherit;
+      a {
+        @include centerbyflex(null);
+        height: $nav-height;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: 0.5s;
+        color: white;
+        text-transform: uppercase;
+        @include medias("mobile") {
+          justify-content: flex-start;
+        }
+      }
+
+      &:hover,
+      &.active {
+        > a {
+          translate: 0 -10px;
+          box-shadow: $black-shadow;
+        }
+      }
+      &.active ul.child {
+        left: 50%;
+        z-index: 1;
+        @include oneValue("&::before", width, 100%);
+        @include medias("mobile") {
+          height: auto;
+          left: 0;
+          top: 0;
+          opacity: 1;
+          overflow: visible;
+        }
+      }
+      ul.child {
+        display: flex;
+        @include position(
+          null,
+          absolute,
+          null,
+          null,
+          $left: -200vw,
+          $bottom: 0
+        );
+        z-index: -1;
+        translate: -50% 100%;
+        transition: 0.5s;
+        @include medias("mobile") {
+          flex-direction: column;
+          @include position(
+            $blue-2-color,
+            relative,
+            null,
+            0,
+            $left: -100vw,
+            $top: 50px
+          );
+          translate: 0 -10px;
+          margin-inline: 20px;
+          opacity: 0;
+          overflow: hidden;
+          transition: top 0.5s 0.5s, left 0.5s, opacity 0.5s;
+        }
+        @include beforeBorder($pink-color, 0, 3px, 0.5s 0.5s);
+        li {
+          @include oneValue("&:hover a", background-color, $pink-color);
+          a {
+            @include medias("small") {
+              padding: 10px;
+            }
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+  .mobile {
+    display: none;
+    @include medias("mobile") {
+      display: block;
+    }
+    .container {
+      @include centerbyflex("vertical");
+      justify-content: space-between;
+      .logo {
+        text-transform: capitalize;
+        font-size: 20px;
+        font-family: $thin-font;
+      }
+    }
+  }
+}

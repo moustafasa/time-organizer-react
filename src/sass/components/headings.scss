@@ -1,0 +1,16 @@
+@use "../helpers/mixins" as *;
+@use "../variables/colors" as *;
+@use "../variables/others" as *;
+
+.page-head {
+  padding: 15px 20px;
+  position: relative;
+  border-radius: 10px;
+  background-color: $blue-2-color;
+  box-shadow: $blue-shadow;
+  text: {
+    align: center;
+    transform: capitalize;
+  }
+  color: $yellow-color;
+}
