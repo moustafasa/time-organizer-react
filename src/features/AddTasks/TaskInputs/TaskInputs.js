@@ -42,7 +42,7 @@ const Sub = () => {
 
 const Head = () => {
   const [headName, setHeadName] = useState("");
-
+  const [subNum, setSubNum] = useState(0);
   return (
     <div className="head">
       <InputBox
