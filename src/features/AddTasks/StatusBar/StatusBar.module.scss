@@ -1,0 +1,28 @@
+@use "../../../sass/helpers/mixins" as *;
+@use "../../../sass/variables/colors" as *;
+@use "../../../sass/variables/others" as *;
+
+.statusBar {
+  background-color: $green-1-color;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: $black-box-shadow;
+  .map {
+    display: flex;
+    gap: 20px;
+    text-transform: capitalize;
+    flex-wrap: wrap;
+    .selectCont {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      .selectBox {
+        flex: 1;
+      }
+      label {
+      }
+    }
+  }
+}

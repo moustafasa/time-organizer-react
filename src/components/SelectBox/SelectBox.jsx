@@ -11,7 +11,11 @@ import { FaCaretDown, FaCaretUp } from "react-icons/fa";
  * @param {valueState} param1 the state which will contain choosed value of select and the function * to set the value it should be like [selectValue,setSelect]
  * @returns customize select box
  */
-const SelectBox = ({ options, valueState: [selectValue, setSelectValue] }) => {
+const SelectBox = ({
+  options,
+  className,
+  valueState: [selectValue, setSelectValue],
+}) => {
   const [optOpenClass, setOptOpenClass] = useState(false);
 
   const chooseHandler = (e) => {
@@ -32,7 +36,7 @@ const SelectBox = ({ options, valueState: [selectValue, setSelectValue] }) => {
     return () => document.removeEventListener("click", blurHandler);
   }, []);
   return (
-    <div className="select-box">
+    <div className={`select-box ${className}`}>
       <div className="overlay" onClick={openOptions}>
         {optOpenClass ? (
           <FaCaretUp className="drop-down-icon" />

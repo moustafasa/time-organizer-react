@@ -8,6 +8,7 @@
   color: white;
   .overlay {
     position: relative;
+    width: 100%;
     cursor: pointer;
     .drop-down-icon {
       @include position(null, absolute, null, null, $left: 5px, $top: 50%);
