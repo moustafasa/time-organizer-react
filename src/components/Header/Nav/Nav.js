@@ -5,13 +5,13 @@ import "./Nav.scss";
 const Nav = () => {
   return (
     <nav>
-      <ul class="parent">
+      <ul className="parent">
         <li>
-          <Link to="/">add tasks </Link>
+          <Link to="/addTasks">add tasks </Link>
         </li>
         <li>
           <Link to="/showTasks">show tasks </Link>
-          <ul class="showTasks child ">
+          <ul className="showTasks child ">
             <li data-showed="heads">
               <Link to="/showTasks/heads">show heads</Link>
             </li>
@@ -25,7 +25,7 @@ const Nav = () => {
         </li>
         <li>
           <Link to="/runningTasks">runninig tasks </Link>
-          <ul class="runTasks child ">
+          <ul className="runTasks child ">
             <li data-showed="day">
               <Link to="/runningTasks/day">show day Tasks</Link>
             </li>
@@ -35,11 +35,11 @@ const Nav = () => {
           </ul>
         </li>
       </ul>
-      <div class="mobile">
-        <div class="container">
-          <div class="logo">time Organiser</div>
-          <button class="bar-btn">
-            <i class="fa-solid fa-bars"></i>
+      <div className="mobile">
+        <div className="container">
+          <div className="logo">time Organiser</div>
+          <button className="bar-btn">
+            <i className="fa-solid fa-bars"></i>
           </button>
         </div>
       </div>
