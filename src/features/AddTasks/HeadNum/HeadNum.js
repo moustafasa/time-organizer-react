@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import sass from "./HeadNum.module.scss";
 import { useDispatch } from "react-redux";
-import { changeNumberOfTasks } from "../AddTasksSlice";
+import { changeNumberOfHeads } from "../AddTasksSlice";
 import InputBox from "../../../components/InputBox/InputBox";
 
 const HeadNum = () => {
-  const [numberOfTasks, setNumberOfTasks] = useState(0);
+  const [NumberOfHeads, setNumberOfHeads] = useState(0);
   const dispatch = useDispatch();
   return (
     <div className={sass.headNum + " input-box"}>
       <InputBox
         type="number"
         label="number of heads"
-        value={numberOfTasks}
-        setValue={setNumberOfTasks}
+        value={NumberOfHeads}
+        setValue={setNumberOfHeads}
       />
       <button
         className="start"
         onClick={(e) => {
-          dispatch(changeNumberOfTasks(numberOfTasks));
+          dispatch(changeNumberOfHeads(+NumberOfHeads));
         }}
         type="button"
       >
