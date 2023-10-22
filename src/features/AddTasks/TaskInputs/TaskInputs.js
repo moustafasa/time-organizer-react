@@ -3,13 +3,18 @@ import InputBox from "../../../components/InputBox/InputBox";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeNumberOfHeads,
+  changeNumberOfSubs,
+  changeNumberOfTasks,
+  deleteTasks,
   getHeadById,
   getHeads,
   getNumberOfTasks,
   getSubById,
   getSubs,
+  getSubsOfHead,
   getTaskById,
   getTasks,
+  getTasksOfSub,
   updateHead,
   updateSub,
   updateTask,
@@ -28,7 +33,7 @@ const Tasks = ({ id }) => {
     dispatch(updateTask({ id, changes: { subTasksDone: value } }));
 
   return (
-    <div className="task">
+    <div className={sass.task}>
       <InputBox
         label="task 1"
         type="text"
@@ -47,6 +52,12 @@ const Tasks = ({ id }) => {
         value={task.subTasksDone}
         setValue={setSubTasksDone}
       />
+      <button
+        className="input-modify-btn minus-btn"
+        onClick={(e) => dispatch(deleteTasks([id]))}
+      >
+        -
+      </button>
     </div>
   );
 };
@@ -56,12 +67,7 @@ const Sub = ({ id }) => {
   const dispatch = useDispatch();
   const setSubName = (value) =>
     dispatch(updateSub({ id, changes: { name: value } }));
-
-  const allTasks = useSelector(getTasks);
-  const tasks = allTasks.filter(
-    (task) => task.split(":")[0] + ":" + task.split(":")[1] === id
-  );
-
+  const tasks = useSelector((state) => getTasksOfSub(state, id));
   return (
     <div className={sass.subCont}>
       <InputBox
@@ -70,10 +76,16 @@ const Sub = ({ id }) => {
         value={subName}
         setValue={setSubName}
       />
-      <div className="tasks">
+      <div className={sass.tasks}>
         {tasks.map((task) => (
           <Tasks key={task} id={task} />
         ))}
+        <button
+          className="input-modify-btn plus-btn"
+          onClick={(e) => dispatch(changeNumberOfTasks({ num: 1, subId: id }))}
+        >
+          +
+        </button>
       </div>
     </div>
   );
@@ -81,8 +93,7 @@ const Sub = ({ id }) => {
 
 const Head = ({ id }) => {
   const headName = useSelector((state) => getHeadById(state, id).name);
-  const allSubs = useSelector(getSubs);
-  const subs = allSubs.filter((sub) => sub.split(":")[0] === id);
+  const subs = useSelector((state) => getSubsOfHead(state, id));
   const dispatch = useDispatch();
   const setHeadName = (value) =>
     dispatch(updateHead({ id, changes: { name: value } }));
@@ -98,6 +109,12 @@ const Head = ({ id }) => {
         {subs.map((sub) => (
           <Sub key={sub} id={sub} />
         ))}
+        <button
+          className="input-modify-btn plus-btn"
+          onClick={(e) => dispatch(changeNumberOfSubs({ num: 1, headId: id }))}
+        >
+          +
+        </button>
       </div>
     </div>
   );
@@ -105,11 +122,18 @@ const Head = ({ id }) => {
 
 const TaskInputs = () => {
   const heads = useSelector(getHeads);
+  const dispatch = useDispatch();
   return (
     <div className={sass.inputs}>
       {heads.map((headId) => (
         <Head key={headId} id={headId} />
       ))}
+      <button
+        className="input-modify-btn plus-btn"
+        onClick={(e) => dispatch(changeNumberOfHeads(1))}
+      >
+        +
+      </button>
     </div>
   );
 };

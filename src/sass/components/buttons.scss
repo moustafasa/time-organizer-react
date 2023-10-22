@@ -48,6 +48,7 @@ button {
   margin: 20px auto;
   border-radius: 6px;
   border: 1px solid var(--btn-color);
+  color: var(--btn-color);
   transition: 0.5s;
   @include oneValue("i", color, var(--btn-color));
   &.minus-btn {
