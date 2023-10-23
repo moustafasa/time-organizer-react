@@ -35,13 +35,13 @@ const addTasksSlice = createSlice({
       subsAdapter.addMany(state.subs, action.payload);
     },
     deleteSubs(state, action) {
-      subsAdapter.removeOne(state.subs, action.payload);
+      subsAdapter.removeMany(state.subs, action.payload);
     },
     deleteTasks(state, action) {
       tasksAdapter.removeMany(state.tasks, action.payload);
     },
     deleteHeads(state, action) {
-      headsAdapter.removeOne(state.heads, action.payload);
+      headsAdapter.removeMany(state.heads, action.payload);
     },
     updateHead(state, action) {
       headsAdapter.updateOne(state.heads, action.payload);
@@ -67,7 +67,7 @@ const addTasksSlice = createSlice({
   },
 });
 
-const { addHeads, addSubs } = addTasksSlice.actions;
+const { addHeads, addSubs, deleteHeads, deleteSubs } = addTasksSlice.actions;
 export const changeNumberOfHeads = (headNum) => (dispatch) => {
   const lastIndex = Date.now();
   const heads = [...Array(headNum)].map((_, index) => {
@@ -91,6 +91,12 @@ export const changeNumberOfSubs =
     });
     dispatch(addSubs(subs));
   };
+
+export const removeSub = (sub) => (dispatch, getState) => {
+  const tasks = getTasksOfSub(getState());
+  dispatch(deleteSubs([sub]));
+  dispatch(deleteTasks(tasks));
+};
 
 export default addTasksSlice.reducer;
 export const {

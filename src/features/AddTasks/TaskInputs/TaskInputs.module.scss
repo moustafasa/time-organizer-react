@@ -13,15 +13,25 @@
     flex-wrap: wrap;
     gap: 30px;
     margin-top: 50px;
-    .subCont {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 20px;
-      .tasks {
-        @include flex-gap(40px);
-        .task {
-          @include flex-gap(20px);
+    align-items: flex-start;
+    padding-inline: 50px;
+    .inputBox {
+      flex: 1;
+    }
+    .subjects {
+      flex: 2;
+      .subCont {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 20px;
+        align-items: flex-start;
+        .tasks {
+          flex: 1;
+          @include flex-gap(40px);
+          .task {
+            @include flex-gap(20px);
+          }
         }
       }
     }

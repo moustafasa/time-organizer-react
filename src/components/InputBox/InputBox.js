@@ -1,8 +1,8 @@
 import React from "react";
 
-const InputBox = ({ type, label, value, setValue }) => {
+const InputBox = ({ type, label, value, setValue, className }) => {
   return (
-    <div className="input-box">
+    <div className={`input-box ${className}`}>
       <label>{label}</label>
       <input
         type={type}
