@@ -15,6 +15,7 @@ import {
   getTaskById,
   getTasks,
   getTasksOfSub,
+  removeSub,
   updateHead,
   updateSub,
   updateTask,
@@ -35,18 +36,21 @@ const Tasks = ({ id }) => {
   return (
     <div className={sass.task}>
       <InputBox
+        className={sass.inputBox}
         label="task 1"
         type="text"
         value={task.name}
         setValue={setTaskName}
       />
       <InputBox
+        className={sass.inputBox}
         label="subTasksNum"
         type="number"
         value={task.subTasksNum}
         setValue={setSubTasksNum}
       />
       <InputBox
+        className={sass.inputBox}
         label="subTasksDone"
         type="number"
         value={task.subTasksDone}
@@ -71,6 +75,7 @@ const Sub = ({ id }) => {
   return (
     <div className={sass.subCont}>
       <InputBox
+        className={sass.inputBox}
         label="sub 1"
         type="text"
         value={subName}
@@ -87,6 +92,12 @@ const Sub = ({ id }) => {
           +
         </button>
       </div>
+      <button
+        className="input-modify-btn minus-btn"
+        onClick={(e) => dispatch(removeSub(id))}
+      >
+        -
+      </button>
     </div>
   );
 };
@@ -100,12 +111,13 @@ const Head = ({ id }) => {
   return (
     <div className={sass.headCont}>
       <InputBox
+        className={sass.inputBox}
         label="head 1"
         type="text"
         value={headName}
         setValue={setHeadName}
       />
-      <div className="subjects">
+      <div className={sass.subjects}>
         {subs.map((sub) => (
           <Sub key={sub} id={sub} />
         ))}
