@@ -1,22 +1,24 @@
 import {
+  createAsyncThunk,
   createEntityAdapter,
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const headsAdapter = createEntityAdapter();
 const headsState = headsAdapter.getInitialState({
-  currentHead: 0,
+  currentHead: "",
 });
 
 const subsAdapter = createEntityAdapter();
 const subsState = subsAdapter.getInitialState({
-  currentSub: 0,
+  currentSub: "",
 });
 
 const tasksAdapter = createEntityAdapter();
 const tasksState = tasksAdapter.getInitialState({
-  currentTask: 0,
+  currentTask: "",
 });
 
 const initialState = {
@@ -64,6 +66,15 @@ const addTasksSlice = createSlice({
       });
       tasksAdapter.addMany(state.tasks, tasks);
     },
+    changeCurrentHead(state, action) {
+      state.heads.currentHead = action.payload;
+    },
+    changeCurrentSub(state, action) {
+      state.subs.currentSub = action.payload;
+    },
+    changeCurrentTask(state, action) {
+      state.tasks.currentTask = action.payload;
+    },
   },
 });
 
@@ -92,11 +103,33 @@ export const changeNumberOfSubs =
     dispatch(addSubs(subs));
   };
 
+export const removeHead = (head) => (dispatch, getState) => {
+  const subs = getSubsOfHead(getState());
+  dispatch(deleteHeads([head]));
+  dispatch(deleteSubs(subs));
+};
 export const removeSub = (sub) => (dispatch, getState) => {
   const tasks = getTasksOfSub(getState());
   dispatch(deleteSubs([sub]));
   dispatch(deleteTasks(tasks));
 };
+
+export const addTasksToRemote = createAsyncThunk(
+  "addTasks/addTasksToRemote",
+  async (_, { dispatch, getState }) => {
+    const heads = getHeadsEntities(getState());
+    const subs = getSubsEntities(getState());
+    const tasks = getTasksEntities(getState());
+
+    const res = await axios.post("http://localhost:3000/data", {
+      heads,
+      subs,
+      tasks,
+    });
+
+    console.log(res);
+  }
+);
 
 export default addTasksSlice.reducer;
 export const {
@@ -105,13 +138,25 @@ export const {
   updateSub,
   updateTask,
   deleteTasks,
+  changeCurrentHead,
+  changeCurrentTask,
+  changeCurrentSub,
 } = addTasksSlice.actions;
-export const { selectById: getHeadById, selectIds: getHeads } =
-  headsAdapter.getSelectors((state) => state.addTasks.heads);
-export const { selectById: getSubById, selectIds: getSubs } =
-  subsAdapter.getSelectors((state) => state.addTasks.subs);
-export const { selectById: getTaskById, selectIds: getTasks } =
-  tasksAdapter.getSelectors((state) => state.addTasks.tasks);
+export const {
+  selectById: getHeadById,
+  selectIds: getHeads,
+  selectAll: getHeadsEntities,
+} = headsAdapter.getSelectors((state) => state.addTasks.heads);
+export const {
+  selectById: getSubById,
+  selectIds: getSubs,
+  selectAll: getSubsEntities,
+} = subsAdapter.getSelectors((state) => state.addTasks.subs);
+export const {
+  selectById: getTaskById,
+  selectIds: getTasks,
+  selectAll: getTasksEntities,
+} = tasksAdapter.getSelectors((state) => state.addTasks.tasks);
 
 export const getSubsOfHead = createSelector(
   [getSubs, (state, headId) => headId],
@@ -124,3 +169,18 @@ export const getTasksOfSub = createSelector(
       (task) => task.split(":")[0] + ":" + task.split(":")[1] === subId
     )
 );
+export const getSubsEntitiesOfHead = createSelector(
+  [getSubsEntities, (state, headId) => headId],
+  (subs, headId) => subs.filter((sub) => sub.id.split(":")[0] === headId)
+);
+export const getTasksEntitiesOfSub = createSelector(
+  [getTasksEntities, (state, subId) => subId],
+  (tasks, subId) =>
+    tasks.filter(
+      (task) => task.id.split(":")[0] + ":" + task.id.split(":")[1] === subId
+    )
+);
+
+export const getCurrentHead = (state) => state.addTasks.heads.currentHead;
+export const getCurrentSub = (state) => state.addTasks.subs.currentSub;
+export const getCurrentTask = (state) => state.addTasks.tasks.currentTask;

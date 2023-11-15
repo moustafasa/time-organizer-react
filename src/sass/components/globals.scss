@@ -65,4 +65,9 @@ img {
   clear: both;
 }
 
+section {
+  padding-block: $padding-top $padding-bottom;
+  min-height: 100vh;
+}
+
 /* end global rules  */
