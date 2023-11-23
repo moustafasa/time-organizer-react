@@ -1,0 +1,38 @@
+{
+  "data": {
+    "heads": [
+      {
+        "id": "lopbml6z",
+        "name": "programing"
+      },
+      {
+        "id": "lopbml70",
+        "name": "pharmacy"
+      }
+    ],
+    "subs": [
+      {
+        "id": "lopbml6z:lopbml6z",
+        "name": "backend"
+      },
+      {
+        "id": "lopbml70:lopbml73",
+        "name": "cogno"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "lopbml6z:lopbml6z:lopbml70",
+        "name": "c#",
+        "subTasksNum": "32",
+        "subTasksDone": 0
+      },
+      {
+        "id": "lopbml70:lopbml73:lopbml73",
+        "name": "lec 1",
+        "subTasksNum": "23",
+        "subTasksDone": 0
+      }
+    ]
+  }
+}

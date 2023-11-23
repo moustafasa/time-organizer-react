@@ -9,7 +9,7 @@ import TaskInputs from "./TaskInputs/TaskInputs";
 const AddTasks = () => {
   const numberOfHeads = useSelector(getHeads);
   return (
-    <div className={sass.addTasks}>
+    <section className={sass.addTasks}>
       <div className={sass.container + " container"}>
         <h2 className="page-head"> setup your tasks </h2>
         <form className={sass.add} onSubmit={(e) => e.preventDefault()}>
@@ -23,7 +23,7 @@ const AddTasks = () => {
           )}
         </form>
       </div>
-    </div>
+    </section>
   );
 };
 

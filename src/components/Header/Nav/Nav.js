@@ -1,17 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import "./Nav.scss";
 
 const Nav = () => {
+  const [showTasksToggle, setShowTasksToggle] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setShowTasksToggle(false);
+  }, [location.pathname]);
   return (
     <nav>
       <ul className="parent">
         <li>
           <Link to="/addTasks">add tasks </Link>
         </li>
-        <li>
-          <Link to="/showTasks">show tasks </Link>
-          <ul className="showTasks child ">
+        <li className={showTasksToggle ? "active" : ""}>
+          <button onClick={(_) => setShowTasksToggle(!showTasksToggle)}>
+            show tasks
+          </button>
+          <ul className="showTasks child">
             <li data-showed="heads">
               <Link to="/showTasks/heads">show heads</Link>
             </li>

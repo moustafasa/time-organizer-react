@@ -8,6 +8,9 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: $black-box-shadow;
+  position: sticky;
+  top: 0;
+  left: 0;
   .map {
     display: flex;
     gap: 20px;

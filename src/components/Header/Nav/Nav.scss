@@ -19,7 +19,7 @@ nav {
         opacity: 1;
       }
       @include oneValue(
-        "ul.parent>li:hover>a, ul.parent>li.active>a",
+        "ul.parent>li:hover>a,button, ul.parent>li.active>a,button",
         translate,
         0 -5px
       );
@@ -56,7 +56,8 @@ nav {
       position: relative;
       &:hover,
       &.active {
-        > a {
+        > a,
+        button {
           background-color: $purple-1-color;
           color: $yellow-color;
           @include medias("mobile") {
@@ -67,7 +68,8 @@ nav {
     }
     li {
       width: inherit;
-      a {
+      a,
+      button {
         @include centerbyflex(null);
         height: $nav-height;
         padding: 10px 20px;
@@ -82,7 +84,8 @@ nav {
 
       &:hover,
       &.active {
-        > a {
+        > a,
+        button {
           translate: 0 -10px;
           box-shadow: $black-shadow;
         }
@@ -130,8 +133,9 @@ nav {
         }
         @include beforeBorder($pink-color, 0, 3px, 0.5s 0.5s);
         li {
-          @include oneValue("&:hover a", background-color, $pink-color);
-          a {
+          @include oneValue("&:hover a,button", background-color, $pink-color);
+          a,
+          button {
             @include medias("small") {
               padding: 10px;
             }
