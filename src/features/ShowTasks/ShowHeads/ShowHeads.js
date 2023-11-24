@@ -1,7 +1,11 @@
 import React from "react";
 import sass from "./ShowHeads.module.scss";
+import { useSelector } from "react-redux";
+import { getAllHeads } from "../ShowTasksSlice";
 
 const ShowHeads = () => {
+  const heads = useSelector(getAllHeads);
+  console.log(heads);
   return (
     <div className={sass.tableCont}>
       <table className={sass.table + " " + sass.table}>
@@ -17,15 +21,17 @@ const ShowHeads = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>programming</td>
-            <td>100%</td>
-            <td>23</td>
-            <td>23</td>
-            <td>233</td>
-            <td>233</td>
-          </tr>
+          {heads.map((head, index) => (
+            <tr key={head.id}>
+              <td>{index + 1}</td>
+              <td>{head.name}</td>
+              <td>100%</td>
+              <td>23</td>
+              <td>23</td>
+              <td>233</td>
+              <td>233</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

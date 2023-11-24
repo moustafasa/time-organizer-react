@@ -74,6 +74,8 @@ button {
   background-color: $orange-btn;
   transition: 0.5s;
   text-transform: uppercase;
+  display: block;
+  text-align: center;
   &:hover {
     box-shadow: 0 0 6px $red-1-color;
     color: $yellow-color;
