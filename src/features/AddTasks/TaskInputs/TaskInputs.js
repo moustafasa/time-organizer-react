@@ -176,9 +176,11 @@ const TaskInputs = () => {
 
       <button
         className="submit-button"
-        onClick={(e) => dispatch(addTasksToRemote())}
+        onClick={(e) => {
+          console.log("sdlkds");
+          dispatch(addTasksToRemote());
+        }}
       >
-        {" "}
         add
       </button>
     </div>

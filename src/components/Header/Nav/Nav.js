@@ -24,7 +24,7 @@ const Nav = () => {
               <Link to="/showTasks/heads">show heads</Link>
             </li>
             <li data-showed="subjects">
-              <Link to="/showTasks/subjects">show subjects</Link>
+              <Link to="/showTasks/subs">show subjects</Link>
             </li>
             <li data-showed="tasks">
               <Link to="/showTasks/tasks">show tasks</Link>

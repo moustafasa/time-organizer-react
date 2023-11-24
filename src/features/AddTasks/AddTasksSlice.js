@@ -48,6 +48,15 @@ const addTasksSlice = createSlice({
     updateHead(state, action) {
       headsAdapter.updateOne(state.heads, action.payload);
     },
+    updateMany(state, action) {
+      if (action.payload.type === "tasks") {
+        tasksAdapter.updateMany(state.tasks, action.payload.changes);
+      } else if (action.payload.type === "subs") {
+        subsAdapter.updateMany(state.subs, action.payload.changes);
+      } else if (action.payload.type === "heads") {
+        headsAdapter.updateMany(state.heads, action.payload.changes);
+      }
+    },
     updateSub(state, action) {
       headsAdapter.updateOne(state.subs, action.payload);
     },
@@ -62,6 +71,7 @@ const addTasksSlice = createSlice({
           name: "",
           subTasksNum: 0,
           subTasksDone: 0,
+          progress: 0,
         };
       });
       tasksAdapter.addMany(state.tasks, tasks);
@@ -78,13 +88,55 @@ const addTasksSlice = createSlice({
   },
 });
 
-const { addHeads, addSubs, deleteHeads, deleteSubs } = addTasksSlice.actions;
+const { addHeads, addSubs, deleteHeads, deleteSubs, updateMany } =
+  addTasksSlice.actions;
+
+const calcAll = () => (dispatch, getState) => {
+  const tasks = getTasksEntities(getState());
+  const subs = getSubsEntities(getState());
+  const tUpdates = [];
+  const sUpdates = [];
+  const hUpdates = [];
+  tasks.forEach((task) => {
+    const progress = Math.floor((+task.subTasksDone / +task.subTasksNum) * 100);
+    tUpdates.push({ id: task.id, changes: { progress } });
+  });
+
+  dispatch(updateMany({ type: "tasks", changes: tUpdates }));
+
+  subs.forEach((sub) => {
+    const subTasks = tasks.filter(
+      (task) => task.id.split(":")[0] + ":" + task.id.split(":")[1] === sub.id
+    );
+    let tasksNum = 0;
+    let tasksDone = 0;
+    subTasks.forEach((task) => {
+      tasksNum++;
+      if (task.progress === 100) {
+        tasksDone++;
+      }
+    });
+
+    const progress = Math.floor((tasksDone / tasksNum) * 100);
+    sUpdates.push({ id: sub.id, changes: { progress, tasksNum, tasksDone } });
+  });
+  dispatch(updateMany({ type: "subs", changes: sUpdates }));
+};
+
 export const changeNumberOfHeads = (headNum) => (dispatch) => {
   const lastIndex = Date.now();
   const heads = [...Array(headNum)].map((_, index) => {
     const id = (index + lastIndex).toString(36);
     dispatch(changeNumberOfSubs({ num: 1, headId: id }));
-    return { id, name: "" };
+    return {
+      id,
+      name: "",
+      subNum: 1,
+      subDone: 0,
+      tasksNum: 0,
+      tasksDone: 0,
+      progress: 0,
+    };
   });
   dispatch(addHeads(heads));
 };
@@ -98,6 +150,9 @@ export const changeNumberOfSubs =
       return {
         id,
         name: "",
+        tasksNum: 1,
+        tasksDone: 0,
+        progress: 0,
       };
     });
     dispatch(addSubs(subs));
@@ -121,13 +176,11 @@ export const addTasksToRemote = createAsyncThunk(
     const subs = getSubsEntities(getState());
     const tasks = getTasksEntities(getState());
 
-    const res = await axios.post("http://localhost:3000/data", {
-      heads,
-      subs,
-      tasks,
-    });
+    dispatch(calcAll());
 
-    console.log(res);
+    const headRes = await axios.post("http://localhost:3000/heads", ...heads);
+    const subRes = await axios.post("http://localhost:3000/subs", ...subs);
+    const taskRes = await axios.post("http://localhost:3000/tasks", ...tasks);
   }
 );
 
