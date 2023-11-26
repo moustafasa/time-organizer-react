@@ -5,6 +5,8 @@ import store from "./app/store";
 import { Provider } from "react-redux";
 
 // style
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import "./sass/components/animations.scss";
 import "./sass/components/buttons.scss";
 import "./sass/components/fonts.scss";

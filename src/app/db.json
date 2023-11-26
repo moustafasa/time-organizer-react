@@ -1,15 +1,167 @@
 {
-  "heads": [
-    {
-      "id": "",
-      "name": "programing"
-    }
-  ],
-  "subs": [
-    {
-      "id": "",
-      "name": "front end"
-    }
-  ],
-  "tasks": [{ "id": "", "name": "js", "subtasksNum": 23, "subtasksDone": 22 }]
+  "data": {
+    "heads": [
+      {
+        "id": "lpe0icc6",
+        "name": "programming",
+        "subNum": 2,
+        "subDone": 0,
+        "tasksNum": 6,
+        "tasksDone": 2,
+        "progress": 38
+      },
+      {
+        "id": "lpe0icc7",
+        "name": "pharmacy",
+        "subNum": 1,
+        "subDone": 0,
+        "tasksNum": 1,
+        "tasksDone": 0,
+        "progress": 75
+      },
+      {
+        "id": "lpfa8zw2",
+        "name": "fdsfd",
+        "subNum": 1,
+        "subDone": 1,
+        "tasksNum": 1,
+        "tasksDone": 1,
+        "progress": 100
+      },
+      {
+        "id": "lpfa8zw3",
+        "name": "fdjsa",
+        "subNum": 1,
+        "subDone": 0,
+        "tasksNum": 1,
+        "tasksDone": 0,
+        "progress": 71
+      }
+    ],
+    "subs": [
+      {
+        "id": "lpe0icc6:lpe0icc6",
+        "headId": "lpe0icc6",
+        "name": "front end",
+        "tasksNum": 4,
+        "tasksDone": 2,
+        "progress": 69
+      },
+      {
+        "id": "lpe0icc7:lpe0icca",
+        "headId": "lpe0icc7",
+        "name": "organic",
+        "tasksNum": 1,
+        "tasksDone": 0,
+        "progress": 75
+      },
+      {
+        "id": "lpe0icc6:lpe0jf3h",
+        "headId": "lpe0icc6",
+        "name": "backend",
+        "tasksNum": 2,
+        "tasksDone": 0,
+        "progress": 8
+      },
+      {
+        "id": "lpfa8zw2:lpfa8zw2",
+        "headId": "lpfa8zw2",
+        "name": "jdskla",
+        "tasksNum": 1,
+        "tasksDone": 1,
+        "progress": 100
+      },
+      {
+        "id": "lpfa8zw3:lpfa8zw3",
+        "headId": "lpfa8zw3",
+        "name": "jfkdsa",
+        "tasksNum": 1,
+        "tasksDone": 0,
+        "progress": 71
+      }
+    ],
+    "tasks": [
+      {
+        "id": "lpe0icc6:lpe0icc6:lpe0icc8",
+        "name": "html",
+        "subId": "lpe0icc6:lpe0icc6",
+        "headId": "lpe0icc6",
+        "subTasksNum": 34,
+        "subTasksDone": 1,
+        "progress": 2
+      },
+      {
+        "id": "lpe0icc7:lpe0icca:lpe0icca",
+        "name": "lec 1",
+        "subId": "lpe0icc7:lpe0icca",
+        "headId": "lpe0icc7",
+        "subTasksNum": 32,
+        "subTasksDone": 32,
+        "progress": 100
+      },
+      {
+        "id": "lpe0icc6:lpe0icc6:lpe0iody",
+        "name": "css",
+        "subId": "lpe0icc6:lpe0icc6",
+        "headId": "lpe0icc6",
+        "subTasksNum": 88,
+        "subTasksDone": 88,
+        "progress": 100
+      },
+      {
+        "id": "lpe0icc6:lpe0icc6:lpe0iulq",
+        "name": "js",
+        "subId": "lpe0icc6:lpe0icc6",
+        "headId": "lpe0icc6",
+        "subTasksNum": 188,
+        "subTasksDone": 188,
+        "progress": 100
+      },
+      {
+        "id": "lpe0icc6:lpe0icc6:lpe0j0z3",
+        "name": "react",
+        "subId": "lpe0icc6:lpe0icc6",
+        "headId": "lpe0icc6",
+        "subTasksNum": 200,
+        "subTasksDone": 150,
+        "progress": 75
+      },
+      {
+        "id": "lpe0icc6:lpe0jf3h:lpe0jf3h",
+        "name": "php",
+        "subId": "lpe0icc6:lpe0jf3h",
+        "headId": "lpe0icc6",
+        "subTasksNum": 23,
+        "subTasksDone": 2,
+        "progress": 8
+      },
+      {
+        "id": "lpe0icc6:lpe0jf3h:lpe0jp7q",
+        "name": "mysql",
+        "subId": "lpe0icc6:lpe0jf3h",
+        "headId": "lpe0icc6",
+        "subTasksNum": 23,
+        "subTasksDone": 2,
+        "progress": 8
+      },
+      {
+        "id": "lpfa8zw2:lpfa8zw2:lpfa8zw2",
+        "name": "fdjskl",
+        "subId": "lpfa8zw2:lpfa8zw2",
+        "headId": "lpfa8zw2",
+        "subTasksNum": 23,
+        "subTasksDone": 23,
+        "progress": 100
+      },
+      {
+        "id": "lpfa8zw3:lpfa8zw3:lpfa8zw3",
+        "name": "jfsdlk",
+        "subId": "lpfa8zw3:lpfa8zw3",
+        "headId": "lpfa8zw3",
+        "subTasksNum": 32,
+        "subTasksDone": 23,
+        "progress": 71
+      }
+    ]
+  }
 }

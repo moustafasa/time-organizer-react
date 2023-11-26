@@ -26,42 +26,17 @@ const initialState = {
   subs: subsState,
   tasks: tasksState,
 };
+
 const addTasksSlice = createSlice({
   initialState: initialState,
   name: "addTasks",
   reducers: {
+    // add
     addHeads(state, action) {
       headsAdapter.addMany(state.heads, action.payload);
     },
     addSubs(state, action) {
       subsAdapter.addMany(state.subs, action.payload);
-    },
-    deleteSubs(state, action) {
-      subsAdapter.removeMany(state.subs, action.payload);
-    },
-    deleteTasks(state, action) {
-      tasksAdapter.removeMany(state.tasks, action.payload);
-    },
-    deleteHeads(state, action) {
-      headsAdapter.removeMany(state.heads, action.payload);
-    },
-    updateHead(state, action) {
-      headsAdapter.updateOne(state.heads, action.payload);
-    },
-    updateMany(state, action) {
-      if (action.payload.type === "tasks") {
-        tasksAdapter.updateMany(state.tasks, action.payload.changes);
-      } else if (action.payload.type === "subs") {
-        subsAdapter.updateMany(state.subs, action.payload.changes);
-      } else if (action.payload.type === "heads") {
-        headsAdapter.updateMany(state.heads, action.payload.changes);
-      }
-    },
-    updateSub(state, action) {
-      headsAdapter.updateOne(state.subs, action.payload);
-    },
-    updateTask(state, action) {
-      headsAdapter.updateOne(state.tasks, action.payload);
     },
     changeNumberOfTasks(state, action) {
       const lastIndex = Date.now();
@@ -69,6 +44,8 @@ const addTasksSlice = createSlice({
         return {
           id: `${action.payload.subId}:${(index + lastIndex).toString(36)}`,
           name: "",
+          subId: action.payload.subId,
+          headId: action.payload.subId.split(":")[0],
           subTasksNum: 0,
           subTasksDone: 0,
           progress: 0,
@@ -76,6 +53,30 @@ const addTasksSlice = createSlice({
       });
       tasksAdapter.addMany(state.tasks, tasks);
     },
+
+    // delete
+    deleteHeads(state, action) {
+      headsAdapter.removeMany(state.heads, action.payload);
+    },
+    deleteSubs(state, action) {
+      subsAdapter.removeMany(state.subs, action.payload);
+    },
+    deleteTasks(state, action) {
+      tasksAdapter.removeMany(state.tasks, action.payload);
+    },
+
+    // update
+    updateHead(state, action) {
+      headsAdapter.updateOne(state.heads, action.payload);
+    },
+    updateSub(state, action) {
+      headsAdapter.updateOne(state.subs, action.payload);
+    },
+    updateTask(state, action) {
+      headsAdapter.updateOne(state.tasks, action.payload);
+    },
+
+    // change currentElement
     changeCurrentHead(state, action) {
       state.heads.currentHead = action.payload;
     },
@@ -88,40 +89,7 @@ const addTasksSlice = createSlice({
   },
 });
 
-const { addHeads, addSubs, deleteHeads, deleteSubs, updateMany } =
-  addTasksSlice.actions;
-
-const calcAll = () => (dispatch, getState) => {
-  const tasks = getTasksEntities(getState());
-  const subs = getSubsEntities(getState());
-  const tUpdates = [];
-  const sUpdates = [];
-  const hUpdates = [];
-  tasks.forEach((task) => {
-    const progress = Math.floor((+task.subTasksDone / +task.subTasksNum) * 100);
-    tUpdates.push({ id: task.id, changes: { progress } });
-  });
-
-  dispatch(updateMany({ type: "tasks", changes: tUpdates }));
-
-  subs.forEach((sub) => {
-    const subTasks = tasks.filter(
-      (task) => task.id.split(":")[0] + ":" + task.id.split(":")[1] === sub.id
-    );
-    let tasksNum = 0;
-    let tasksDone = 0;
-    subTasks.forEach((task) => {
-      tasksNum++;
-      if (task.progress === 100) {
-        tasksDone++;
-      }
-    });
-
-    const progress = Math.floor((tasksDone / tasksNum) * 100);
-    sUpdates.push({ id: sub.id, changes: { progress, tasksNum, tasksDone } });
-  });
-  dispatch(updateMany({ type: "subs", changes: sUpdates }));
-};
+const { addHeads, addSubs, deleteHeads, deleteSubs } = addTasksSlice.actions;
 
 export const changeNumberOfHeads = (headNum) => (dispatch) => {
   const lastIndex = Date.now();
@@ -149,6 +117,7 @@ export const changeNumberOfSubs =
       dispatch(changeNumberOfTasks({ num: 1, subId: id }));
       return {
         id,
+        headId,
         name: "",
         tasksNum: 1,
         tasksDone: 0,
@@ -159,12 +128,12 @@ export const changeNumberOfSubs =
   };
 
 export const removeHead = (head) => (dispatch, getState) => {
-  const subs = getSubsOfHead(getState());
+  const subs = getSubsOfHead(getState(), head);
   dispatch(deleteHeads([head]));
   dispatch(deleteSubs(subs));
 };
 export const removeSub = (sub) => (dispatch, getState) => {
-  const tasks = getTasksOfSub(getState());
+  const tasks = getTasksOfSub(getState(), sub);
   dispatch(deleteSubs([sub]));
   dispatch(deleteTasks(tasks));
 };
@@ -176,11 +145,11 @@ export const addTasksToRemote = createAsyncThunk(
     const subs = getSubsEntities(getState());
     const tasks = getTasksEntities(getState());
 
-    dispatch(calcAll());
-
-    const headRes = await axios.post("http://localhost:3000/heads", ...heads);
-    const subRes = await axios.post("http://localhost:3000/subs", ...subs);
-    const taskRes = await axios.post("http://localhost:3000/tasks", ...tasks);
+    const res = await axios.post("http://localhost:3000/all", {
+      heads,
+      subs,
+      tasks,
+    });
   }
 );
 
@@ -213,25 +182,19 @@ export const {
 
 export const getSubsOfHead = createSelector(
   [getSubs, (state, headId) => headId],
-  (subs, headId) => subs.filter((sub) => sub.split(":")[0] === headId)
+  (subs, headId) => subs.filter((sub) => sub.search(headId) >= 0)
 );
 export const getTasksOfSub = createSelector(
   [getTasks, (state, subId) => subId],
-  (tasks, subId) =>
-    tasks.filter(
-      (task) => task.split(":")[0] + ":" + task.split(":")[1] === subId
-    )
+  (tasks, subId) => tasks.filter((task) => task.search(subId) >= 0)
 );
 export const getSubsEntitiesOfHead = createSelector(
   [getSubsEntities, (state, headId) => headId],
-  (subs, headId) => subs.filter((sub) => sub.id.split(":")[0] === headId)
+  (subs, headId) => subs.filter((sub) => sub.headId === headId)
 );
 export const getTasksEntitiesOfSub = createSelector(
   [getTasksEntities, (state, subId) => subId],
-  (tasks, subId) =>
-    tasks.filter(
-      (task) => task.id.split(":")[0] + ":" + task.id.split(":")[1] === subId
-    )
+  (tasks, subId) => tasks.filter((task) => task.subId === subId)
 );
 
 export const getCurrentHead = (state) => state.addTasks.heads.currentHead;
