@@ -1,20 +1,26 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteItem, getElementById, updateItem } from "../ShowTasksSlice";
-import sass from "./ShowHeads.module.scss";
+import sass from "./ShowData.module.scss";
+import _ from "lodash";
 
-const ShowHeads = ({ headId, index, checkHandler, checked }) => {
-  const head = useSelector((state) => getElementById(state, headId));
+const ShowData = ({ elementId, index, checkHandler, keys, editedKeys }) => {
+  const element = useSelector((state) => getElementById(state, elementId));
+  const editedObject = editedKeys.reduce((obj, curr) => {
+    obj[curr] = element[curr];
+    return obj;
+  }, {});
   const [editable, setEditable] = useState(false);
-  const [headValue, setHeadValue] = useState(head.name);
+  const [elementValue, setElementValue] = useState(editedObject);
   const dispatch = useDispatch();
+
   const editHandler = () => {
-    dispatch(updateItem({ id: headId, update: { name: headValue } }));
+    dispatch(updateItem({ id: elementId, update: elementValue }));
     setEditable(false);
   };
 
   const deleteHandler = () => {
-    dispatch(deleteItem(headId));
+    dispatch(deleteItem(elementId));
   };
 
   return (
@@ -23,30 +29,44 @@ const ShowHeads = ({ headId, index, checkHandler, checked }) => {
         <input
           type="checkbox"
           className="form-check-input"
-          value={headId}
-          checked={checked}
+          value={elementId}
           onChange={checkHandler}
         />
       </td>
       <td>{index + 1}</td>
       <td>
         {!editable ? (
-          head.name
+          element.name
         ) : (
           <input
             type="text"
             className="form-control text-center text-capitalize"
             data-bs-theme="dark"
-            value={headValue}
-            onChange={(e) => setHeadValue(e.target.value)}
+            value={elementValue.name}
+            onChange={(e) =>
+              setElementValue({ ...elementValue, name: e.target.value })
+            }
           />
         )}
       </td>
-      <td>{head.progress}%</td>
-      <td>{head.subNum}</td>
-      <td>{head.subDone}</td>
-      <td>{head.tasksNum}</td>
-      <td>{head.tasksDone}</td>
+      <td>{element.progress}%</td>
+      {keys.map((key, index) => (
+        <td key={key + index}>
+          {editedKeys.includes(key) && editable ? (
+            <input
+              type="number"
+              className="form-control text-center text-capitalize"
+              data-bs-theme="dark"
+              value={elementValue[key]}
+              onChange={(e) =>
+                setElementValue({ ...elementValue, [key]: e.target.value })
+              }
+            />
+          ) : (
+            element[key]
+          )}
+        </td>
+      ))}
       <td>
         <div
           className={`d-flex gap-3 align-items-center justify-content-center w-100 ${sass.buttonCont}`}
@@ -55,7 +75,7 @@ const ShowHeads = ({ headId, index, checkHandler, checked }) => {
             <>
               <button
                 onClick={() => {
-                  setHeadValue(head.name);
+                  setElementValue(editedObject);
                   setEditable(true);
                 }}
                 className="btn btn-success text-capitalize d-block "
@@ -74,7 +94,7 @@ const ShowHeads = ({ headId, index, checkHandler, checked }) => {
               <button
                 onClick={editHandler}
                 className={`btn btn-primary text-capitalize d-block`}
-                disabled={headValue === head.name}
+                disabled={_.isEqual(elementValue, editedObject)}
               >
                 save
               </button>
@@ -92,4 +112,4 @@ const ShowHeads = ({ headId, index, checkHandler, checked }) => {
   );
 };
 
-export default ShowHeads;
+export default ShowData;

@@ -86,109 +86,10 @@ const addTasksSlice = createSlice({
     changeCurrentTask(state, action) {
       state.tasks.currentTask = action.payload;
     },
-
-    // calc progress
-    calcAll(state, action) {
-      // calc tasks
-      tasksAdapter.updateMany(
-        state.tasks,
-        state.tasks.ids.map((id) => {
-          const task = state.tasks.entities[id];
-          return {
-            id,
-            changes: {
-              progress: Math.floor(
-                (+task.subTasksDone / +task.subTasksNum) * 100
-              ),
-            },
-          };
-        })
-      );
-
-      // calc subs
-      subsAdapter.updateMany(
-        state.subs,
-        state.subs.ids.map((id) => {
-          const tasks = state.tasks.ids
-            .filter((tId) => tId.search(id) >= 0)
-            .map((task) => state.tasks.entities[task]);
-
-          const tasksNum = tasks.length;
-          const tasksDone = tasks.filter((task) => task.progress >= 100).length;
-          const taskProgSum = tasks.reduce(
-            (prev, curr) => prev + curr.progress,
-            0
-          );
-
-          const progress = Math.floor(taskProgSum / tasksNum);
-
-          return {
-            id,
-            changes: {
-              tasksNum,
-              tasksDone,
-              progress,
-            },
-          };
-        })
-      );
-
-      // calc heads
-      headsAdapter.updateMany(
-        state.heads,
-        state.heads.ids.map((id) => {
-          const subs = state.subs.ids
-            .filter((sId) => sId.search(id) >= 0)
-            .map((sub) => state.subs.entities[sub]);
-          const tasksNum = subs.reduce(
-            (prev, current) => prev + current.tasksNum,
-            0
-          );
-          const tasksDone = subs.reduce(
-            (prev, current) => prev + current.tasksDone,
-            0
-          );
-
-          const subNum = subs.length;
-          const subDone = subs.filter((sub) => sub.progress >= 100).length;
-
-          const subProgSum = subs.reduce(
-            (prev, curr) => prev + curr.progress,
-            0
-          );
-
-          return {
-            id,
-            changes: {
-              tasksNum,
-              tasksDone,
-              subNum,
-              subDone,
-              progress: Math.floor(subProgSum / subNum),
-            },
-          };
-        })
-      );
-    },
   },
 });
 
-const { addHeads, addSubs, deleteHeads, deleteSubs, calcAll } =
-  addTasksSlice.actions;
-
-// const calcAll = () => (dispatch, getState) => {
-//   const tasks = getTasksEntities(getState());
-//   const subs = getSubsEntities(getState());
-//   const tUpdates = [];
-//   const sUpdates = [];
-//   const hUpdates = [];
-//   tasks.forEach((task) => {
-//     const progress = Math.floor((+task.subTasksDone / +task.subTasksNum) * 100);
-//     tUpdates.push({ id: task.id, changes: { progress } });
-//   });
-
-//   dispatch(updateMany({ type: "tasks", changes: tUpdates }));
-// };
+const { addHeads, addSubs, deleteHeads, deleteSubs } = addTasksSlice.actions;
 
 export const changeNumberOfHeads = (headNum) => (dispatch) => {
   const lastIndex = Date.now();
@@ -244,11 +145,11 @@ export const addTasksToRemote = createAsyncThunk(
     const subs = getSubsEntities(getState());
     const tasks = getTasksEntities(getState());
 
-    dispatch(calcAll());
-
-    const headRes = await axios.post("http://localhost:3000/heads", heads);
-    // const subRes = await axios.post("http://localhost:3000/subs", subs);
-    // const taskRes = await axios.post("http://localhost:3000/tasks", tasks);
+    const res = await axios.post("http://localhost:3000/all", {
+      heads,
+      subs,
+      tasks,
+    });
   }
 );
 
