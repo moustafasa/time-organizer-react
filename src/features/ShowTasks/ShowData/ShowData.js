@@ -1,18 +1,35 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteItem, getElementById, updateItem } from "../ShowTasksSlice";
+import {
+  changeCurrentHead,
+  changeCurrentSub,
+  deleteItem,
+  getCurrentPage,
+  getElementById,
+  updateItem,
+} from "../ShowTasksSlice";
 import sass from "./ShowData.module.scss";
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 
-const ShowData = ({ elementId, index, checkHandler, keys, editedKeys }) => {
+const ShowData = ({
+  elementId,
+  index,
+  check: [checkedItems, setCheckedItems],
+  keys,
+  editedKeys,
+}) => {
+  const currentPage = useSelector(getCurrentPage);
   const element = useSelector((state) => getElementById(state, elementId));
   const editedObject = editedKeys.reduce((obj, curr) => {
     obj[curr] = element[curr];
     return obj;
   }, {});
+
   const [editable, setEditable] = useState(false);
   const [elementValue, setElementValue] = useState(editedObject);
   const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   const editHandler = () => {
     dispatch(updateItem({ id: elementId, update: elementValue }));
@@ -23,13 +40,44 @@ const ShowData = ({ elementId, index, checkHandler, keys, editedKeys }) => {
     dispatch(deleteItem(elementId));
   };
 
+  const checkHandler = (e) => {
+    if (e.target.checked) {
+      setCheckedItems([...checkedItems, e.target.value]);
+    } else {
+      setCheckedItems(checkedItems.filter((id) => id !== e.target.value));
+    }
+  };
+
+  const selectHandler = (e) => {
+    if (!e.target.closest("td:last-of-type")) {
+      if (checkedItems.includes(elementId)) {
+        setCheckedItems(checkedItems.filter((id) => id !== elementId));
+      } else {
+        setCheckedItems([...checkedItems, elementId]);
+      }
+    }
+  };
+
+  const goToHandler = (e) => {
+    if (!e.target.closest("td:last-of-type") && currentPage !== "tasks") {
+      if (currentPage === "heads") {
+        dispatch(changeCurrentHead(elementId));
+      } else {
+        dispatch(changeCurrentHead(element.headId));
+        dispatch(changeCurrentSub(elementId));
+      }
+      navigator(`/showTasks/${currentPage === "heads" ? "subs" : "tasks"}`);
+    }
+  };
+
   return (
-    <tr>
+    <tr onClick={selectHandler} onDoubleClick={goToHandler}>
       <td>
         <input
           type="checkbox"
           className="form-check-input"
           value={elementId}
+          checked={checkedItems.includes(elementId)}
           onChange={checkHandler}
         />
       </td>

@@ -1,0 +1,12 @@
+@use "../../../sass/helpers/mixins" as *;
+@use "../../../sass/variables/colors" as *;
+@use "../../../sass/variables/others" as *;
+
+.selects {
+  .selectCont {
+    label {
+      white-space: nowrap;
+      font-size: 1.3rem;
+    }
+  }
+}

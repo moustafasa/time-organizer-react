@@ -1,0 +1,15 @@
+@use "../../../../sass/helpers/mixins" as *;
+@use "../../../../sass/variables/colors" as *;
+@use "../../../../sass/variables/others" as *;
+
+.subCont {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+  scroll-margin: 110px;
+  .tasks {
+    flex: 1;
+    @include flex-gap(40px);
+  }
+}
