@@ -123,14 +123,17 @@ server.get("/heads", (req, res) => {
 // subs
 server.get("/subs", (req, res) => {
   const db = router.db;
-  const subs = db.get("data").get("subs").value();
+  const headId = req.query.headId;
+  const subs = db.get("data").get("subs").filter({ headId }).value();
   res.send(subs);
 });
 
 // tasks
 server.get("/tasks", (req, res) => {
   const db = router.db;
-  const tasks = db.get("data").get("tasks").value();
+  const headId = req.query.headId;
+  const subId = req.query.subId;
+  const tasks = db.get("data").get("tasks").filter({ headId, subId }).value();
   res.send(tasks);
 });
 

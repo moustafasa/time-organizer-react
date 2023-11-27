@@ -1,0 +1,15 @@
+@use "../../../sass/helpers/mixins" as *;
+@use "../../../sass/variables/colors" as *;
+@use "../../../sass/variables/others" as *;
+
+.inputs {
+  width: 100%;
+  input {
+    width: 100%;
+  }
+
+  .input-box {
+    flex: 1;
+    height: fit-content;
+  }
+}

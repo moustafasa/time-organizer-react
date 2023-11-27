@@ -7,8 +7,8 @@
         "subNum": 2,
         "subDone": 0,
         "tasksNum": 6,
-        "tasksDone": 2,
-        "progress": 38
+        "tasksDone": 3,
+        "progress": 50
       },
       {
         "id": "lpe0icc7",
@@ -18,24 +18,6 @@
         "tasksNum": 1,
         "tasksDone": 0,
         "progress": 75
-      },
-      {
-        "id": "lpfa8zw2",
-        "name": "fdsfd",
-        "subNum": 1,
-        "subDone": 1,
-        "tasksNum": 1,
-        "tasksDone": 1,
-        "progress": 100
-      },
-      {
-        "id": "lpfa8zw3",
-        "name": "fdjsa",
-        "subNum": 1,
-        "subDone": 0,
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 71
       }
     ],
     "subs": [
@@ -44,8 +26,8 @@
         "headId": "lpe0icc6",
         "name": "front end",
         "tasksNum": 4,
-        "tasksDone": 2,
-        "progress": 69
+        "tasksDone": 3,
+        "progress": 93
       },
       {
         "id": "lpe0icc7:lpe0icca",
@@ -62,22 +44,6 @@
         "tasksNum": 2,
         "tasksDone": 0,
         "progress": 8
-      },
-      {
-        "id": "lpfa8zw2:lpfa8zw2",
-        "headId": "lpfa8zw2",
-        "name": "jdskla",
-        "tasksNum": 1,
-        "tasksDone": 1,
-        "progress": 100
-      },
-      {
-        "id": "lpfa8zw3:lpfa8zw3",
-        "headId": "lpfa8zw3",
-        "name": "jfkdsa",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 71
       }
     ],
     "tasks": [
@@ -87,8 +53,8 @@
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
         "subTasksNum": 34,
-        "subTasksDone": 1,
-        "progress": 2
+        "subTasksDone": 34,
+        "progress": 100
       },
       {
         "id": "lpe0icc7:lpe0icca:lpe0icca",
@@ -143,24 +109,6 @@
         "subTasksNum": 23,
         "subTasksDone": 2,
         "progress": 8
-      },
-      {
-        "id": "lpfa8zw2:lpfa8zw2:lpfa8zw2",
-        "name": "fdjskl",
-        "subId": "lpfa8zw2:lpfa8zw2",
-        "headId": "lpfa8zw2",
-        "subTasksNum": 23,
-        "subTasksDone": 23,
-        "progress": 100
-      },
-      {
-        "id": "lpfa8zw3:lpfa8zw3:lpfa8zw3",
-        "name": "jfsdlk",
-        "subId": "lpfa8zw3:lpfa8zw3",
-        "headId": "lpfa8zw3",
-        "subTasksNum": 32,
-        "subTasksDone": 23,
-        "progress": 71
       }
     ]
   }

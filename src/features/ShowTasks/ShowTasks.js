@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import ShowHeads from "./ShowHeads/ShowHeads";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  changeCurrentPage,
   deleteMultiple,
   fetchData,
   getAllDataIds,
-  getAllHeadsIds,
-  getAllSubsIds,
-  getAllTasksIds,
+  getAllHeadsEntities,
+  getAllSubsEntities,
+  getCurrentHead,
+  getCurrentSub,
 } from "./ShowTasksSlice";
 import sass from "./ShowTasks.module.scss";
-import ShowSubs from "./ShowSubs/ShowSubs";
-import ShowTasksE from "./ShowTasksE/ShowTasksE";
 import ShowData from "./ShowData/ShowData";
+import SelectBox from "../../components/SelectBox/SelectBox";
+import ShowSelects from "./ShowSelects/ShowSelects";
 
 const ShowTasks = () => {
   const keys = {
@@ -22,24 +23,38 @@ const ShowTasks = () => {
     tasks: ["subTasksNum", "subTasksDone"],
   };
 
+  const data = useSelector(getAllDataIds);
+  const currentHead = useSelector(getCurrentHead);
+  const currentSub = useSelector(getCurrentSub);
+
   const [checkedItems, setCheckedItems] = useState([]);
   const { showed } = useParams();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchData(showed));
-  }, [showed, dispatch]);
-
-  const data = useSelector(getAllDataIds);
-
-  const checkHandler = (e) => {
-    if (e.target.checked) {
-      setCheckedItems([...checkedItems, e.target.value]);
-    } else {
-      setCheckedItems(checkedItems.filter((id) => id !== e.target.value));
+    const args = {};
+    if (showed !== "heads") {
+      args["headId"] = currentHead;
     }
-  };
+    if (showed === "tasks") {
+      args["subId"] = currentSub;
+    }
+    dispatch(changeCurrentPage(showed));
+    dispatch(fetchData({ page: showed, args }));
+  }, [showed, currentHead, currentSub, dispatch]);
+
+  useEffect(() => {
+    const unCheckOnBlurHandler = (e) => {
+      if (!e.target.closest("table") && !e.target.closest("button")) {
+        setCheckedItems([]);
+      }
+    };
+    document.addEventListener("click", unCheckOnBlurHandler);
+    return () => {
+      document.removeEventListener("click", unCheckOnBlurHandler);
+    };
+  }, []);
 
   const deleteMultiHandler = () => {
     dispatch(deleteMultiple(checkedItems));
@@ -53,6 +68,7 @@ const ShowTasks = () => {
     <section>
       <div className="container">
         <h2 className="page-head"> show {showed} </h2>
+        <ShowSelects />
         <div className={sass.tableCont}>
           <table className={sass.table}>
             <thead>
@@ -73,7 +89,7 @@ const ShowTasks = () => {
                   key={id}
                   elementId={id}
                   index={index}
-                  checkHandler={checkHandler}
+                  check={[checkedItems, setCheckedItems]}
                   keys={keys[showed]}
                   editedKeys={
                     showed === "tasks"

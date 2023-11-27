@@ -4,7 +4,6 @@
 
 .tableCont {
   padding-top: 50px;
-  padding-inline: 30px;
   overflow-x: auto;
   .table {
     width: 100%;
@@ -34,6 +33,11 @@
     }
 
     tr {
+      cursor: pointer;
+      &:hover,
+      &:has(input:checked) {
+        background-color: $blue-2-color;
+      }
     }
   }
 }

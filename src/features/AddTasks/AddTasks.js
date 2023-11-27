@@ -4,7 +4,7 @@ import HeadNum from "./HeadNum/HeadNum";
 import StatusBar from "./StatusBar/StatusBar";
 import { useSelector } from "react-redux";
 import { getHeads } from "./AddTasksSlice";
-import TaskInputs from "./TaskInputs/TaskInputs";
+import Inputs from "./Inputs/Inputs";
 
 const AddTasks = () => {
   const numberOfHeads = useSelector(getHeads);
@@ -18,7 +18,7 @@ const AddTasks = () => {
           ) : (
             <>
               <StatusBar />
-              <TaskInputs />
+              <Inputs />
             </>
           )}
         </form>
