@@ -13,10 +13,12 @@ import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/u
 import InputBox from "../../../../components/InputBox/InputBox";
 import SubInput from "../Sub/SubInput";
 import sass from "./HeadInput.module.scss";
+import { useSearchParams } from "react-router-dom";
 
 const HeadInput = ({ id, index }) => {
-  const headName = useSelector((state) => getHeadById(state, id).name);
+  const head = useSelector((state) => getHeadById(state, id));
   const subs = useSelector((state) => getSubsOfHead(state, id));
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const setHeadName = (value) =>
     dispatch(updateHead({ id, changes: { name: value } }));
@@ -29,28 +31,36 @@ const HeadInput = ({ id, index }) => {
       <InputBox
         label={`head ${index}`}
         type="text"
-        value={headName}
+        value={head.name}
         setValue={setHeadName}
+        readOnly={head.readOnly}
       />
+
       <div className={sass.subjects}>
         {subs.map((sub, index) => (
           <SubInput key={sub} id={sub} index={index + 1} />
         ))}
-        <button
-          className="input-modify-btn plus-btn"
-          onClick={(e) => dispatch(changeNumberOfSubs({ num: 1, headId: id }))}
-          title="add Sub"
-        >
-          +
-        </button>
+        {!searchParams.get("subId") && (
+          <button
+            className="input-modify-btn plus-btn"
+            onClick={(e) =>
+              dispatch(changeNumberOfSubs({ num: 1, headId: id }))
+            }
+            title="add Sub"
+          >
+            +
+          </button>
+        )}
       </div>
-      <button
-        className="input-modify-btn minus-btn"
-        title={`remove head ${index}`}
-        onClick={(e) => dispatch(removeHead(id))}
-      >
-        -
-      </button>
+      {!head.readOnly && (
+        <button
+          className="input-modify-btn minus-btn"
+          title={`remove head ${index}`}
+          onClick={(e) => dispatch(removeHead(id))}
+        >
+          -
+        </button>
+      )}
     </div>
   );
 };

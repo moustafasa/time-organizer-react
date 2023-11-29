@@ -15,7 +15,7 @@ import TaskInput from "../Task/TaskInput";
 import sass from "./SubInput.module.scss";
 
 const SubInput = ({ id, index }) => {
-  const subName = useSelector((state) => getSubById(state, id).name);
+  const sub = useSelector((state) => getSubById(state, id));
   const dispatch = useDispatch();
   const setSubName = (value) =>
     dispatch(updateSub({ id, changes: { name: value } }));
@@ -27,8 +27,9 @@ const SubInput = ({ id, index }) => {
       <InputBox
         label={`sub ${index}`}
         type="text"
-        value={subName}
+        value={sub.name}
         setValue={setSubName}
+        readOnly={sub.readOnly}
       />
       <div className={sass.tasks}>
         {tasks.map((task, index) => (
@@ -42,13 +43,15 @@ const SubInput = ({ id, index }) => {
           +
         </button>
       </div>
-      <button
-        className="input-modify-btn minus-btn"
-        onClick={(e) => dispatch(removeSub(id))}
-        title={`remove sub ${index}`}
-      >
-        -
-      </button>
+      {!sub.readOnly && (
+        <button
+          className="input-modify-btn minus-btn"
+          onClick={(e) => dispatch(removeSub(id))}
+          title={`remove sub ${index}`}
+        >
+          -
+        </button>
+      )}
     </div>
   );
 };
