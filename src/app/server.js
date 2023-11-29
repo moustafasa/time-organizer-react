@@ -119,6 +119,11 @@ server.get("/heads", (req, res) => {
   const heads = db.get("data").get("heads").value();
   res.send(heads);
 });
+server.get("/heads/:id", (req, res) => {
+  const db = router.db;
+  const head = db.get("data").get("heads").find({ id: req.params.id }).value();
+  res.send(head);
+});
 
 // subs
 server.get("/subs", (req, res) => {
@@ -126,6 +131,12 @@ server.get("/subs", (req, res) => {
   const headId = req.query.headId;
   const subs = db.get("data").get("subs").filter({ headId }).value();
   res.send(subs);
+});
+
+server.get("/subs/:id", (req, res) => {
+  const db = router.db;
+  const sub = db.get("data").get("subs").find({ id: req.params.id }).value();
+  res.send(sub);
 });
 
 // tasks

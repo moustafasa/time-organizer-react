@@ -65,16 +65,18 @@ const ShowSelects = () => {
           valueState={[headValue, setHeadValue]}
         />
       </div>
-      <div
-        className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1`}
-      >
-        <label>sub Name :</label>
-        <SelectBox
-          className={sass.SelectBox}
-          options={subsOptions}
-          valueState={[subValue, setSubValue]}
-        />
-      </div>
+      {page === "tasks" && (
+        <div
+          className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1`}
+        >
+          <label>sub Name :</label>
+          <SelectBox
+            className={sass.SelectBox}
+            options={subsOptions}
+            valueState={[subValue, setSubValue]}
+          />
+        </div>
+      )}
     </div>
   );
 };

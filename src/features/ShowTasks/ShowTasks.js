@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeCurrentPage,
@@ -26,11 +26,19 @@ const ShowTasks = () => {
   const data = useSelector(getAllDataIds);
   const currentHead = useSelector(getCurrentHead);
   const currentSub = useSelector(getCurrentSub);
-
+  const navigator = useNavigate();
   const [checkedItems, setCheckedItems] = useState([]);
   const { showed } = useParams();
 
+  const addTasksSParams = `${
+    showed !== "heads" ? `?headId=${currentHead}` : ""
+  }${showed === "tasks" ? `&subId=${currentSub}` : ""}`;
+
   const dispatch = useDispatch();
+
+  const addTasksHandler = () => {
+    navigator(`/addTasks${addTasksSParams}`);
+  };
 
   useEffect(() => {
     const args = {};
@@ -68,7 +76,7 @@ const ShowTasks = () => {
     <section>
       <div className="container">
         <h2 className="page-head"> show {showed} </h2>
-        <ShowSelects />
+        {showed !== "heads" && <ShowSelects />}
         <div className={sass.tableCont}>
           <table className={sass.table}>
             <thead>
@@ -102,9 +110,16 @@ const ShowTasks = () => {
           </table>
         </div>
         <div className="d-flex justify-content-center w-100 mt-5 gap-3">
-          <Link to={"/addTasks"} className="btn btn-primary text-capitalize">
+          <button
+            onClick={addTasksHandler}
+            className="btn btn-primary text-capitalize"
+            disabled={
+              (showed !== "heads" && currentHead === "") ||
+              (showed === "tasks" && currentSub === "")
+            }
+          >
             add
-          </Link>
+          </button>
           <button
             className="btn btn-danger text-capitalize"
             disabled={checkedItems.length === 0}
@@ -115,6 +130,7 @@ const ShowTasks = () => {
           <button
             className="btn btn-danger text-capitalize"
             onClick={deleteAllHandler}
+            disabled={data.length === 0}
           >
             delete all
           </button>

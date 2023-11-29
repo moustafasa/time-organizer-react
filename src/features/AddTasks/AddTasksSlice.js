@@ -48,7 +48,6 @@ const addTasksSlice = createSlice({
           headId: action.payload.subId.split(":")[0],
           subTasksNum: 0,
           subTasksDone: 0,
-          progress: 0,
         };
       });
       tasksAdapter.addMany(state.tasks, tasks);
@@ -75,6 +74,11 @@ const addTasksSlice = createSlice({
     updateTask(state, action) {
       headsAdapter.updateOne(state.tasks, action.payload);
     },
+    clear(state, action) {
+      headsAdapter.removeAll(state.heads);
+      subsAdapter.removeAll(state.subs);
+      tasksAdapter.removeAll(state.tasks);
+    },
 
     // change currentElement
     changeCurrentHead(state, action) {
@@ -99,15 +103,12 @@ export const changeNumberOfHeads = (headNum) => (dispatch) => {
     return {
       id,
       name: "",
-      subNum: 1,
-      subDone: 0,
-      tasksNum: 0,
-      tasksDone: 0,
-      progress: 0,
+      readOnly: false,
     };
   });
   dispatch(addHeads(heads));
 };
+
 export const changeNumberOfSubs =
   ({ num, headId }) =>
   (dispatch) => {
@@ -119,13 +120,45 @@ export const changeNumberOfSubs =
         id,
         headId,
         name: "",
-        tasksNum: 1,
-        tasksDone: 0,
-        progress: 0,
+        readOnly: false,
       };
     });
+
+    console.log(subs);
     dispatch(addSubs(subs));
   };
+
+export const addSubToHead = createAsyncThunk(
+  "addTasks/addSubToHead",
+  async (headId, { dispatch }) => {
+    const res = await axios(`http://localhost:3000/heads/${headId}`);
+    dispatch(
+      addHeads([{ id: res.data.id, name: res.data.name, readOnly: true }])
+    );
+    dispatch(changeNumberOfSubs({ num: 1, headId: res.data.id }));
+  }
+);
+export const addTaskToSub = createAsyncThunk(
+  "addTasks/addTasToSub",
+  async ({ headId, subId }, { dispatch }) => {
+    const hRes = await axios(`http://localhost:3000/heads/${headId}`);
+    const sRes = await axios(`http://localhost:3000/subs/${subId}`);
+    dispatch(
+      addHeads([{ id: hRes.data.id, name: hRes.data.name, readOnly: true }])
+    );
+    dispatch(
+      addSubs([
+        {
+          id: sRes.data.id,
+          name: sRes.data.name,
+          tasksNum: sRes.data.tasksNum,
+          readOnly: true,
+        },
+      ])
+    );
+    dispatch(changeNumberOfTasks({ num: 1, subId: sRes.data.id }));
+  }
+);
 
 export const removeHead = (head) => (dispatch, getState) => {
   const subs = getSubsOfHead(getState(), head);
@@ -145,6 +178,9 @@ export const addTasksToRemote = createAsyncThunk(
     const subs = getSubsEntities(getState());
     const tasks = getTasksEntities(getState());
 
+    delete heads["readOnly"];
+    delete subs["readOnly"];
+
     const res = await axios.post("http://localhost:3000/all", {
       heads,
       subs,
@@ -163,6 +199,7 @@ export const {
   changeCurrentHead,
   changeCurrentTask,
   changeCurrentSub,
+  clear,
 } = addTasksSlice.actions;
 export const {
   selectById: getHeadById,
