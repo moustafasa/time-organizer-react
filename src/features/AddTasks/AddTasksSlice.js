@@ -151,7 +151,7 @@ export const addTaskToSub = createAsyncThunk(
         {
           id: sRes.data.id,
           name: sRes.data.name,
-          tasksNum: sRes.data.tasksNum,
+          headId: headId,
           readOnly: true,
         },
       ])
