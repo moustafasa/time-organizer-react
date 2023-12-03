@@ -9,6 +9,7 @@ const Nav = () => {
   useEffect(() => {
     setShowTasksToggle(false);
   }, [location.pathname]);
+
   return (
     <nav>
       <ul className="parent">
