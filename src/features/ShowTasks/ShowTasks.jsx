@@ -1,56 +1,93 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  useLoaderData,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeCurrentPage,
   deleteMultiple,
   fetchData,
   getAllDataIds,
-  getAllHeadsEntities,
-  getAllSubsEntities,
+  getAllHeadsIds,
+  getAllSubsIds,
+  getAllTasksIds,
   getCurrentHead,
   getCurrentSub,
 } from "./ShowTasksSlice";
 import sass from "./ShowTasks.module.scss";
 import ShowData from "./ShowData/ShowData";
-import SelectBox from "../../components/SelectBox/SelectBox";
 import ShowSelects from "./ShowSelects/ShowSelects";
+import {
+  getHeadById,
+  getSubById,
+  getTaskById,
+} from "../AddTasks/AddTasksSlice";
 
-const ShowTasks = () => {
-  const keys = {
-    heads: ["subNum", "subDone", "tasksNum", "tasksDone"],
-    subs: ["tasksNum", "tasksDone"],
-    tasks: ["subTasksNum", "subTasksDone"],
+export const loader =
+  (dispatch) =>
+  async ({ request, params }) => {
+    // init variables
+    const { page } = params;
+    const url = new URL(request.url);
+    const headId = url.searchParams.get("headId");
+    const subId = url.searchParams.get("subId");
+    const keys = {
+      heads: ["subNum", "subDone", "tasksNum", "tasksDone"],
+      subs: ["tasksNum", "tasksDone"],
+      tasks: ["subTasksNum", "subTasksDone"],
+    };
+
+    // get selectors depending on currentPage
+    const getAllDataIds =
+      page === "heads"
+        ? getAllHeadsIds
+        : page === "subs"
+        ? getAllSubsIds
+        : getAllTasksIds;
+
+    const getElementById =
+      page === "heads"
+        ? getHeadById
+        : page === "subs"
+        ? getSubById
+        : getTaskById;
+
+    // fetch page depending on searchParams
+    const args = {};
+    if (page !== "heads") {
+      args["headId"] = headId;
+    }
+    if (page === "tasks") {
+      args["subId"] = subId;
+    }
+    dispatch(changeCurrentPage(page));
+    dispatch(fetchData({ page: page, args }));
+
+    return {
+      getAllDataIds,
+      getElementById,
+      keys: keys[page],
+    };
   };
 
+const ShowTasks = () => {
+  const { keys } = useLoaderData();
+  const [searchParams] = useSearchParams();
   const data = useSelector(getAllDataIds);
-  const currentHead = useSelector(getCurrentHead);
-  const currentSub = useSelector(getCurrentSub);
+  const currentHead = searchParams.get("headId");
+  const currentSub = searchParams.get("subId");
   const navigator = useNavigate();
   const [checkedItems, setCheckedItems] = useState([]);
-  const { showed } = useParams();
-
-  const addTasksSParams = `${
-    showed !== "heads" ? `?headId=${currentHead}` : ""
-  }${showed === "tasks" ? `&subId=${currentSub}` : ""}`;
+  const { page } = useParams();
 
   const dispatch = useDispatch();
 
   const addTasksHandler = () => {
-    navigator(`/addTasks${addTasksSParams}`);
+    navigator(`/addTasks${window.location.search}`);
   };
-
-  useEffect(() => {
-    const args = {};
-    if (showed !== "heads") {
-      args["headId"] = currentHead;
-    }
-    if (showed === "tasks") {
-      args["subId"] = currentSub;
-    }
-    dispatch(changeCurrentPage(showed));
-    dispatch(fetchData({ page: showed, args }));
-  }, [showed, currentHead, currentSub, dispatch]);
 
   useEffect(() => {
     const unCheckOnBlurHandler = (e) => {
@@ -75,8 +112,8 @@ const ShowTasks = () => {
   return (
     <section>
       <div className="container">
-        <h2 className="page-head"> show {showed} </h2>
-        {showed !== "heads" && <ShowSelects />}
+        <h2 className="page-head"> show {page} </h2>
+        {page !== "heads" && <ShowSelects />}
         <div className={sass.tableCont}>
           <table className={sass.table}>
             <thead>
@@ -85,7 +122,7 @@ const ShowTasks = () => {
                 <th>id</th>
                 <th>name</th>
                 <th>progress</th>
-                {keys[showed].map((key) => (
+                {keys.map((key) => (
                   <th key={key}>{key}</th>
                 ))}
                 <th>options</th>
@@ -98,9 +135,9 @@ const ShowTasks = () => {
                   elementId={id}
                   index={index}
                   check={[checkedItems, setCheckedItems]}
-                  keys={keys[showed]}
+                  keys={keys}
                   editedKeys={
-                    showed === "tasks"
+                    page === "tasks"
                       ? ["name", "subTasksNum", "subTasksDone"]
                       : ["name"]
                   }
@@ -114,8 +151,8 @@ const ShowTasks = () => {
             onClick={addTasksHandler}
             className="btn btn-primary text-capitalize"
             disabled={
-              (showed !== "heads" && currentHead === "") ||
-              (showed === "tasks" && currentSub === "")
+              (page !== "heads" && currentHead === "") ||
+              (page === "tasks" && currentSub === "")
             }
           >
             add

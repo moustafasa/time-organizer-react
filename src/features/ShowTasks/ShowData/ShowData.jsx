@@ -10,7 +10,7 @@ import {
 } from "../ShowTasksSlice";
 import sass from "./ShowData.module.scss";
 import _ from "lodash";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 const ShowData = ({
   elementId,
@@ -19,6 +19,7 @@ const ShowData = ({
   keys,
   editedKeys,
 }) => {
+  // const { getElementById } = useLoaderData();
   const currentPage = useSelector(getCurrentPage);
   const element = useSelector((state) => getElementById(state, elementId));
   const editedObject = editedKeys.reduce((obj, curr) => {

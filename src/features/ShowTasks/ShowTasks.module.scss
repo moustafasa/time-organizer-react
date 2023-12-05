@@ -33,6 +33,7 @@
     }
 
     tr {
+      transition: 0.5s;
       cursor: pointer;
       &:hover,
       &:has(input:checked) {

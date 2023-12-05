@@ -6,12 +6,21 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import Header from "./components/Header/Header";
-import AddTasks from "./features/AddTasks/AddTasks";
-import ShowTasks from "./features/ShowTasks/ShowTasks";
+import AddTasks, {
+  action as addTasksAction,
+  loader as addTasksLoader,
+} from "./features/AddTasks/AddTasks";
+import ShowTasks, {
+  loader as showTasksLoader,
+  action as showTasksAction,
+} from "./features/ShowTasks/ShowTasks";
 import Nav from "./components/Header/Nav/Nav";
 import Content from "./components/Header/Content/Content";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+
   const router = createBrowserRouter([
     {
       element: (
@@ -22,8 +31,17 @@ function App() {
       ),
       children: [
         { path: "/", element: <div>home</div> },
-        { path: "/addTasks", element: <AddTasks /> },
-        { path: "/showTasks/:showed", element: <ShowTasks /> },
+        {
+          path: "/addTasks",
+          element: <AddTasks />,
+          loader: addTasksLoader(dispatch),
+          action: addTasksAction(dispatch),
+        },
+        {
+          path: "/showTasks/:page",
+          element: <ShowTasks />,
+          loader: showTasksLoader(dispatch),
+        },
       ],
     },
   ]);

@@ -39,6 +39,7 @@ const SubInput = ({ id, index }) => {
           className="input-modify-btn plus-btn"
           onClick={(e) => dispatch(changeNumberOfTasks({ num: 1, subId: id }))}
           title="add task"
+          type="button"
         >
           +
         </button>
@@ -48,6 +49,7 @@ const SubInput = ({ id, index }) => {
           className="input-modify-btn minus-btn"
           onClick={(e) => dispatch(removeSub(id))}
           title={`remove sub ${index}`}
+          type="button"
         >
           -
         </button>

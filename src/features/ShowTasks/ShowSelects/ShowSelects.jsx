@@ -1,34 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import SelectBox from "../../../components/SelectBox/SelectBox";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  changeCurrentHead,
-  changeCurrentSub,
   fetchData,
   getAllHeadsEntities,
   getAllSubsEntities,
-  getCurrentHead,
-  getCurrentPage,
-  getCurrentSub,
 } from "../ShowTasksSlice";
 import sass from "./ShowSelects.module.scss";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const ShowSelects = () => {
-  const page = useSelector(getCurrentPage);
+  const { page } = useParams();
   const heads = useSelector(getAllHeadsEntities);
   const subs = useSelector(getAllSubsEntities);
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const headValue = useSelector(getCurrentHead);
+  const headValue = searchParams.get("headId") || "";
+  const subValue = searchParams.get("subId") || "";
+
   const setHeadValue = (value) => {
-    dispatch(changeCurrentHead(value));
+    const newParams = { headId: value };
+    if (page === "tasks") newParams["subId"] = "";
+    setSearchParams(newParams);
   };
 
   useEffect(() => {
-    if (page === "subs") {
+    if (page !== "heads") {
       dispatch(fetchData({ page: "heads" }));
-    } else if (page === "tasks") {
-      dispatch(fetchData({ page: "heads" }));
+    }
+    if (page === "tasks") {
       dispatch(fetchData({ page: "subs", args: { headId: headValue } }));
     }
   }, [page, dispatch, headValue]);
@@ -39,9 +40,8 @@ const ShowSelects = () => {
       return { text: heads[id].name, value: id };
     }),
   ];
-  const subValue = useSelector(getCurrentSub);
-  const setSubValue = (value) => {
-    dispatch(changeCurrentSub(value));
+  const setSubValue = async (value) => {
+    setSearchParams({ headId: headValue, subId: value });
   };
 
   const subsOptions = [
@@ -63,6 +63,7 @@ const ShowSelects = () => {
           className={sass.SelectBox}
           options={headsOptions}
           valueState={[headValue, setHeadValue]}
+          name="headId"
         />
       </div>
       {page === "tasks" && (
@@ -74,6 +75,7 @@ const ShowSelects = () => {
             className={sass.SelectBox}
             options={subsOptions}
             valueState={[subValue, setSubValue]}
+            name="subId"
           />
         </div>
       )}
