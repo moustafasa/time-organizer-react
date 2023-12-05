@@ -9,37 +9,33 @@ import {
 import "./Inputs.scss";
 
 import HeadInput from "./Head/HeadInput";
-import { useSearchParams } from "react-router-dom";
+import { Form, useLoaderData, useSearchParams } from "react-router-dom";
 
 const Inputs = () => {
   const heads = useSelector(getHeads);
+  const { headId } = useLoaderData();
   const dispatch = useDispatch();
-  const [searchParams, setSearchParams] = useSearchParams();
   return (
-    <div className={"inputs"}>
+    <Form method="post" className={"inputs"}>
       {heads.map((headId, index) => (
         <HeadInput key={headId} id={headId} index={index + 1} />
       ))}
 
-      {!searchParams.get("headId") && (
+      {!headId && (
         <button
           className="input-modify-btn plus-btn"
           onClick={(e) => dispatch(changeNumberOfHeads(1))}
           style={{ marginTop: "50px" }}
+          type="button"
         >
           +
         </button>
       )}
 
-      <button
-        className="submit-button"
-        onClick={(e) => {
-          dispatch(addTasksToRemote());
-        }}
-      >
+      <button className="submit-button" type="submit">
         add
       </button>
-    </div>
+    </Form>
   );
 };
 

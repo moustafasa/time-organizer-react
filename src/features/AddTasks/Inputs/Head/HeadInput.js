@@ -13,12 +13,12 @@ import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/u
 import InputBox from "../../../../components/InputBox/InputBox";
 import SubInput from "../Sub/SubInput";
 import sass from "./HeadInput.module.scss";
-import { useSearchParams } from "react-router-dom";
+import { useLoaderData, useSearchParams } from "react-router-dom";
 
 const HeadInput = ({ id, index }) => {
   const head = useSelector((state) => getHeadById(state, id));
   const subs = useSelector((state) => getSubsOfHead(state, id));
-  const [searchParams] = useSearchParams();
+  const { subId } = useLoaderData();
   const dispatch = useDispatch();
   const setHeadName = (value) =>
     dispatch(updateHead({ id, changes: { name: value } }));
@@ -40,12 +40,13 @@ const HeadInput = ({ id, index }) => {
         {subs.map((sub, index) => (
           <SubInput key={sub} id={sub} index={index + 1} />
         ))}
-        {!searchParams.get("subId") && (
+        {!subId && (
           <button
             className="input-modify-btn plus-btn"
             onClick={(e) =>
               dispatch(changeNumberOfSubs({ num: 1, headId: id }))
             }
+            type="button"
             title="add Sub"
           >
             +
@@ -57,6 +58,7 @@ const HeadInput = ({ id, index }) => {
           className="input-modify-btn minus-btn"
           title={`remove head ${index}`}
           onClick={(e) => dispatch(removeHead(id))}
+          type="button"
         >
           -
         </button>

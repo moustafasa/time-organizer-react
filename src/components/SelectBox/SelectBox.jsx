@@ -15,6 +15,7 @@ const SelectBox = ({
   options,
   className,
   valueState: [selectValue, setSelectValue],
+  name,
 }) => {
   const [optOpenClass, setOptOpenClass] = useState(false);
 
@@ -47,6 +48,7 @@ const SelectBox = ({
         <select
           value={selectValue}
           onChange={(e) => setSelectValue(e.target.value)}
+          name={name}
         >
           {options.map((opt, key) => (
             <option key={key} value={opt.value}>

@@ -48,6 +48,7 @@ const TaskInput = ({ id, index }) => {
         className="input-modify-btn minus-btn"
         onClick={(e) => dispatch(deleteTasks([id]))}
         title={`remove task ${index}`}
+        type="button"
       >
         -
       </button>

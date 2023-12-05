@@ -3,28 +3,31 @@ import sass from "./HeadNum.module.scss";
 import { useDispatch } from "react-redux";
 import { changeNumberOfHeads } from "../AddTasksSlice";
 import InputBox from "../../../components/InputBox/InputBox";
+import { Form, useFetcher } from "react-router-dom";
 
 const HeadNum = () => {
-  const [NumberOfHeads, setNumberOfHeads] = useState(0);
-  const dispatch = useDispatch();
+  const fetcher = useFetcher();
+  const [numberOfHeads, setNumberOfHeads] = useState(0);
+
   return (
-    <div className={sass.headNum + " input-box"}>
+    <fetcher.Form
+      method="post"
+      className={sass.headNum + " input-box"}
+      onSubmit={(e) => {
+        if (numberOfHeads <= 0) e.preventDefault();
+      }}
+    >
       <InputBox
         type="number"
         label="number of heads"
-        value={NumberOfHeads}
+        value={numberOfHeads}
         setValue={setNumberOfHeads}
+        name="headNum"
       />
-      <button
-        className="start"
-        onClick={(e) => {
-          dispatch(changeNumberOfHeads(+NumberOfHeads));
-        }}
-        type="button"
-      >
+      <button className="start" type="submit">
         start
       </button>
-    </div>
+    </fetcher.Form>
   );
 };
 
