@@ -5,7 +5,7 @@ import {
   changeCurrentSub,
   deleteItem,
   getCurrentPage,
-  getElementById,
+  // getElementById,
   updateItem,
 } from "../ShowTasksSlice";
 import sass from "./ShowData.module.scss";
@@ -19,9 +19,10 @@ const ShowData = ({
   keys,
   editedKeys,
 }) => {
-  // const { getElementById } = useLoaderData();
+  const { getElementById } = useLoaderData();
   const currentPage = useSelector(getCurrentPage);
   const element = useSelector((state) => getElementById(state, elementId));
+
   const editedObject = editedKeys.reduce((obj, curr) => {
     obj[curr] = element[curr];
     return obj;
@@ -61,13 +62,13 @@ const ShowData = ({
 
   const goToHandler = (e) => {
     if (!e.target.closest("td:last-of-type") && currentPage !== "tasks") {
-      if (currentPage === "heads") {
-        dispatch(changeCurrentHead(elementId));
-      } else {
-        dispatch(changeCurrentHead(element.headId));
-        dispatch(changeCurrentSub(elementId));
-      }
-      navigator(`/showTasks/${currentPage === "heads" ? "subs" : "tasks"}`);
+      navigator(
+        `/showTasks/${
+          currentPage === "heads"
+            ? `subs?headId=${elementId}`
+            : `tasks?headId=${element.headId}&subId=${elementId}`
+        }`
+      );
     }
   };
 
