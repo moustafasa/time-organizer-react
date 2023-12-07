@@ -16,6 +16,9 @@ import {
   getAllTasksIds,
   getCurrentHead,
   getCurrentSub,
+  getHeadsById,
+  getSubsById,
+  getTasksById,
 } from "./ShowTasksSlice";
 import sass from "./ShowTasks.module.scss";
 import ShowData from "./ShowData/ShowData";
@@ -50,10 +53,10 @@ export const loader =
 
     const getElementById =
       page === "heads"
-        ? getHeadById
+        ? getHeadsById
         : page === "subs"
-        ? getSubById
-        : getTaskById;
+        ? getSubsById
+        : getTasksById;
 
     // fetch page depending on searchParams
     const args = {};
