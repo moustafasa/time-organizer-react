@@ -4,10 +4,12 @@ import "./Nav.scss";
 
 const Nav = () => {
   const [showTasksToggle, setShowTasksToggle] = useState(false);
+  const [runTasksToggle, setRunTasksToggle] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     setShowTasksToggle(false);
+    setRunTasksToggle(false);
   }, [location.pathname]);
 
   return (
@@ -32,14 +34,19 @@ const Nav = () => {
             </li>
           </ul>
         </li>
-        <li>
-          <Link to="/runningTasks">runninig tasks </Link>
+        <li className={runTasksToggle ? "active" : ""}>
+          <button onClick={(_) => setRunTasksToggle(!runTasksToggle)}>
+            runninig tasks
+          </button>
           <ul className="runTasks child ">
+            <li data-showed="add">
+              <Link to="/runningTasks/add">set run tasks</Link>
+            </li>
             <li data-showed="day">
-              <Link to="/runningTasks/day">show day Tasks</Link>
+              <Link to="/runningTasks/show/day">show day Tasks</Link>
             </li>
             <li data-showed="week">
-              <Link to="/runningTasks/week">show week Tasks</Link>
+              <Link to="/runningTasks/show/week">show week Tasks</Link>
             </li>
           </ul>
         </li>

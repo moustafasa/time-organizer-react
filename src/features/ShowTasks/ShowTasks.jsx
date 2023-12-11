@@ -6,28 +6,15 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeCurrentPage,
-  deleteMultiple,
-  fetchData,
-  getAllDataIds,
-  getAllHeadsIds,
-  getAllSubsIds,
-  getAllTasksIds,
-  getCurrentHead,
-  getCurrentSub,
-  getHeadsById,
-  getSubsById,
-  getTasksById,
-} from "./ShowTasksSlice";
+import { deleteMultiple, fetchData, getAllDataIds } from "./ShowTasksSlice";
 import sass from "./ShowTasks.module.scss";
 import ShowData from "./ShowData/ShowData";
 import ShowSelects from "./ShowSelects/ShowSelects";
 import {
-  getHeadById,
-  getSubById,
-  getTaskById,
-} from "../AddTasks/AddTasksSlice";
+  useGetHeadsQuery,
+  useGetSubsQuery,
+  useGetTasksQuery,
+} from "../api/apiSlice";
 
 export const loader =
   (dispatch) =>
@@ -43,21 +30,6 @@ export const loader =
       tasks: ["subTasksNum", "subTasksDone"],
     };
 
-    // get selectors depending on currentPage
-    const getAllDataIds =
-      page === "heads"
-        ? getAllHeadsIds
-        : page === "subs"
-        ? getAllSubsIds
-        : getAllTasksIds;
-
-    const getElementById =
-      page === "heads"
-        ? getHeadsById
-        : page === "subs"
-        ? getSubsById
-        : getTasksById;
-
     // fetch page depending on searchParams
     const args = {};
     if (page !== "heads") {
@@ -66,25 +38,43 @@ export const loader =
     if (page === "tasks") {
       args["subId"] = subId;
     }
-    dispatch(changeCurrentPage(page));
-    dispatch(fetchData({ page: page, args }));
+    await dispatch(fetchData({ page: page, args }));
+
+    let useGetDataQuery;
+    if (page === "heads") {
+      useGetDataQuery = useGetHeadsQuery;
+    } else if (page === "subs") {
+      useGetDataQuery = () => useGetSubsQuery(headId);
+    } else if (page === "tasks") {
+      useGetDataQuery = () => useGetTasksQuery({ headId, subId });
+    }
 
     return {
-      getAllDataIds,
-      getElementById,
       keys: keys[page],
+      useGetDataQuery,
     };
   };
 
 const ShowTasks = () => {
-  const { keys } = useLoaderData();
+  const { keys, useGetDataQuery } = useLoaderData();
+  const { page } = useParams();
   const [searchParams] = useSearchParams();
-  const data = useSelector(getAllDataIds);
+  const data = useSelector((state) => getAllDataIds(state, page));
   const currentHead = searchParams.get("headId");
   const currentSub = searchParams.get("subId");
   const navigator = useNavigate();
   const [checkedItems, setCheckedItems] = useState([]);
-  const { page } = useParams();
+
+  const {
+    data: values = [],
+    isError,
+    isFetching,
+    isLoading,
+    isSuccess,
+    refetch,
+  } = useGetDataQuery();
+
+  console.log(values, isError, isFetching, isLoading, isSuccess);
 
   const dispatch = useDispatch();
 
@@ -105,11 +95,11 @@ const ShowTasks = () => {
   }, []);
 
   const deleteMultiHandler = () => {
-    dispatch(deleteMultiple(checkedItems));
+    dispatch(deleteMultiple({ ids: checkedItems, page }));
   };
 
   const deleteAllHandler = () => {
-    dispatch(deleteMultiple(data));
+    dispatch(deleteMultiple({ ids: data, page }));
   };
 
   return (

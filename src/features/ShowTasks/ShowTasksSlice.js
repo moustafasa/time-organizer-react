@@ -39,31 +39,29 @@ export const fetchData = createAsyncThunk(
 
 export const updateItem = createAsyncThunk(
   "showTasks/updateItem",
-  async ({ id, update }, { getState }) => {
-    const page = getState().showTasks.page;
+  async ({ id, page, update }) => {
     const res = await axios.patch(
       `http://localhost:3000/${page}/${id}`,
       update
     );
-    return { id, update: res.data };
+    console.log(res.data);
+    return { id, update: res.data, page };
   }
 );
 
 export const deleteItem = createAsyncThunk(
   "showTasks/deleteItem",
-  async (id, { getState }) => {
-    const page = getState().showTasks.page;
+  async ({ id, page }) => {
     await axios.delete(`http://localhost:3000/${page}/${id}`);
-    return id;
+    return { id, page };
   }
 );
 
 export const deleteMultiple = createAsyncThunk(
   "showTasks/deleteMultiple",
-  async (ids, { getState }) => {
-    const page = getState().showTasks.page;
+  async ({ ids, page }) => {
     await axios.post(`http://localhost:3000/${page}/deleteMulti`, ids);
-    return ids;
+    return { ids, page };
   }
 );
 
@@ -100,7 +98,7 @@ const showTasksSlice = createSlice({
           subs: subsAdapter,
           heads: headsAdapter,
         };
-        adapter[state.page].updateOne(state[state.page], {
+        adapter[action.payload.page].updateOne(state[action.payload.page], {
           id: action.payload.id,
           changes: action.payload.update,
         });
@@ -111,7 +109,10 @@ const showTasksSlice = createSlice({
           subs: subsAdapter,
           heads: headsAdapter,
         };
-        adapter[state.page].removeOne(state[state.page], action.payload);
+        adapter[action.payload.page].removeOne(
+          state[action.payload.page],
+          action.payload.id
+        );
       })
       .addCase(deleteMultiple.fulfilled, (state, action) => {
         const adapter = {
@@ -119,7 +120,10 @@ const showTasksSlice = createSlice({
           subs: subsAdapter,
           heads: headsAdapter,
         };
-        adapter[state.page].removeMany(state[state.page], action.payload);
+        adapter[action.payload.page].removeMany(
+          state[action.payload.page],
+          action.payload.id
+        );
       });
   },
 });
@@ -138,8 +142,8 @@ export const {
 } = headsAdapter.getSelectors((state) => state.showTasks.heads);
 
 export const getAllDataIds = createSelector(
-  [(state) => state.showTasks.page, (state) => state],
-  (page, state) => {
+  [(state) => state, (state, page) => page],
+  (state, page) => {
     const data = {
       tasks: getAllTasksIds,
       subs: getAllSubsIds,
@@ -150,8 +154,8 @@ export const getAllDataIds = createSelector(
 );
 
 export const getElementById = createSelector(
-  [(state) => state.showTasks.page, (state) => state, (state, id) => id],
-  (page, state, id) => {
+  [(state) => state, (state, page) => page, (state, page, id) => id],
+  (state, page, id) => {
     const data = {
       tasks: getTasksById,
       subs: getSubsById,
