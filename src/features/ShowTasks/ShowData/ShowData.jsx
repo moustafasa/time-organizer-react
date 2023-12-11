@@ -1,16 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeCurrentHead,
-  changeCurrentSub,
-  deleteItem,
-  getCurrentPage,
-  // getElementById,
-  updateItem,
-} from "../ShowTasksSlice";
+import { deleteItem, getElementById, updateItem } from "../ShowTasksSlice";
 import sass from "./ShowData.module.scss";
 import _ from "lodash";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ShowData = ({
   elementId,
@@ -19,9 +12,11 @@ const ShowData = ({
   keys,
   editedKeys,
 }) => {
-  const { getElementById } = useLoaderData();
-  const currentPage = useSelector(getCurrentPage);
-  const element = useSelector((state) => getElementById(state, elementId));
+  const { page } = useParams();
+
+  const element = useSelector((state) =>
+    getElementById(state, page, elementId)
+  );
 
   const editedObject = editedKeys.reduce((obj, curr) => {
     obj[curr] = element[curr];
@@ -34,12 +29,12 @@ const ShowData = ({
   const navigator = useNavigate();
 
   const editHandler = () => {
-    dispatch(updateItem({ id: elementId, update: elementValue }));
+    dispatch(updateItem({ id: elementId, page, update: elementValue }));
     setEditable(false);
   };
 
   const deleteHandler = () => {
-    dispatch(deleteItem(elementId));
+    dispatch(deleteItem({ id: elementId, page }));
   };
 
   const checkHandler = (e) => {
@@ -61,10 +56,10 @@ const ShowData = ({
   };
 
   const goToHandler = (e) => {
-    if (!e.target.closest("td:last-of-type") && currentPage !== "tasks") {
+    if (!e.target.closest("td:last-of-type") && page !== "tasks") {
       navigator(
         `/showTasks/${
-          currentPage === "heads"
+          page === "heads"
             ? `subs?headId=${elementId}`
             : `tasks?headId=${element.headId}&subId=${elementId}`
         }`
@@ -138,6 +133,11 @@ const ShowData = ({
               >
                 delete
               </button>
+              {page === "tasks" && (
+                <button className="btn btn-primary text-capitalize d-block">
+                  addToRun
+                </button>
+              )}
             </>
           ) : (
             <>

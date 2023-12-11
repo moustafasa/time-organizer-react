@@ -12,9 +12,11 @@ server.use(
     "data/heads": "/heads",
     "data/subs": "/subs",
     "data/tasks": "/tasks",
+    "data/runningTasks": "/runningTasks",
     "data/heads/:id": "/heads/:id",
     "data/subs/:id": "/subs/:id",
     "data/tasks/:id": "/tasks/:id",
+    "data/runningTasks/:page": "/runningTasks/:page",
   })
 );
 
@@ -337,6 +339,73 @@ server.post("/tasks/deleteMulti", (req, res) => {
   } else {
     res.sendStatus(404);
   }
+});
+
+////////////////////////////////////////////////////////////////////
+///////////////////////// running tasks ////////////////////////////
+////////////////////////////////////////////////////////////////////
+
+server.post("/runningTasks", (req, res) => {
+  const db = router.db; // Assign the lowdb instance
+  const data = req.body.data;
+  const task = db.get("data").get("tasks").find({ id: data.task }).value();
+  let obj = {};
+  if (task) {
+    obj.day = data.day;
+    obj.headName = db
+      .get("data")
+      .get("heads")
+      .find({ id: data.head })
+      .value()?.name;
+    obj.subName = db
+      .get("data")
+      .get("subs")
+      .find({ id: data.sub })
+      .value()?.name;
+
+    obj.id = data.task + data.day;
+    obj.taskId = data.task;
+  }
+
+  if (
+    _.isEmpty(
+      db
+        .get("data")
+        .get("runningTasks")
+        .find({
+          id: data.task + data.day,
+        })
+        .value()
+    )
+  ) {
+    db.get("data")
+      .get("runningTasks")
+      .insert({ ...task, ...obj })
+      .write();
+    res.sendStatus(200);
+  } else {
+    console.log("done");
+  }
+});
+
+server.get("/runningTasks/:page", (req, res) => {
+  const db = router.db;
+  let tasks;
+  if (req.params.page === "week") {
+    tasks = db.get("data").get("runningTasks").value();
+  } else if (req.params.page === "day") {
+    const nowData = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    );
+    tasks = db
+      .get("data")
+      .get("runningTasks")
+      .filter({ day: nowData.toDateString() })
+      .value();
+  }
+  res.send(tasks);
 });
 
 server.use(router);

@@ -12,11 +12,17 @@ import AddTasks, {
 } from "./features/AddTasks/AddTasks";
 import ShowTasks, {
   loader as showTasksLoader,
-  action as showTasksAction,
 } from "./features/ShowTasks/ShowTasks";
 import Nav from "./components/Header/Nav/Nav";
 import Content from "./components/Header/Content/Content";
 import { useDispatch } from "react-redux";
+import RunningTasks, {
+  loader as runningTasksLoader,
+} from "./features/RunningTasks/RunningTasks";
+import SetupRunTasks, {
+  loader as setRunTasksLoader,
+  action as setRunTasksAction,
+} from "./features/RunningTasks/SetupRunTasks/SetupRunTasks";
 
 function App() {
   const dispatch = useDispatch();
@@ -41,6 +47,23 @@ function App() {
           path: "/showTasks/:page",
           element: <ShowTasks />,
           loader: showTasksLoader(dispatch),
+        },
+        {
+          path: "/runningTasks",
+          element: <Outlet />,
+          children: [
+            {
+              path: "show/:page",
+              element: <RunningTasks />,
+              loader: runningTasksLoader(dispatch),
+            },
+            {
+              path: "add",
+              element: <SetupRunTasks />,
+              loader: setRunTasksLoader,
+              action: setRunTasksAction,
+            },
+          ],
         },
       ],
     },
