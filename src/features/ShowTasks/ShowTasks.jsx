@@ -6,15 +6,24 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteMultiple, fetchData, getAllDataIds } from "./ShowTasksSlice";
-import sass from "./ShowTasks.module.scss";
-import ShowData from "./ShowData/ShowData";
-import ShowSelects from "./ShowSelects/ShowSelects";
 import {
+  deleteMultiple,
+  fetchData,
+  getAll,
+  getAllDataIds,
+  getAllHeadsIds,
+  getAllSubsIds,
+  getAllTasksIds,
+  useDeleteMultipleMutation,
+  useGetDataQuery,
   useGetHeadsQuery,
   useGetSubsQuery,
   useGetTasksQuery,
-} from "../api/apiSlice";
+} from "./ShowTasksSlice";
+import sass from "./ShowTasks.module.scss";
+import ShowData from "./ShowData/ShowData";
+import ShowSelects from "./ShowSelects/ShowSelects";
+import PopUp from "../../components/PopUp/PopUp";
 
 export const loader =
   (dispatch) =>
@@ -38,45 +47,37 @@ export const loader =
     if (page === "tasks") {
       args["subId"] = subId;
     }
-    await dispatch(fetchData({ page: page, args }));
-
-    let useGetDataQuery;
-    if (page === "heads") {
-      useGetDataQuery = useGetHeadsQuery;
-    } else if (page === "subs") {
-      useGetDataQuery = () => useGetSubsQuery(headId);
-    } else if (page === "tasks") {
-      useGetDataQuery = () => useGetTasksQuery({ headId, subId });
-    }
 
     return {
       keys: keys[page],
-      useGetDataQuery,
+      args,
+      // useGetDataQuery,
     };
   };
 
 const ShowTasks = () => {
-  const { keys, useGetDataQuery } = useLoaderData();
+  const { keys, args } = useLoaderData();
   const { page } = useParams();
   const [searchParams] = useSearchParams();
-  const data = useSelector((state) => getAllDataIds(state, page));
   const currentHead = searchParams.get("headId");
   const currentSub = searchParams.get("subId");
   const navigator = useNavigate();
   const [checkedItems, setCheckedItems] = useState([]);
 
-  const {
-    data: values = [],
-    isError,
-    isFetching,
-    isLoading,
-    isSuccess,
-    refetch,
-  } = useGetDataQuery();
+  const { data, isError, isFetching, isLoading, isSuccess, refetch } =
+    useGetDataQuery(
+      { page, args },
+      {
+        selectFromResult: ({ data, ...rest }) => {
+          return {
+            data: getAllDataIds(data, page),
+            ...rest,
+          };
+        },
+      }
+    );
 
-  console.log(values, isError, isFetching, isLoading, isSuccess);
-
-  const dispatch = useDispatch();
+  const [deleteMulti] = useDeleteMultipleMutation();
 
   const addTasksHandler = () => {
     navigator(`/addTasks${window.location.search}`);
@@ -95,15 +96,32 @@ const ShowTasks = () => {
   }, []);
 
   const deleteMultiHandler = () => {
-    dispatch(deleteMultiple({ ids: checkedItems, page }));
+    const args = { ids: checkedItems, page };
+    if (page !== "heads") {
+      args["headId"] = currentHead;
+    }
+    if (page === "subs") {
+      args["subId"] = currentSub;
+    }
+    deleteMulti(args);
   };
 
   const deleteAllHandler = () => {
-    dispatch(deleteMultiple({ ids: data, page }));
+    const args = { ids: data, page };
+    if (page !== "heads") {
+      args["headId"] = currentHead;
+    }
+    if (page === "subs") {
+      args["subId"] = currentSub;
+    }
+    deleteMulti(args);
   };
 
   return (
     <section>
+      <PopUp>
+        <div>content</div>
+      </PopUp>
       <div className="container">
         <h2 className="page-head"> show {page} </h2>
         {page !== "heads" && <ShowSelects />}

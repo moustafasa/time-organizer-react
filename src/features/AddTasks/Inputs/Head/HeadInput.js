@@ -8,7 +8,7 @@ import {
   removeHead,
   updateHead,
 } from "../../AddTasksSlice";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import SubInput from "../Sub/SubInput";
@@ -67,4 +67,4 @@ const HeadInput = ({ id, index }) => {
   );
 };
 
-export default HeadInput;
+export default memo(HeadInput);

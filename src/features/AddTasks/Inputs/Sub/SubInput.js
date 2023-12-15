@@ -8,7 +8,7 @@ import {
   removeSub,
   updateSub,
 } from "../../AddTasksSlice";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import TaskInput from "../Task/TaskInput";
@@ -58,4 +58,4 @@ const SubInput = ({ id, index }) => {
   );
 };
 
-export default SubInput;
+export default memo(SubInput);

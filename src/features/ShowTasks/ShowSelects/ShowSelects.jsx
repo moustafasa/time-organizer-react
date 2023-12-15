@@ -5,14 +5,15 @@ import {
   fetchData,
   getAllHeadsEntities,
   getAllSubsEntities,
+  useGetDataQuery,
 } from "../ShowTasksSlice";
 import sass from "./ShowSelects.module.scss";
 import { useParams, useSearchParams } from "react-router-dom";
 
 const ShowSelects = () => {
   const { page } = useParams();
-  const heads = useSelector(getAllHeadsEntities);
-  const subs = useSelector(getAllSubsEntities);
+  // const heads = useSelector(getAllHeadsEntities);
+  // const subs = useSelector(getAllSubsEntities);
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,14 +26,34 @@ const ShowSelects = () => {
     setSearchParams(newParams);
   };
 
-  useEffect(() => {
-    if (page !== "heads") {
-      dispatch(fetchData({ page: "heads" }));
+  const { data: heads } = useGetDataQuery(
+    { page: "heads" },
+    {
+      selectFromResult: ({ data, ...rest }) => {
+        return {
+          data: getAllHeadsEntities(data),
+          ...rest,
+        };
+      },
+      skip: page === "heads",
     }
-    if (page === "tasks") {
-      dispatch(fetchData({ page: "subs", args: { headId: headValue } }));
+  );
+
+  const { data: subs } = useGetDataQuery(
+    {
+      page: "subs",
+      args: { headId: headValue },
+    },
+    {
+      selectFromResult: ({ data, ...rest }) => {
+        return {
+          data: getAllSubsEntities(data),
+          ...rest,
+        };
+      },
+      skip: page !== "tasks",
     }
-  }, [page, dispatch, headValue]);
+  );
 
   const headsOptions = [
     { text: "choose", value: "" },

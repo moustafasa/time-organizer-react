@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteItem, getElementById, updateItem } from "../ShowTasksSlice";
+import {
+  getElementById,
+  useDeleteElementMutation,
+  useEditDataMutation,
+  useGetDataQuery,
+} from "../ShowTasksSlice";
 import sass from "./ShowData.module.scss";
 import _ from "lodash";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
 
 const ShowData = ({
   elementId,
@@ -13,9 +17,20 @@ const ShowData = ({
   editedKeys,
 }) => {
   const { page } = useParams();
+  const { args } = useLoaderData();
+  const [updateElement] = useEditDataMutation();
+  const [deleteItem] = useDeleteElementMutation();
 
-  const element = useSelector((state) =>
-    getElementById(state, page, elementId)
+  const { data: element = [] } = useGetDataQuery(
+    { page, args },
+    {
+      selectFromResult: ({ data, ...rest }) => {
+        return {
+          data: getElementById(data, page, elementId),
+          ...rest,
+        };
+      },
+    }
   );
 
   const editedObject = editedKeys.reduce((obj, curr) => {
@@ -25,16 +40,15 @@ const ShowData = ({
 
   const [editable, setEditable] = useState(false);
   const [elementValue, setElementValue] = useState(editedObject);
-  const dispatch = useDispatch();
   const navigator = useNavigate();
 
-  const editHandler = () => {
-    dispatch(updateItem({ id: elementId, page, update: elementValue }));
+  const editHandler = async () => {
+    await updateElement({ id: elementId, page, update: elementValue, ...args });
     setEditable(false);
   };
 
   const deleteHandler = () => {
-    dispatch(deleteItem({ id: elementId, page }));
+    deleteItem({ id: elementId, page, ...args });
   };
 
   const checkHandler = (e) => {
@@ -46,7 +60,7 @@ const ShowData = ({
   };
 
   const selectHandler = (e) => {
-    if (!e.target.closest("td:last-of-type")) {
+    if (!e.target.closest("td:last-of-type") && !editable) {
       if (checkedItems.includes(elementId)) {
         setCheckedItems(checkedItems.filter((id) => id !== elementId));
       } else {
@@ -134,9 +148,14 @@ const ShowData = ({
                 delete
               </button>
               {page === "tasks" && (
-                <button className="btn btn-primary text-capitalize d-block">
+                <Link
+                  to={`/runningTasks/add?${new URLSearchParams(
+                    args
+                  ).toString()}&taskId=${elementId}`}
+                  className="btn btn-primary text-capitalize d-block"
+                >
                   addToRun
-                </button>
+                </Link>
               )}
             </>
           ) : (

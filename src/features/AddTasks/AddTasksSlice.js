@@ -5,6 +5,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import { apiSlice } from "../api/apiSlice";
 
 const headsAdapter = createEntityAdapter();
 const headsState = headsAdapter.getInitialState({
@@ -26,6 +27,30 @@ const initialState = {
   subs: subsState,
   tasks: tasksState,
 };
+
+const addTasksQuerySlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    addAll: builder.mutation({
+      queryFn: async (_, { getState }, options, baseQuery) => {
+        const heads = getHeadsEntities(getState());
+        const subs = getSubsEntities(getState());
+        const tasks = getTasksEntities(getState());
+
+        delete heads["readOnly"];
+        delete subs["readOnly"];
+
+        const res = await baseQuery({
+          url: "/all",
+          data: { heads, tasks, subs },
+          method: "POST",
+        });
+
+        return res;
+      },
+      invalidatesTags: [{ type: "Data", id: "LIST" }],
+    }),
+  }),
+});
 
 const addTasksSlice = createSlice({
   initialState: initialState,
@@ -124,7 +149,6 @@ export const changeNumberOfSubs =
       };
     });
 
-    console.log(subs);
     dispatch(addSubs(subs));
   };
 
@@ -170,24 +194,6 @@ export const removeSub = (sub) => (dispatch, getState) => {
   dispatch(deleteSubs([sub]));
   dispatch(deleteTasks(tasks));
 };
-
-export const addTasksToRemote = createAsyncThunk(
-  "addTasks/addTasksToRemote",
-  async (_, { dispatch, getState }) => {
-    const heads = getHeadsEntities(getState());
-    const subs = getSubsEntities(getState());
-    const tasks = getTasksEntities(getState());
-
-    delete heads["readOnly"];
-    delete subs["readOnly"];
-
-    const res = await axios.post("http://localhost:3000/all", {
-      heads,
-      subs,
-      tasks,
-    });
-  }
-);
 
 export default addTasksSlice.reducer;
 export const {
@@ -237,3 +243,4 @@ export const getTasksEntitiesOfSub = createSelector(
 export const getCurrentHead = (state) => state.addTasks.heads.currentHead;
 export const getCurrentSub = (state) => state.addTasks.subs.currentSub;
 export const getCurrentTask = (state) => state.addTasks.tasks.currentTask;
+export const { useAddAllMutation } = addTasksQuerySlice;
