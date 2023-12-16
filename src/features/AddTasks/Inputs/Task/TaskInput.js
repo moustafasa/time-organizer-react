@@ -6,7 +6,7 @@ import {
   getTaskById,
   updateTask,
 } from "../../AddTasksSlice";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import sass from "./TaskInput.module.scss";
@@ -56,4 +56,4 @@ const TaskInput = ({ id, index }) => {
   );
 };
 
-export default TaskInput;
+export default memo(TaskInput);

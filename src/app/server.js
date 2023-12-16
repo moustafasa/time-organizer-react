@@ -231,15 +231,32 @@ function deleteHeads(db, id) {
 }
 
 function deleteSubs(db, id, headId) {
+  // remove sub and tasks
   db.get("data").get("subs").remove({ id: id }).write();
   db.get("data").get("tasks").remove({ subId: id }).write();
-  calcHeads(db, headId);
+
+  // calc after delete
+  const head = db.get("data").get("heads").find({ id: headId });
+  const headUpdated = head.value();
+  calcHeads(db, headUpdated);
+  console.log(headUpdated);
+  head.assign(headUpdated).write();
 }
 
 function deleteTasks(db, id, headId, subId) {
+  // remove task
   db.get("data").get("tasks").remove({ id: id }).write();
-  calcSubs(db, subId);
-  calcHeads(db, headId);
+
+  // calc after delete
+  const sub = db.get("data").get("subs").find({ id: subId });
+  const head = db.get("data").get("heads").find({ id: headId });
+  const subUpdated = sub.value();
+  const headUpdated = head.value();
+
+  calcSubs(db, subUpdated);
+  calcHeads(db, headUpdated);
+  sub.assign(subUpdated).write();
+  head.assign(headUpdated).write();
 }
 
 // heads
@@ -347,23 +364,23 @@ server.post("/tasks/deleteMulti", (req, res) => {
 
 server.post("/runningTasks", (req, res) => {
   const db = router.db; // Assign the lowdb instance
-  const data = req.body.data;
-  const task = db.get("data").get("tasks").find({ id: data.task }).value();
+  const data = req.body;
+  const task = db.get("data").get("tasks").find({ id: data.taskId }).value();
   let obj = {};
   if (task) {
     obj.day = data.day;
     obj.headName = db
       .get("data")
       .get("heads")
-      .find({ id: data.head })
+      .find({ id: data.headId })
       .value()?.name;
     obj.subName = db
       .get("data")
       .get("subs")
-      .find({ id: data.sub })
+      .find({ id: data.subId })
       .value()?.name;
 
-    obj.id = data.task + data.day;
+    obj.id = data.taskId + data.day;
     obj.taskId = data.task;
   }
 
@@ -373,7 +390,7 @@ server.post("/runningTasks", (req, res) => {
         .get("data")
         .get("runningTasks")
         .find({
-          id: data.task + data.day,
+          id: data.taskId + data.day,
         })
         .value()
     )
@@ -406,6 +423,21 @@ server.get("/runningTasks/:page", (req, res) => {
       .value();
   }
   res.send(tasks);
+});
+
+server.delete("/runningTasks/:id", (req, res) => {
+  const db = router.db;
+  const task = db
+    .get("data")
+    .get("runningTasks")
+    .find({ id: req.params.id })
+    .value();
+  if (task) {
+    db.get("data").get("runningTasks").remove({ id: req.params.id }).write();
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 server.use(router);

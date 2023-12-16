@@ -1,69 +1,105 @@
 import {
-  createAsyncThunk,
   createEntityAdapter,
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import axios from "axios";
+import { apiSlice } from "../api/apiSlice";
 
 const headsAdapter = createEntityAdapter();
 const subsAdapter = createEntityAdapter();
 const tasksAdapter = createEntityAdapter();
 
+const tasks = tasksAdapter.getInitialState();
+const subs = subsAdapter.getInitialState();
+const heads = headsAdapter.getInitialState();
+
 const initialState = {
-  tasks: tasksAdapter.getInitialState(),
-  subs: subsAdapter.getInitialState({ currentSub: "" }),
-  heads: headsAdapter.getInitialState({ currentHead: "" }),
-  page: "heads",
+  tasks,
+  subs,
+  heads,
 };
 
-export const fetchData = createAsyncThunk(
-  "showTasks/fetchData",
-  async ({ page, args }) => {
-    if (page !== "heads" && !args) {
-      return { data: [], page };
-    }
+const showTasksQuerySlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    getData: builder.query({
+      query: ({ page, args }) => {
+        const searchParams = new URLSearchParams(args);
+        return {
+          url: `/${page}?${searchParams.toString()}`,
+        };
+      },
+      transformResponse: (resData, _, args) => {
+        const adapter = {
+          heads: headsAdapter,
+          subs: subsAdapter,
+          tasks: tasksAdapter,
+        };
+        return adapter[args.page].setAll(initialState[args.page], resData);
+      },
+      providesTags: (result = { ids: [] }, error, args) => [
+        { type: "Data", id: "LIST" },
+        { type: "Data", id: args.page },
+        ...result.ids.map((id) => ({ type: "Data", id })),
+      ],
+    }),
+    editData: builder.mutation({
+      query: ({ page, id, update }) => ({
+        url: `/${page}/${id}`,
+        method: "PATCH",
+        data: update,
+      }),
+      invalidatesTags: (result, error, args) => {
+        const tags = [{ type: "Data", id: args.id }];
 
-    const params =
-      page !== "heads"
-        ? `?headId=${args.headId}${
-            page === "tasks" ? `&subId=${args.subId}` : ""
-          }`
-        : "";
+        if (args.headId) {
+          tags.push({ type: "Data", id: args.headId });
+        }
 
-    const res = await axios.get("http://localhost:3000/" + page + params);
+        if (args.subId) {
+          tags.push({ type: "Data", id: args.subId });
+        }
+        return tags;
+      },
+    }),
+    deleteElement: builder.mutation({
+      query: ({ page, id }) => ({
+        url: `/${page}/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, err, args) => {
+        const tags = [{ type: "Data", id: args.page }];
 
-    return { data: res.data, page };
-  }
-);
+        if (args.headId) {
+          tags.push({ type: "Data", id: args.headId });
+        }
 
-export const updateItem = createAsyncThunk(
-  "showTasks/updateItem",
-  async ({ id, page, update }) => {
-    const res = await axios.patch(
-      `http://localhost:3000/${page}/${id}`,
-      update
-    );
-    console.log(res.data);
-    return { id, update: res.data, page };
-  }
-);
+        if (args.subId) {
+          tags.push({ type: "Data", id: args.subId });
+        }
+        return tags;
+      },
+    }),
+    deleteMultiple: builder.mutation({
+      query: ({ page, ids }) => ({
+        url: `/${page}/deleteMulti`,
+        method: "POST",
+        data: ids,
+      }),
+      invalidatesTags: (result, err, args) => {
+        const tags = [{ type: "Data", id: args.page }];
 
-export const deleteItem = createAsyncThunk(
-  "showTasks/deleteItem",
-  async ({ id, page }) => {
-    await axios.delete(`http://localhost:3000/${page}/${id}`);
-    return { id, page };
-  }
-);
+        if (args.headId) {
+          tags.push({ type: "Data", id: args.headId });
+        }
 
-export const deleteMultiple = createAsyncThunk(
-  "showTasks/deleteMultiple",
-  async ({ ids, page }) => {
-    await axios.post(`http://localhost:3000/${page}/deleteMulti`, ids);
-    return { ids, page };
-  }
-);
+        if (args.subId) {
+          tags.push({ type: "Data", id: args.subId });
+        }
+        return tags;
+      },
+    }),
+  }),
+});
 
 const showTasksSlice = createSlice({
   name: "showTasks",
@@ -79,67 +115,26 @@ const showTasksSlice = createSlice({
       state.page = action.payload;
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchData.fulfilled, (state, action) => {
-        const adapter = {
-          tasks: tasksAdapter,
-          subs: subsAdapter,
-          heads: headsAdapter,
-        };
-        adapter[action.payload.page].setAll(
-          state[action.payload.page],
-          action.payload.data
-        );
-      })
-      .addCase(updateItem.fulfilled, (state, action) => {
-        const adapter = {
-          tasks: tasksAdapter,
-          subs: subsAdapter,
-          heads: headsAdapter,
-        };
-        adapter[action.payload.page].updateOne(state[action.payload.page], {
-          id: action.payload.id,
-          changes: action.payload.update,
-        });
-      })
-      .addCase(deleteItem.fulfilled, (state, action) => {
-        const adapter = {
-          tasks: tasksAdapter,
-          subs: subsAdapter,
-          heads: headsAdapter,
-        };
-        adapter[action.payload.page].removeOne(
-          state[action.payload.page],
-          action.payload.id
-        );
-      })
-      .addCase(deleteMultiple.fulfilled, (state, action) => {
-        const adapter = {
-          tasks: tasksAdapter,
-          subs: subsAdapter,
-          heads: headsAdapter,
-        };
-        adapter[action.payload.page].removeMany(
-          state[action.payload.page],
-          action.payload.id
-        );
-      });
-  },
 });
 
-export const { selectIds: getAllTasksIds, selectById: getTasksById } =
-  tasksAdapter.getSelectors((state) => state.showTasks.tasks);
+export const {
+  selectIds: getAllTasksIds,
+  selectById: getTasksById,
+  selectEntities: getAllTasksEntities,
+} = tasksAdapter.getSelectors((state) => state ?? tasks);
+
 export const {
   selectIds: getAllSubsIds,
   selectById: getSubsById,
   selectEntities: getAllSubsEntities,
-} = subsAdapter.getSelectors((state) => state.showTasks.subs);
+} = subsAdapter.getSelectors((state) => state ?? subs);
 export const {
   selectIds: getAllHeadsIds,
   selectById: getHeadsById,
   selectEntities: getAllHeadsEntities,
-} = headsAdapter.getSelectors((state) => state.showTasks.heads);
+} = headsAdapter.getSelectors((state) => {
+  return state ?? heads;
+});
 
 export const getAllDataIds = createSelector(
   [(state) => state, (state, page) => page],
@@ -166,9 +161,12 @@ export const getElementById = createSelector(
   }
 );
 
-export const getCurrentHead = (state) => state.showTasks.heads.currentHead;
-export const getCurrentSub = (state) => state.showTasks.subs.currentSub;
-export const getCurrentPage = (state) => state.showTasks.page;
+export const {
+  useGetDataQuery,
+  useEditDataMutation,
+  useDeleteElementMutation,
+  useDeleteMultipleMutation,
+} = showTasksQuerySlice;
 
 export const { changeCurrentHead, changeCurrentSub, changeCurrentPage } =
   showTasksSlice.actions;

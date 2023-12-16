@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addSubToHead,
   addTaskToSub,
-  addTasksToRemote,
   changeNumberOfHeads,
   clear,
   getHeads,
@@ -44,12 +43,11 @@ export const action =
       const url = new URL(request.url);
       const headId = url.searchParams.get("headId");
       const subId = url.searchParams.get("subId");
-      dispatch(addTasksToRemote());
 
       return subId
-        ? redirect("/showTasks/tasks")
+        ? redirect(`/showTasks/tasks?headId=${headId}&subId=${subId}`)
         : headId
-        ? redirect("/showTasks/subs")
+        ? redirect(`/showTasks/subs?headId=${headId}`)
         : redirect("/showTasks/heads");
     }
   };

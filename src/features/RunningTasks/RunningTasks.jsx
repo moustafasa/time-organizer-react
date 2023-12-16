@@ -1,16 +1,22 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { fetchRunTasks, getRunTasksIds } from "./RunningTasksSlice";
+import {
+  fetchRunTasks,
+  getRunTasksIds,
+  useGetRunningTasksQuery,
+} from "./RunningTasksSlice";
 import Task from "./Task/Task";
-
-export const loader =
-  (dispatch) =>
-  async ({ request, params }) => {
-    return await dispatch(fetchRunTasks(params.page));
-  };
+import { useParams } from "react-router-dom";
 
 const RunningTasks = () => {
-  const tasks = useSelector(getRunTasksIds);
+  const { page } = useParams();
+  const { data: runTasks } = useGetRunningTasksQuery(page, {
+    selectFromResult: ({ data, ...rest }) => ({
+      data: getRunTasksIds(data),
+      ...rest,
+    }),
+  });
+
   return (
     <section>
       <div className="container">
@@ -34,7 +40,7 @@ const RunningTasks = () => {
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task, ind) => (
+              {runTasks.map((task, ind) => (
                 <Task key={task} id={task} index={ind + 1} />
               ))}
             </tbody>

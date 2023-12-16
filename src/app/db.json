@@ -6,18 +6,18 @@
         "name": "programming",
         "subNum": 2,
         "subDone": 0,
-        "tasksNum": 7,
+        "tasksNum": 6,
         "tasksDone": 3,
-        "progress": 41
+        "progress": 50
       },
       {
         "id": "lpe0icc7",
         "name": "pharmacy",
         "subNum": 1,
-        "subDone": 0,
+        "subDone": 1,
         "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 75
+        "tasksDone": 1,
+        "progress": 100
       }
     ],
     "subs": [
@@ -25,17 +25,17 @@
         "id": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
         "name": "front end",
-        "tasksNum": 5,
+        "tasksNum": 4,
         "tasksDone": 3,
-        "progress": 75
+        "progress": 93
       },
       {
         "id": "lpe0icc7:lpe0icca",
         "headId": "lpe0icc7",
         "name": "organic",
         "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 75
+        "tasksDone": 1,
+        "progress": 100
       },
       {
         "id": "lpe0icc6:lpe0jf3h",
@@ -54,7 +54,8 @@
         "headId": "lpe0icc6",
         "subTasksNum": 34,
         "subTasksDone": 34,
-        "progress": 100
+        "progress": 100,
+        "page": "tasks"
       },
       {
         "id": "lpe0icc7:lpe0icca:lpe0icca",
@@ -90,7 +91,8 @@
         "headId": "lpe0icc6",
         "subTasksNum": 200,
         "subTasksDone": 150,
-        "progress": 75
+        "progress": 75,
+        "page": "tasks"
       },
       {
         "id": "lpe0icc6:lpe0jf3h:lpe0jf3h",
@@ -109,62 +111,9 @@
         "subTasksNum": 23,
         "subTasksDone": 2,
         "progress": 8
-      },
-      {
-        "id": "lpe0icc6:lpe0icc6:lprd0lab",
-        "name": "rtk query",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 100,
-        "subTasksDone": 4,
-        "progress": 4
-      },
-      {
-        "id": "lpe0icc6:lprh3hri:lprh3hri",
-        "name": "dasfds",
-        "subId": "lpe0icc6:lprh3hri",
-        "headId": "lpe0icc6",
-        "subTasksNum": 23,
-        "subTasksDone": 2,
-        "progress": 8
-      },
-      {
-        "id": "lq090mlp:lq090mlp:lq090mlp",
-        "name": "",
-        "subId": "lq090mlp:lq090mlp",
-        "headId": "lq090mlp",
-        "subTasksNum": 0,
-        "subTasksDone": 0,
-        "progress": null
       }
     ],
     "runningTasks": [
-      {
-        "id": "lpe0icc6:lpe0icc6:lpe0icc8Sat Dec 09 2023",
-        "name": "html",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 34,
-        "subTasksDone": 34,
-        "progress": 100,
-        "day": "Sat Dec 09 2023",
-        "headName": "programming",
-        "subName": "front end",
-        "taskId": "lpe0icc6:lpe0icc6:lpe0icc8"
-      },
-      {
-        "id": "lpe0icc6:lpe0icc6:lpe0iodySat Dec 09 2023",
-        "name": "css",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 88,
-        "subTasksDone": 88,
-        "progress": 100,
-        "day": "Sat Dec 09 2023",
-        "headName": "programming",
-        "subName": "front end",
-        "taskId": "lpe0icc6:lpe0icc6:lpe0iody"
-      },
       {
         "id": "lpe0icc6:lpe0icc6:lpe0iodyTue Dec 12 2023",
         "name": "css",
@@ -177,6 +126,32 @@
         "headName": "programming",
         "subName": "front end",
         "taskId": "lpe0icc6:lpe0icc6:lpe0iody"
+      },
+      {
+        "id": "lpe0icc6:lpe0jf3h:lpe0jp7qThu Dec 14 2023",
+        "name": "mysql",
+        "subId": "lpe0icc6:lpe0jf3h",
+        "headId": "lpe0icc6",
+        "subTasksNum": 23,
+        "subTasksDone": 2,
+        "progress": 8,
+        "day": "Thu Dec 14 2023",
+        "headName": "programming",
+        "subName": "backend",
+        "taskId": "lpe0icc6:lpe0jf3h:lpe0jp7q"
+      },
+      {
+        "id": "lpe0icc6:lpe0icc6:lpe0j0z3Thu Dec 14 2023",
+        "name": "react",
+        "subId": "lpe0icc6:lpe0icc6",
+        "headId": "lpe0icc6",
+        "subTasksNum": 200,
+        "subTasksDone": 150,
+        "progress": 75,
+        "page": "tasks",
+        "day": "Thu Dec 14 2023",
+        "headName": "programming",
+        "subName": "front end"
       }
     ]
   }

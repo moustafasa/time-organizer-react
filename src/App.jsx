@@ -55,7 +55,6 @@ function App() {
             {
               path: "show/:page",
               element: <RunningTasks />,
-              loader: runningTasksLoader(dispatch),
             },
             {
               path: "add",
