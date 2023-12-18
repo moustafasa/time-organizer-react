@@ -13,7 +13,7 @@ import {
 import sass from "./ShowTasks.module.scss";
 import ShowData from "./ShowData/ShowData";
 import ShowSelects from "./ShowSelects/ShowSelects";
-import PopUp from "../../components/PopUp/PopUp";
+import PopUp, { show } from "../../components/PopUp/PopUp";
 
 export const loader =
   (dispatch) =>
@@ -66,6 +66,31 @@ const ShowTasks = () => {
       }
     );
 
+  const deletConfirm = (type) => {
+    show({
+      title: `delete ${
+        type === "multi" || type === "all" ? page : page.slice(0, -1)
+      }`,
+      body: (
+        <p className="text-capitalize fs-4 ">
+          are you sure you want to delete{" "}
+          {type === "multi"
+            ? `selected ${page}`
+            : type === "all"
+            ? `all ${page}`
+            : `this ${page.slice(0, -1)}`}
+        </p>
+      ),
+      btn: {
+        name: "delete",
+        class: "btn btn-danger text-capitalize",
+        handler: () => {
+          console.log("done");
+        },
+      },
+    });
+  };
+
   const [deleteMulti] = useDeleteMultipleMutation();
 
   const addTasksHandler = () => {
@@ -106,9 +131,10 @@ const ShowTasks = () => {
     deleteMulti(args);
   };
 
+  useEffect(() => {}, []);
+
   return (
     <section>
-      <PopUp />
       <div className="container">
         <h2 className="page-head"> show {page} </h2>
         {page !== "heads" && <ShowSelects />}
