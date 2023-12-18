@@ -5,20 +5,10 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteMultiple,
-  fetchData,
-  getAll,
   getAllDataIds,
-  getAllHeadsIds,
-  getAllSubsIds,
-  getAllTasksIds,
   useDeleteMultipleMutation,
   useGetDataQuery,
-  useGetHeadsQuery,
-  useGetSubsQuery,
-  useGetTasksQuery,
 } from "./ShowTasksSlice";
 import sass from "./ShowTasks.module.scss";
 import ShowData from "./ShowData/ShowData";
@@ -51,7 +41,6 @@ export const loader =
     return {
       keys: keys[page],
       args,
-      // useGetDataQuery,
     };
   };
 
@@ -119,9 +108,7 @@ const ShowTasks = () => {
 
   return (
     <section>
-      <PopUp>
-        <div>content</div>
-      </PopUp>
+      <PopUp />
       <div className="container">
         <h2 className="page-head"> show {page} </h2>
         {page !== "heads" && <ShowSelects />}
