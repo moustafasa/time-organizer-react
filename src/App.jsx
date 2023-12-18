@@ -23,6 +23,7 @@ import SetupRunTasks, {
   loader as setRunTasksLoader,
   action as setRunTasksAction,
 } from "./features/RunningTasks/SetupRunTasks/SetupRunTasks";
+import PopUp from "./components/PopUp/PopUp";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,6 +71,7 @@ function App() {
   return (
     <div className="App">
       <RouterProvider router={router} />
+      <PopUp />
     </div>
   );
 }

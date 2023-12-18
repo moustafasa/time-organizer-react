@@ -1,17 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import sass from "./PopUp.module.scss";
+import EventEmiiter from "events";
 
-const PopUp = ({ title, body, footer }) => {
+const emitter = new EventEmiiter();
+
+export const show = ({ title, body, btn }) =>
+  emitter.emit("show", { title, body, btn });
+
+const PopUp = () => {
+  const [show, setShow] = useState();
+  const [options, setOptions] = useState({});
+
+  const hideHandler = () => {
+    setShow(false);
+    setOptions({});
+  };
+  useEffect(() => {
+    const showHandler = (obj) => {
+      setShow(true);
+      setOptions(obj);
+    };
+    emitter.on("show", showHandler);
+    return () => {
+      emitter.off("show", showHandler);
+    };
+  }, []);
+  if (!show) return null;
   return (
-    <div className="modal" data-bs-theme="dark" style={{ display: "block" }}>
+    <div
+      className="modal"
+      data-bs-theme="dark"
+      style={{ zIndex: "999999", display: "block" }}
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h2 className="modal-title">{title}</h2>
-            <button className="btn-close" type="button"></button>
+            <h5 className="title">{options.title}</h5>
+            <button
+              type="button"
+              onClick={hideHandler}
+              className="btn btn-close"
+            ></button>
           </div>
-          <div className="modal-body">{body}</div>
-          <div className="modal-footer">{footer}</div>
+          <div className="modal-body">{options.body}</div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              onClick={hideHandler}
+              className="btn btn-secondary text-capitalize"
+            >
+              cancel
+            </button>
+            <button
+              type="button"
+              className={options.btn?.class}
+              onClick={() => {
+                options.btn?.handler();
+                hideHandler();
+              }}
+            >
+              {options.btn?.name}
+            </button>
+          </div>
         </div>
       </div>
     </div>
