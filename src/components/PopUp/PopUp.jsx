@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import sass from "./PopUp.module.scss";
 import EventEmiiter from "events";
+import classNames from "classnames";
 
 const emitter = new EventEmiiter();
 
@@ -26,16 +27,13 @@ const PopUp = () => {
     };
   }, []);
   if (!show) return null;
+  const modalClass = classNames(sass.overlay, "modal");
   return (
-    <div
-      className="modal"
-      data-bs-theme="dark"
-      style={{ zIndex: "999999", display: "block" }}
-    >
+    <div className={modalClass} data-bs-theme="dark">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="title">{options.title}</h5>
+            <h5 className="title text-capitalize">{options.title}</h5>
             <button
               type="button"
               onClick={hideHandler}

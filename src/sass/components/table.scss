@@ -1,11 +1,11 @@
-@use "../../sass/helpers/mixins" as *;
-@use "../../sass/variables/colors" as *;
-@use "../../sass/variables/others" as *;
+@use "../helpers/mixins" as *;
+@use "../variables/colors" as *;
+@use "../variables/others" as *;
 
-.tableCont {
+.table-cont {
   padding-top: 50px;
   overflow-x: auto;
-  .table {
+  .custom-table {
     width: 100%;
     text-align: center;
     border-collapse: collapse;

@@ -10,10 +10,10 @@ import {
   useDeleteMultipleMutation,
   useGetDataQuery,
 } from "./ShowTasksSlice";
-import sass from "./ShowTasks.module.scss";
 import ShowData from "./ShowData/ShowData";
 import ShowSelects from "./ShowSelects/ShowSelects";
 import PopUp, { show } from "../../components/PopUp/PopUp";
+import { toast } from "react-toastify";
 
 export const loader =
   (dispatch) =>
@@ -53,7 +53,7 @@ const ShowTasks = () => {
   const navigator = useNavigate();
   const [checkedItems, setCheckedItems] = useState([]);
 
-  const { data, isError, isFetching, isLoading, isSuccess, refetch } =
+  const { data, isError, isFetching, isLoading, isSuccess, refetch, status } =
     useGetDataQuery(
       { page, args },
       {
@@ -65,33 +65,37 @@ const ShowTasks = () => {
         },
       }
     );
-
-  const deletConfirm = (type) => {
+  const deleteConfirm = (type, handler) => {
     show({
       title: `delete ${
         type === "multi" || type === "all" ? page : page.slice(0, -1)
       }`,
       body: (
-        <p className="text-capitalize fs-4 ">
+        <p className="text-capitalize">
           are you sure you want to delete{" "}
           {type === "multi"
             ? `selected ${page}`
             : type === "all"
             ? `all ${page}`
             : `this ${page.slice(0, -1)}`}
+          ?
         </p>
       ),
       btn: {
         name: "delete",
         class: "btn btn-danger text-capitalize",
-        handler: () => {
-          console.log("done");
-        },
+        handler,
       },
     });
   };
 
-  const [deleteMulti] = useDeleteMultipleMutation();
+  const [deleteMulti, { isSuccess: isDeleted }] = useDeleteMultipleMutation();
+
+  // useEffect(() => {
+  //   if (isDeleted) {
+  //     toast.success("the element is deleted successfully");
+  //   }
+  // }, [isDeleted]);
 
   const addTasksHandler = () => {
     navigator(`/addTasks${window.location.search}`);
@@ -131,15 +135,13 @@ const ShowTasks = () => {
     deleteMulti(args);
   };
 
-  useEffect(() => {}, []);
-
   return (
     <section>
       <div className="container">
         <h2 className="page-head"> show {page} </h2>
         {page !== "heads" && <ShowSelects />}
-        <div className={sass.tableCont}>
-          <table className={sass.table}>
+        <div className="table-cont">
+          <table className="custom-table">
             <thead>
               <tr>
                 <th>#</th>
@@ -165,6 +167,7 @@ const ShowTasks = () => {
                       ? ["name", "subTasksNum", "subTasksDone"]
                       : ["name"]
                   }
+                  deleteConfirm={deleteConfirm}
                 />
               ))}
             </tbody>
@@ -184,13 +187,13 @@ const ShowTasks = () => {
           <button
             className="btn btn-danger text-capitalize"
             disabled={checkedItems.length === 0}
-            onClick={deleteMultiHandler}
+            onClick={() => deleteConfirm("multi", deleteMultiHandler)}
           >
             delete
           </button>
           <button
             className="btn btn-danger text-capitalize"
-            onClick={deleteAllHandler}
+            onClick={() => deleteConfirm("all", deleteAllHandler)}
             disabled={data.length === 0}
           >
             delete all

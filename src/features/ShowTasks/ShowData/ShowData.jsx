@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getElementById,
   useDeleteElementMutation,
@@ -8,6 +8,8 @@ import {
 import sass from "./ShowData.module.scss";
 import _ from "lodash";
 import { Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
+import { show } from "../../../components/PopUp/PopUp";
+import { toast } from "react-toastify";
 
 const ShowData = ({
   elementId,
@@ -15,11 +17,12 @@ const ShowData = ({
   check: [checkedItems, setCheckedItems],
   keys,
   editedKeys,
+  deleteConfirm,
 }) => {
   const { page } = useParams();
   const { args } = useLoaderData();
-  const [updateElement] = useEditDataMutation();
-  const [deleteItem] = useDeleteElementMutation();
+  const [updateElement, { isSuccess }] = useEditDataMutation();
+  const [deleteItem, { isSuccess: isDeleted }] = useDeleteElementMutation();
 
   const { data: element = [] } = useGetDataQuery(
     { page, args },
@@ -32,6 +35,18 @@ const ShowData = ({
       },
     }
   );
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success(`all changes are saved`);
+  //   }
+  // }, [isSuccess]);
+
+  // useEffect(() => {
+  //   if (isDeleted) {
+  //     toast.success("The element is deleted successfully");
+  //   }
+  // }, [isDeleted]);
 
   const editedObject = editedKeys.reduce((obj, curr) => {
     obj[curr] = element[curr];
@@ -48,7 +63,7 @@ const ShowData = ({
   };
 
   const deleteHandler = () => {
-    deleteItem({ id: elementId, page, ...args });
+    deleteConfirm("one", () => deleteItem({ id: elementId, page, ...args }));
   };
 
   const checkHandler = (e) => {
@@ -79,6 +94,18 @@ const ShowData = ({
         }`
       );
     }
+  };
+
+  const editConfirm = () => {
+    show({
+      title: `edit ${page.slice(0, -1)}`,
+      body: <p className="text-capitalize">are you sure to save changes?</p>,
+      btn: {
+        name: "save",
+        handler: editHandler,
+        class: "btn btn-success text-capitalize",
+      },
+    });
   };
 
   return (
@@ -161,7 +188,7 @@ const ShowData = ({
           ) : (
             <>
               <button
-                onClick={editHandler}
+                onClick={editConfirm}
                 className={`btn btn-primary text-capitalize d-block`}
                 disabled={_.isEqual(elementValue, editedObject)}
               >

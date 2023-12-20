@@ -5,6 +5,7 @@ import {
   Form,
   redirect,
   useLoaderData,
+  useRouteLoaderData,
   useSearchParams,
 } from "react-router-dom";
 import {
@@ -14,6 +15,11 @@ import {
   useGetDataQuery,
 } from "../../ShowTasks/ShowTasksSlice";
 import { useAddRunTasksMutation } from "../RunningTasksSlice";
+import {
+  convertWeakDaysToDates,
+  getOptionsOfWeekDays,
+  getWeekDays,
+} from "../functions";
 
 export const loader = async ({ request, params }) => {
   const url = new URL(request.url);
@@ -29,56 +35,20 @@ export const loader = async ({ request, params }) => {
     args["subId"] = sub;
   }
 
-  const getWeekDays = () => {
-    const date = new Date();
-    const days = [
-      "Saturday",
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-    ];
-
-    const nowDay = date.getDay() === 6 ? 0 : date.getDay() + 1;
-
-    if (nowDay < 6) {
-      return days.slice(nowDay);
-    } else {
-      return ["friday", ...days];
-    }
-  };
-
-  const weekDays = getWeekDays();
-
   return {
-    weekDays: weekDays.map((day, index) => {
-      const date = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate()
-      );
-
-      if (index !== 0) {
-        date.setDate(date.getDate() + index);
-      }
-      const value = date.toDateString();
-
-      return { text: day, value: value };
-    }),
     args,
   };
 };
 
 export const action = async ({ request, params }) => {
-  return redirect("/runningTasks/show/week");
+  return redirect("/runningTasks/show");
 };
 
 const SetupRunTasks = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   // const [tasksList, setTasksList] = useState([]);
-  const { weekDays, args } = useLoaderData();
+  const { args } = useLoaderData();
+  const { weekDays } = useRouteLoaderData("runningTasks");
   const [day, setDay] = useState(weekDays[0].value);
 
   const { data: heads = {} } = useGetDataQuery(

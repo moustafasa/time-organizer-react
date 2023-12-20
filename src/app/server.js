@@ -368,6 +368,8 @@ server.post("/runningTasks", (req, res) => {
   const task = db.get("data").get("tasks").find({ id: data.taskId }).value();
   let obj = {};
   if (task) {
+    obj.id = data.taskId + data.day;
+    obj.taskId = data.taskId;
     obj.day = data.day;
     obj.headName = db
       .get("data")
@@ -379,9 +381,6 @@ server.post("/runningTasks", (req, res) => {
       .get("subs")
       .find({ id: data.subId })
       .value()?.name;
-
-    obj.id = data.taskId + data.day;
-    obj.taskId = data.task;
   }
 
   if (
@@ -405,23 +404,24 @@ server.post("/runningTasks", (req, res) => {
   }
 });
 
-server.get("/runningTasks/:page", (req, res) => {
+server.get("/runningTasks/:day", (req, res) => {
   const db = router.db;
   let tasks;
-  if (req.params.page === "week") {
+  if (req.params.day === "all") {
     tasks = db.get("data").get("runningTasks").value();
-  } else if (req.params.page === "day") {
-    const nowData = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDate()
-    );
+  } else {
+    // const nowData = new Date(
+    //   new Date().getFullYear(),
+    //   new Date().getMonth(),
+    //   new Date().getDate()
+    // );
     tasks = db
       .get("data")
       .get("runningTasks")
-      .filter({ day: nowData.toDateString() })
+      .filter({ day: req.params.day })
       .value();
   }
+  console.log(tasks);
   res.send(tasks);
 });
 
