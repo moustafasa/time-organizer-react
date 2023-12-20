@@ -1,10 +1,4 @@
-import {
-  Outlet,
-  Route,
-  RouterProvider,
-  Routes,
-  createBrowserRouter,
-} from "react-router-dom";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Header from "./components/Header/Header";
 import AddTasks, {
   action as addTasksAction,
@@ -13,17 +7,21 @@ import AddTasks, {
 import ShowTasks, {
   loader as showTasksLoader,
 } from "./features/ShowTasks/ShowTasks";
-import Nav from "./components/Header/Nav/Nav";
-import Content from "./components/Header/Content/Content";
 import { useDispatch } from "react-redux";
-import RunningTasks, {
-  loader as runningTasksLoader,
-} from "./features/RunningTasks/RunningTasks";
+import RunningTasks from "./features/RunningTasks/RunningTasks";
 import SetupRunTasks, {
   loader as setRunTasksLoader,
   action as setRunTasksAction,
 } from "./features/RunningTasks/SetupRunTasks/SetupRunTasks";
 import PopUp from "./components/PopUp/PopUp";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { getOptionsOfWeekDays } from "./features/RunningTasks/functions";
+
+const weekDaysLoader = () => {
+  const weekDays = getOptionsOfWeekDays();
+  return { weekDays };
+};
 
 function App() {
   const dispatch = useDispatch();
@@ -52,9 +50,11 @@ function App() {
         {
           path: "/runningTasks",
           element: <Outlet />,
+          id: "runningTasks",
+          loader: weekDaysLoader,
           children: [
             {
-              path: "show/:page",
+              path: "show",
               element: <RunningTasks />,
             },
             {
@@ -72,6 +72,7 @@ function App() {
     <div className="App">
       <RouterProvider router={router} />
       <PopUp />
+      <ToastContainer />
     </div>
   );
 }

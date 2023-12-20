@@ -1,40 +1,82 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
+  getCurrentDay,
   getRunTaskById,
-  getRunTasksIds,
   useDeleteFromRunTasksMutation,
   useGetRunningTasksQuery,
 } from "../RunningTasksSlice";
-import { useParams } from "react-router-dom";
+import { show } from "../../../components/PopUp/PopUp";
 
-const Task = ({ id, index }) => {
-  const { page } = useParams();
-  const { data: task } = useGetRunningTasksQuery(page, {
+const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
+  const dayValue = useSelector(getCurrentDay);
+  const { data: task } = useGetRunningTasksQuery(dayValue, {
     selectFromResult: ({ data, ...rest }) => ({
       data: getRunTaskById(data, id),
       ...rest,
     }),
   });
 
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  // const days = [
+  //   "Sunday",
+  //   "Monday",
+  //   "Tuesday",
+  //   "Wednesday",
+  //   "Thursday",
+  //   "Friday",
+  //   "Saturday",
+  // ];
 
   const date = new Date(task.day);
 
   const [deleteTask] = useDeleteFromRunTasksMutation();
 
+  const checkHandler = (e) => {
+    if (e.target.checked) {
+      setCheckedItems([...checkedItems, e.target.value]);
+    } else {
+      setCheckedItems(checkedItems.filter((id) => id !== e.target.value));
+    }
+  };
+  const selectHandler = (e) => {
+    if (!e.target.closest("td:last-of-type")) {
+      if (checkedItems.includes(id)) {
+        setCheckedItems(checkedItems.filter((item) => item !== id));
+      } else {
+        setCheckedItems([...checkedItems, id]);
+      }
+    }
+  };
+
+  const deleteConfirm = () => {
+    show({
+      title: "delete task",
+      body: (
+        <p className="text-capitalize">
+          are you sure you need to remove this task from runTasks?
+        </p>
+      ),
+      btn: {
+        name: "delete",
+        class: "btn btn-danger",
+        handler: () => deleteTask(id),
+      },
+    });
+  };
+
   return (
-    <tr>
+    <tr onClick={selectHandler}>
+      <td>
+        <input
+          type="checkbox"
+          className="form-check-input"
+          value={id}
+          checked={checkedItems.includes(id)}
+          onChange={checkHandler}
+        />
+      </td>
       <td>{index}</td>
-      <td>{days[date.getDay()]}</td>
+      {/* <td>{days[date.getDay()]}</td> */}
       <td>{task.name}</td>
       <td>{task.headName}</td>
       <td>{task.subName}</td>
@@ -45,7 +87,7 @@ const Task = ({ id, index }) => {
         <div className="d-flex gap-2 align-items-center justify-content-center">
           <button
             className="btn btn-danger text-capitalize d-block"
-            onClick={(e) => deleteTask(id)}
+            onClick={deleteConfirm}
           >
             delete
           </button>

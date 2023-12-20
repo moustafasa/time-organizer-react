@@ -14,10 +14,10 @@
         "id": "lpe0icc7",
         "name": "pharmacy",
         "subNum": 1,
-        "subDone": 1,
+        "subDone": 0,
         "tasksNum": 1,
-        "tasksDone": 1,
-        "progress": 100
+        "tasksDone": 0,
+        "progress": 93
       }
     ],
     "subs": [
@@ -34,8 +34,8 @@
         "headId": "lpe0icc7",
         "name": "organic",
         "tasksNum": 1,
-        "tasksDone": 1,
-        "progress": 100
+        "tasksDone": 0,
+        "progress": 93
       },
       {
         "id": "lpe0icc6:lpe0jf3h",
@@ -63,8 +63,8 @@
         "subId": "lpe0icc7:lpe0icca",
         "headId": "lpe0icc7",
         "subTasksNum": 32,
-        "subTasksDone": 32,
-        "progress": 100
+        "subTasksDone": 30,
+        "progress": 93
       },
       {
         "id": "lpe0icc6:lpe0icc6:lpe0iody",
@@ -115,41 +115,28 @@
     ],
     "runningTasks": [
       {
-        "id": "lpe0icc6:lpe0icc6:lpe0iodyTue Dec 12 2023",
-        "name": "css",
+        "id": "lpe0icc7:lpe0icca:lpe0iccaWed Dec 20 2023",
+        "name": "lec 1",
+        "subId": "lpe0icc7:lpe0icca",
+        "headId": "lpe0icc7",
+        "subTasksNum": 32,
+        "subTasksDone": 30,
+        "progress": 93,
+        "taskId": "lpe0icc7:lpe0icca:lpe0icca",
+        "day": "Wed Dec 20 2023",
+        "headName": "pharmacy",
+        "subName": "organic"
+      },
+      {
+        "id": "lpe0icc6:lpe0icc6:lpe0iulqWed Dec 20 2023",
+        "name": "js",
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
-        "subTasksNum": 88,
-        "subTasksDone": 88,
+        "subTasksNum": 188,
+        "subTasksDone": 188,
         "progress": 100,
-        "day": "Tue Dec 12 2023",
-        "headName": "programming",
-        "subName": "front end",
-        "taskId": "lpe0icc6:lpe0icc6:lpe0iody"
-      },
-      {
-        "id": "lpe0icc6:lpe0jf3h:lpe0jp7qThu Dec 14 2023",
-        "name": "mysql",
-        "subId": "lpe0icc6:lpe0jf3h",
-        "headId": "lpe0icc6",
-        "subTasksNum": 23,
-        "subTasksDone": 2,
-        "progress": 8,
-        "day": "Thu Dec 14 2023",
-        "headName": "programming",
-        "subName": "backend",
-        "taskId": "lpe0icc6:lpe0jf3h:lpe0jp7q"
-      },
-      {
-        "id": "lpe0icc6:lpe0icc6:lpe0j0z3Thu Dec 14 2023",
-        "name": "react",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 200,
-        "subTasksDone": 150,
-        "progress": 75,
-        "page": "tasks",
-        "day": "Thu Dec 14 2023",
+        "taskId": "lpe0icc6:lpe0icc6:lpe0iulq",
+        "day": "Wed Dec 20 2023",
         "headName": "programming",
         "subName": "front end"
       }

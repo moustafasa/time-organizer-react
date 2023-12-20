@@ -43,10 +43,7 @@ const Nav = () => {
               <Link to="/runningTasks/add">set run tasks</Link>
             </li>
             <li data-showed="day">
-              <Link to="/runningTasks/show/day">show day Tasks</Link>
-            </li>
-            <li data-showed="week">
-              <Link to="/runningTasks/show/week">show week Tasks</Link>
+              <Link to="/runningTasks/show">show run Tasks</Link>
             </li>
           </ul>
         </li>

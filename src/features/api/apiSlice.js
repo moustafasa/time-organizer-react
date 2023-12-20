@@ -19,7 +19,7 @@ const axiosBaseQuery =
           headers,
         });
       }
-      return { data: res.data };
+      return { data: res.data || null };
     } catch (axiosError) {
       const err = axiosError;
       return {

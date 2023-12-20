@@ -3,7 +3,7 @@ import { apiSlice } from "../api/apiSlice";
 
 const runningTasksAdapter = createEntityAdapter();
 
-const initialState = runningTasksAdapter.getInitialState();
+const initialState = runningTasksAdapter.getInitialState({ currentDay: "" });
 
 export const runTasksQuerySlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,7 +16,7 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
       invalidatesTags: ["RunTasks"],
     }),
     getRunningTasks: builder.query({
-      query: (type) => `/runningTasks/${type}`,
+      query: (day) => `/runningTasks/${day || "all"}`,
       transformResponse: (resData) =>
         runningTasksAdapter.setAll(initialState, resData),
       providesTags: ["RunTasks"],
@@ -31,7 +31,11 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
 const RunningTasksSlice = createSlice({
   name: "runningTasks",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    changeCurrentDay(state, action) {
+      state.currentDay = action.payload;
+    },
+  },
   extraReducers: (builder) => {},
 });
 
@@ -44,4 +48,7 @@ export const {
   useDeleteFromRunTasksMutation,
 } = runTasksQuerySlice;
 
+export const getCurrentDay = (state) => state.runningTasks.currentDay;
+
+export const { changeCurrentDay } = RunningTasksSlice.actions;
 export default RunningTasksSlice.reducer;
