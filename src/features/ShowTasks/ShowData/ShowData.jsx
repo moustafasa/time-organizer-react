@@ -103,7 +103,7 @@ const ShowData = ({
       btn: {
         name: "save",
         handler: editHandler,
-        class: "btn btn-success text-capitalize",
+        className: "btn btn-success text-capitalize",
       },
     });
   };

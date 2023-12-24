@@ -1,0 +1,8 @@
+@use "../../../sass/helpers/mixins" as *;
+@use "../../../sass//variables/colors" as *;
+
+.startRunTasks {
+  input {
+    text-align: left !important;
+  }
+}

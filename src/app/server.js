@@ -239,7 +239,6 @@ function deleteSubs(db, id, headId) {
   const head = db.get("data").get("heads").find({ id: headId });
   const headUpdated = head.value();
   calcHeads(db, headUpdated);
-  console.log(headUpdated);
   head.assign(headUpdated).write();
 }
 
@@ -421,7 +420,6 @@ server.get("/runningTasks/:day", (req, res) => {
       .filter({ day: req.params.day })
       .value();
   }
-  console.log(tasks);
   res.send(tasks);
 });
 
@@ -434,6 +432,26 @@ server.delete("/runningTasks/:id", (req, res) => {
     .value();
   if (task) {
     db.get("data").get("runningTasks").remove({ id: req.params.id }).write();
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+// delete multi
+server.post("/runningTasks/deleteMulti", (req, res) => {
+  const db = router.db;
+  const ids = req.body;
+  const tasks = db
+    .get("data")
+    .get("runningTasks")
+    .filter((task) => ids.includes(task.id))
+    .value();
+
+  if (tasks.length > 0) {
+    ids.forEach((id) => {
+      db.get("data").get("runningTasks").remove({ id }).write();
+    });
     res.sendStatus(200);
   } else {
     res.sendStatus(404);

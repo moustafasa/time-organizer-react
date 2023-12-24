@@ -17,6 +17,7 @@ import PopUp from "./components/PopUp/PopUp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getOptionsOfWeekDays } from "./features/RunningTasks/functions";
+import StartRunTasks from "./features/RunningTasks/StartRunTasks/StartRunTasks";
 
 const weekDaysLoader = () => {
   const weekDays = getOptionsOfWeekDays();
@@ -62,6 +63,10 @@ function App() {
               element: <SetupRunTasks />,
               loader: setRunTasksLoader,
               action: setRunTasksAction,
+            },
+            {
+              path: "start",
+              element: <StartRunTasks />,
             },
           ],
         },

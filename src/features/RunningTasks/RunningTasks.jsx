@@ -3,10 +3,12 @@ import {
   changeCurrentDay,
   getCurrentDay,
   getRunTasksIds,
+  useDeleteMultiRunTasksMutation,
   useGetRunningTasksQuery,
 } from "./RunningTasksSlice";
 import Task from "./Task/Task";
 import {
+  Link,
   useLoaderData,
   useParams,
   useRouteLoaderData,
@@ -15,6 +17,7 @@ import {
 import { getOptionsOfWeekDays } from "./functions";
 import SelectBox from "../../components/SelectBox/SelectBox";
 import { useDispatch, useSelector } from "react-redux";
+import { show } from "../../components/PopUp/PopUp";
 
 export const loader = () => {
   return {
@@ -35,6 +38,8 @@ const RunningTasks = () => {
     }),
   });
 
+  const [deleteMulti] = useDeleteMultiRunTasksMutation();
+
   useEffect(() => {
     const unCheckOnBlurHandler = (e) => {
       if (!e.target.closest("table") && !e.target.closest("button")) {
@@ -46,6 +51,11 @@ const RunningTasks = () => {
       document.removeEventListener("click", unCheckOnBlurHandler);
     };
   }, []);
+
+  const deleteMultiHandler = async () => {
+    await deleteMulti(checkedItems);
+    setCheckedItems([]);
+  };
 
   return (
     <section>
@@ -86,8 +96,26 @@ const RunningTasks = () => {
             </tbody>
           </table>
         </div>
-        <div className="d-flex justify-content-center align-items-center mt-4">
-          <button className="btn btn-primary">add</button>
+        <div className="d-flex justify-content-center align-items-center mt-4 gap-3">
+          <Link
+            to={"/runningTasks/add"}
+            className="btn btn-primary text-capitalize"
+          >
+            add
+          </Link>
+          <button
+            className="btn btn-danger text-capitalize"
+            disabled={checkedItems.length === 0}
+            onClick={deleteMultiHandler}
+          >
+            delete
+          </button>
+          <button
+            className="btn btn-danger text-capitalize"
+            onClick={async (_) => await deleteMulti(runTasks)}
+          >
+            delete all
+          </button>
         </div>
       </div>
     </section>

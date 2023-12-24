@@ -5,4 +5,8 @@
   background-color: $overlay-color;
   z-index: 99999999999 !important;
   display: block !important;
+  transition: 0.5s;
+  &.black {
+    background-color: black;
+  }
 }

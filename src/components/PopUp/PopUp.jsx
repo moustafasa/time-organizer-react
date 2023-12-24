@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import sass from "./PopUp.module.scss";
 import EventEmiiter from "events";
 import classNames from "classnames";
+import { useSelector } from "react-redux";
 
 const emitter = new EventEmiiter();
 
-export const show = ({ title, body, btn }) =>
-  emitter.emit("show", { title, body, btn });
+export const show = ({ title, body, btn, black = false }) =>
+  emitter.emit("show", { title, body, btn, black });
+
+export const modify = ({ black, disabled }) =>
+  emitter.emit("modify", { black, disabled });
 
 const PopUp = () => {
   const [show, setShow] = useState();
@@ -21,13 +25,27 @@ const PopUp = () => {
       setShow(true);
       setOptions(obj);
     };
+    const modifyHandler = (obj) => {
+      setOptions((opts) => ({
+        ...opts,
+        black: obj.black,
+        btn: { ...opts.btn, disabled: obj.disabled },
+      }));
+    };
     emitter.on("show", showHandler);
+    emitter.on("modify", modifyHandler);
+
     return () => {
       emitter.off("show", showHandler);
+      emitter.off("modify", modifyHandler);
     };
   }, []);
+
   if (!show) return null;
-  const modalClass = classNames(sass.overlay, "modal");
+  const modalClass = classNames(sass.overlay, "modal", {
+    [sass.black]: options.black,
+  });
+
   return (
     <div className={modalClass} data-bs-theme="dark">
       <div className="modal-dialog">
@@ -49,16 +67,21 @@ const PopUp = () => {
             >
               cancel
             </button>
-            <button
-              type="button"
-              className={options.btn?.class}
-              onClick={() => {
-                options.btn?.handler();
-                hideHandler();
-              }}
-            >
-              {options.btn?.name}
-            </button>
+            {options.btn?.jsx ? (
+              options.btn.jsx(hideHandler)
+            ) : (
+              <button
+                type="button"
+                className={options.btn?.className}
+                onClick={() => {
+                  hideHandler();
+                  options.btn?.handler();
+                }}
+                disabled={options.btn.disabled}
+              >
+                {options.btn?.name}
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -83,7 +83,7 @@ const ShowTasks = () => {
       ),
       btn: {
         name: "delete",
-        class: "btn btn-danger text-capitalize",
+        className: "btn btn-danger text-capitalize",
         handler,
       },
     });
