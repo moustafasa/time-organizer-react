@@ -118,26 +118,26 @@ fieldset {
       scale: 1.2;
     }
   }
-  input {
-    display: block;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: 2px solid transparent;
-    transition: 0.5s;
-    background-color: $blue-2-color;
-    color: $yellow-color;
-    text-align: center;
-    font: {
-      family: $input-font;
-      weight: 500;
-    }
-    @include medias("mobile") {
-      width: 100%;
-    }
-    &:focus {
-      border-color: $green-2-color;
-      box-shadow: $blue-shadow;
-    }
+}
+input:not([type="checkbox"]):not(.form-control) {
+  display: block;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: 0.5s;
+  background-color: $blue-2-color;
+  color: $yellow-color;
+  text-align: center;
+  font: {
+    family: $input-font;
+    weight: 500;
+  }
+  @include medias("mobile") {
+    width: 100%;
+  }
+  &:focus {
+    border-color: $green-2-color;
+    box-shadow: $blue-shadow;
   }
 }
 // end add tasks inputs

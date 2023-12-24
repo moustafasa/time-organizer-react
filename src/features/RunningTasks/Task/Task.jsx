@@ -7,6 +7,9 @@ import {
   useGetRunningTasksQuery,
 } from "../RunningTasksSlice";
 import { show } from "../../../components/PopUp/PopUp";
+import StartRunTask from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
+import FinishTask from "../StartRunTasks/FinishTask/FinishTask";
+import RunTasksTimer from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
 
 const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
   const dayValue = useSelector(getCurrentDay);
@@ -58,7 +61,7 @@ const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
       ),
       btn: {
         name: "delete",
-        class: "btn btn-danger",
+        className: "btn btn-danger",
         handler: () => deleteTask(id),
       },
     });
@@ -92,7 +95,10 @@ const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
             delete
           </button>
           {date.getDay() === new Date().getDay() && (
-            <button className="btn btn-primary text-capitalize d-block">
+            <button
+              className="btn btn-primary text-capitalize d-block"
+              // onClick={runTaskDialoge}
+            >
               start
             </button>
           )}

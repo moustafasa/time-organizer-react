@@ -1,0 +1,60 @@
+@use "../../../../sass/helpers/mixins" as *;
+@use "../../../../sass/variables/colors" as *;
+@use "../../../../sass/variables/others" as *;
+
+.start {
+  animation-play-state: running;
+  &.paused {
+    animation-play-state: paused;
+  }
+  .progress {
+    animation: progress-animation var(--duration) linear normal forwards;
+    animation-play-state: inherit;
+  }
+  .flash {
+    animation: flash-animation 1s linear infinite;
+    animation-play-state: inherit;
+  }
+}
+
+.done {
+  .progress,
+  .flash {
+    fill: $add-color;
+  }
+}
+.progressBack {
+  fill: $grey-color;
+}
+
+.progress,
+.flash {
+  fill: $green-2-color;
+}
+
+.flash {
+  opacity: 0.1;
+}
+
+.text {
+  fill: white;
+  font-size: 1.5rem;
+}
+
+@keyframes flash-animation {
+  0% {
+    r: 0;
+  }
+  100% {
+    r: 100;
+  }
+}
+
+@keyframes progress-animation {
+  0% {
+    r: 0;
+  }
+  100% {
+    r: 100;
+  }
+}
