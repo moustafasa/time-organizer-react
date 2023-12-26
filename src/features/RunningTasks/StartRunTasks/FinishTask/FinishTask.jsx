@@ -5,7 +5,7 @@ const FinishTask = ({ task }) => {
   const [subTasksDone, setSubTasksDone] = useState("0");
 
   useEffect(() => {
-    modify({ args: { subTasksDone: +subTasksDone, task } });
+    modify({ args: { subTasksDone: +subTasksDone, task: task.id } });
   }, [subTasksDone]);
 
   return (
