@@ -458,6 +458,8 @@ server.post("/runningTasks/deleteMulti", (req, res) => {
   }
 });
 
+server.post("/runningTasks/didTask/:task", (req, res) => {});
+
 server.use(router);
 server.listen(
   port,

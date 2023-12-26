@@ -76,6 +76,13 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
       invalidatesTags: (res, err, ids) =>
         ids.map((id) => ({ type: "RunTasks", id })),
     }),
+    didTask: builder.mutation({
+      query: ({ id, subTasksNum }) => ({
+        url: `/runningTasks/didTask/${id}`,
+        method: "POST",
+        data: { subTasksNum },
+      }),
+    }),
   }),
 });
 
