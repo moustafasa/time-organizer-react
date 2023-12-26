@@ -54,10 +54,10 @@ const RunTasksTimer = () => {
 
   useEffect(() => {
     setTimer(duration);
-  }, [duration]);
+  }, [isBreak]);
 
   useEffect(() => {
-    if (timer === 0) {
+    if (timer <= 0) {
       if (currentPomodoro === pomodorosNum) {
         setAnimState("done");
       } else {
@@ -66,14 +66,13 @@ const RunTasksTimer = () => {
           dispatch(changeCurrentPomodoro(currentPomodoro + 1));
           setDuration(pomodoroTime);
         } else {
+          console.log("done");
           setDuration(breakTime);
         }
         dispatch(changeIsBreak(!isBreak));
       }
     }
   }, [timer]);
-
-  console.log(duration);
 
   return (
     <div className="d-flex justify-content-center align-items-center flex-column gap-3">
