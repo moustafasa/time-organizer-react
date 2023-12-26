@@ -38,8 +38,9 @@ const useStartTask = (task) => {
     });
   };
 
+  const finishHandler = (args, hideHandler) => {};
+
   const finishedTaskDialoge = async () => {
-    console.log(this);
     show({
       title: "finished",
       body: <FinishTask task={task} />,
@@ -47,7 +48,8 @@ const useStartTask = (task) => {
         jsx: (hideHandler, args) => (
           <button
             className="btn btn-primary text-capitalize"
-            onClick={() => console.log(args)}
+            onClick={() => finishHandler(args, hideHandler)}
+            disabled={args.subTasksDone <= 0}
           >
             done
           </button>
