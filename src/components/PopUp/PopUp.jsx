@@ -9,8 +9,8 @@ const emitter = new EventEmiiter();
 export const show = ({ title, body, btn, black = false }) =>
   emitter.emit("show", { title, body, btn, black });
 
-export const modify = ({ black, disabled }) =>
-  emitter.emit("modify", { black, disabled });
+export const modify = ({ black, disabled, args }) =>
+  emitter.emit("modify", { black, disabled, args });
 
 const PopUp = () => {
   const [show, setShow] = useState();
@@ -29,6 +29,7 @@ const PopUp = () => {
       setOptions((opts) => ({
         ...opts,
         black: obj.black,
+        args: obj.args,
         btn: { ...opts.btn, disabled: obj.disabled },
       }));
     };
@@ -68,7 +69,7 @@ const PopUp = () => {
               cancel
             </button>
             {options.btn?.jsx ? (
-              options.btn.jsx(hideHandler)
+              options.btn.jsx(hideHandler, options.args || {})
             ) : (
               <button
                 type="button"

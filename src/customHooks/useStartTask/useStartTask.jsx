@@ -44,9 +44,14 @@ const useStartTask = (task) => {
       title: "finished",
       body: <FinishTask task={task} />,
       btn: {
-        name: "done",
-        className: "btn btn-primary text-capitalize",
-        handler: () => {},
+        jsx: (hideHandler, args) => (
+          <button
+            className="btn btn-primary text-capitalize"
+            onClick={() => console.log(args)}
+          >
+            done
+          </button>
+        ),
       },
     });
   };
