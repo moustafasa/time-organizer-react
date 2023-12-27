@@ -6,6 +6,7 @@ import {
   changeIsBreak,
   getAnimState,
   getPomodoroTime,
+  useDidTaskMutation,
 } from "../../features/RunningTasks/RunningTasksSlice";
 import { useGetDataQuery } from "../../features/ShowTasks/ShowTasksSlice";
 import { useSearchParams } from "react-router-dom";
@@ -38,7 +39,10 @@ const useStartTask = (task) => {
     });
   };
 
-  const finishHandler = (args, hideHandler) => {};
+  const [didTask] = useDidTaskMutation();
+  const finishHandler = (args, hideHandler) => {
+    didTask({ id: args.task, subTasksDone: args.subTasksDone });
+  };
 
   const finishedTaskDialoge = async () => {
     show({

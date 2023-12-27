@@ -97,6 +97,7 @@ export const {
   useGetRunningTasksQuery,
   useDeleteFromRunTasksMutation,
   useDeleteMultiRunTasksMutation,
+  useDidTaskMutation,
 } = runTasksQuerySlice;
 
 export const getCurrentDay = (state) => state.runningTasks.currentDay;

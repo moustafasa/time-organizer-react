@@ -458,7 +458,25 @@ server.post("/runningTasks/deleteMulti", (req, res) => {
   }
 });
 
-server.post("/runningTasks/didTask/:task", (req, res) => {});
+server.post("/runningTasks/didTask/:id", (req, res) => {
+  const db = router.db;
+  const { id } = req.params;
+  const { subTasksDone } = req.body;
+
+  const task = db.get("data").get("runningTasks").find({ id }).value();
+
+  const taskEle = db.get("data").get("tasks").find({ id: task.taskId }).value();
+
+  taskEle.subTasksDone += subTasksDone;
+  calcTasks(taskEle);
+  calcSubs(db, taskEle.subId);
+  calcHeads(db, taskEle.headId);
+
+  db.get("db").get("tasks").find({ id: taskEle.id }).assign(taskEle).write();
+  db.get("db").get("runningTasks").remove({ id }).write();
+
+  res.sendStatus(200);
+});
 
 server.use(router);
 server.listen(
