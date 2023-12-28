@@ -6,7 +6,7 @@ const runningTasksAdapter = createEntityAdapter();
 const querySliceState = runningTasksAdapter.getInitialState();
 
 const initialState = {
-  currentDay: "",
+  currentDay: new Date().toDateString(),
   pomodorosNum: 2,
   currentPomodoro: 1,
   pomodoroTime: 60,
@@ -77,11 +77,15 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
         ids.map((id) => ({ type: "RunTasks", id })),
     }),
     didTask: builder.mutation({
-      query: ({ id, subTasksNum }) => ({
-        url: `/runningTasks/didTask/${id}`,
-        method: "POST",
-        data: { subTasksNum },
-      }),
+      query: ({ id, subTasksDone }) => {
+        console.log(subTasksDone);
+        return {
+          url: `/runningTasks/didTask/${id}`,
+          method: "POST",
+          data: { subTasksDone },
+        };
+      },
+      invalidatesTags: (res, err, { id }) => [{ type: "RunTasks", id }],
     }),
   }),
 });

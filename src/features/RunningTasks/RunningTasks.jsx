@@ -57,6 +57,28 @@ const RunningTasks = () => {
     setCheckedItems([]);
   };
 
+  const deleteConfirm = (handler, type) => {
+    show({
+      title: "delete task",
+      body: (
+        <p className="text-capitalize">
+          are you sure you need to remove{" "}
+          {type === "multi"
+            ? "selected tasks"
+            : type === "all"
+            ? "all showed tasks"
+            : "this task"}{" "}
+          from runTasks?
+        </p>
+      ),
+      btn: {
+        name: "delete",
+        className: "btn btn-danger",
+        handler: handler,
+      },
+    });
+  };
+
   return (
     <section>
       <div className="container">
@@ -75,12 +97,14 @@ const RunningTasks = () => {
               <tr>
                 <th>#</th>
                 <th>id</th>
+                {dayValue === "" && <th>day</th>}
                 <th>taskName</th>
                 <th>headName</th>
                 <th>subName</th>
                 <th>progress</th>
                 <th>subTasksNum</th>
                 <th>subTasksDone</th>
+                <th>status</th>
                 <th>options</th>
               </tr>
             </thead>
@@ -91,6 +115,7 @@ const RunningTasks = () => {
                   id={task}
                   index={ind + 1}
                   checked={[checkedItems, setCheckedItems]}
+                  deleteConfirm={deleteConfirm}
                 />
               ))}
             </tbody>
@@ -106,13 +131,15 @@ const RunningTasks = () => {
           <button
             className="btn btn-danger text-capitalize"
             disabled={checkedItems.length === 0}
-            onClick={deleteMultiHandler}
+            onClick={() => deleteConfirm(deleteMultiHandler, "multi")}
           >
             delete
           </button>
           <button
             className="btn btn-danger text-capitalize"
-            onClick={async (_) => await deleteMulti(runTasks)}
+            onClick={() =>
+              deleteConfirm(async (_) => await deleteMulti(runTasks), "all")
+            }
           >
             delete all
           </button>

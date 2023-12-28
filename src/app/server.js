@@ -205,7 +205,7 @@ server.patch("/tasks/:id", (req, res) => {
       const subLowDb = db.get("data").get("subs").find({ id: task.subId });
       const subUpdated = subLowDb.value();
       calcSubs(db, subUpdated);
-      subLowDb.assign(subUpdated);
+      subLowDb.assign(subUpdated).write();
 
       // calc heads
       const headLowDb = db.get("data").get("heads").find({ id: task.headId });
@@ -380,6 +380,7 @@ server.post("/runningTasks", (req, res) => {
       .get("subs")
       .find({ id: data.subId })
       .value()?.name;
+    obj.done = false;
   }
 
   if (
@@ -409,11 +410,6 @@ server.get("/runningTasks/:day", (req, res) => {
   if (req.params.day === "all") {
     tasks = db.get("data").get("runningTasks").value();
   } else {
-    // const nowData = new Date(
-    //   new Date().getFullYear(),
-    //   new Date().getMonth(),
-    //   new Date().getDate()
-    // );
     tasks = db
       .get("data")
       .get("runningTasks")
@@ -463,17 +459,25 @@ server.post("/runningTasks/didTask/:id", (req, res) => {
   const { id } = req.params;
   const { subTasksDone } = req.body;
 
-  const task = db.get("data").get("runningTasks").find({ id }).value();
+  const taskRun = db.get("data").get("runningTasks").find({ id }).value();
+  const task = db.get("data").get("tasks").find({ id: taskRun.taskId }).value();
+  task.subTasksDone += subTasksDone;
+  const sub = db.get("data").get("subs").find({ id: task.subId }).value();
+  const head = db.get("data").get("heads").find({ id: task.headId }).value();
 
-  const taskEle = db.get("data").get("tasks").find({ id: task.taskId }).value();
+  calcTasks(task);
+  calcSubs(db, sub);
+  calcHeads(db, head);
 
-  taskEle.subTasksDone += subTasksDone;
-  calcTasks(taskEle);
-  calcSubs(db, taskEle.subId);
-  calcHeads(db, taskEle.headId);
+  db.get("data").get("tasks").find({ id: taskRun.taskId }).assign(task).write();
+  db.get("data").get("subs").find({ id: task.subId }).assign(sub).write();
+  db.get("data").get("heads").find({ id: task.headId }).assign(head).write();
 
-  db.get("db").get("tasks").find({ id: taskEle.id }).assign(taskEle).write();
-  db.get("db").get("runningTasks").remove({ id }).write();
+  db.get("data")
+    .get("runningTasks")
+    .find({ id })
+    .assign({ done: true })
+    .write();
 
   res.sendStatus(200);
 });

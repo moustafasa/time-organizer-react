@@ -42,6 +42,7 @@ const useStartTask = (task) => {
   const [didTask] = useDidTaskMutation();
   const finishHandler = (args, hideHandler) => {
     didTask({ id: args.task, subTasksDone: args.subTasksDone });
+    hideHandler();
   };
 
   const finishedTaskDialoge = async () => {

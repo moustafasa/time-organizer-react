@@ -10,8 +10,14 @@ import { show } from "../../../components/PopUp/PopUp";
 import StartRunTask from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
 import FinishTask from "../StartRunTasks/FinishTask/FinishTask";
 import RunTasksTimer from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
+import { Link } from "react-router-dom";
 
-const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
+const Task = ({
+  id,
+  index,
+  checked: [checkedItems, setCheckedItems],
+  deleteConfirm,
+}) => {
   const dayValue = useSelector(getCurrentDay);
   const { data: task } = useGetRunningTasksQuery(dayValue, {
     selectFromResult: ({ data, ...rest }) => ({
@@ -20,15 +26,15 @@ const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
     }),
   });
 
-  // const days = [
-  //   "Sunday",
-  //   "Monday",
-  //   "Tuesday",
-  //   "Wednesday",
-  //   "Thursday",
-  //   "Friday",
-  //   "Saturday",
-  // ];
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const date = new Date(task.day);
 
@@ -51,22 +57,6 @@ const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
     }
   };
 
-  const deleteConfirm = () => {
-    show({
-      title: "delete task",
-      body: (
-        <p className="text-capitalize">
-          are you sure you need to remove this task from runTasks?
-        </p>
-      ),
-      btn: {
-        name: "delete",
-        className: "btn btn-danger",
-        handler: () => deleteTask(id),
-      },
-    });
-  };
-
   return (
     <tr onClick={selectHandler}>
       <td>
@@ -79,28 +69,29 @@ const Task = ({ id, index, checked: [checkedItems, setCheckedItems] }) => {
         />
       </td>
       <td>{index}</td>
-      {/* <td>{days[date.getDay()]}</td> */}
+      {dayValue === "" && <td>{days[date.getDay()]}</td>}
       <td>{task.name}</td>
       <td>{task.headName}</td>
       <td>{task.subName}</td>
       <td>{task.progress}</td>
       <td>{task.subTasksNum}</td>
       <td>{task.subTasksDone}</td>
+      <td>{task.done ? "done" : "not done"}</td>
       <td>
         <div className="d-flex gap-2 align-items-center justify-content-center">
           <button
             className="btn btn-danger text-capitalize d-block"
-            onClick={deleteConfirm}
+            onClick={() => deleteConfirm(() => deleteTask(id))}
           >
             delete
           </button>
           {date.getDay() === new Date().getDay() && (
-            <button
+            <Link
               className="btn btn-primary text-capitalize d-block"
-              // onClick={runTaskDialoge}
+              to={`/runningTasks/start?taskId=${id}`}
             >
               start
-            </button>
+            </Link>
           )}
         </div>
       </td>
