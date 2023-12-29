@@ -18,6 +18,7 @@ import { getOptionsOfWeekDays } from "./functions";
 import SelectBox from "../../components/SelectBox/SelectBox";
 import { useDispatch, useSelector } from "react-redux";
 import { show } from "../../components/PopUp/PopUp";
+import useWebSocket from "react-use-websocket";
 
 export const loader = () => {
   return {
@@ -79,6 +80,14 @@ const RunningTasks = () => {
     });
   };
 
+  const ws = useWebSocket("ws://localhost:3000");
+  console.log(ws.getWebSocket());
+  useEffect(() => {
+    // ws.onopen = (d) => {
+    //   console.log(d);
+    // };
+  }, []);
+
   return (
     <section>
       <div className="container">
@@ -123,7 +132,7 @@ const RunningTasks = () => {
         </div>
         <div className="d-flex justify-content-center align-items-center mt-4 gap-3">
           <Link
-            to={"/runningTasks/add"}
+            to={`/runningTasks/add?${dayValue && `day=${dayValue}`}`}
             className="btn btn-primary text-capitalize"
           >
             add

@@ -7,8 +7,8 @@
         "subNum": 2,
         "subDone": 0,
         "tasksNum": 6,
-        "tasksDone": 2,
-        "progress": 47
+        "tasksDone": 3,
+        "progress": 85
       },
       {
         "id": "lpe0icc7",
@@ -17,7 +17,7 @@
         "subDone": 0,
         "tasksNum": 1,
         "tasksDone": 0,
-        "progress": 81
+        "progress": 87
       }
     ],
     "subs": [
@@ -27,7 +27,7 @@
         "name": "front end",
         "tasksNum": 4,
         "tasksDone": 2,
-        "progress": 81
+        "progress": 82
       },
       {
         "id": "lpe0icc7:lpe0icca",
@@ -35,15 +35,15 @@
         "name": "organic",
         "tasksNum": 1,
         "tasksDone": 0,
-        "progress": 81
+        "progress": 87
       },
       {
         "id": "lpe0icc6:lpe0jf3h",
         "headId": "lpe0icc6",
         "name": "backend",
         "tasksNum": 2,
-        "tasksDone": 0,
-        "progress": 14
+        "tasksDone": 1,
+        "progress": 88
       }
     ],
     "tasks": [
@@ -63,8 +63,8 @@
         "subId": "lpe0icc7:lpe0icca",
         "headId": "lpe0icc7",
         "subTasksNum": 32,
-        "subTasksDone": 26,
-        "progress": 81
+        "subTasksDone": 28,
+        "progress": 87
       },
       {
         "id": "lpe0icc6:lpe0icc6:lpe0iody",
@@ -90,8 +90,8 @@
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
         "subTasksNum": 200,
-        "subTasksDone": 150,
-        "progress": 75,
+        "subTasksDone": 159,
+        "progress": 79,
         "page": "tasks"
       },
       {
@@ -100,8 +100,8 @@
         "subId": "lpe0icc6:lpe0jf3h",
         "headId": "lpe0icc6",
         "subTasksNum": 23,
-        "subTasksDone": 2,
-        "progress": 8
+        "subTasksDone": 27,
+        "progress": 117
       },
       {
         "id": "lpe0icc6:lpe0jf3h:lpe0jp7q",
@@ -109,39 +109,40 @@
         "subId": "lpe0icc6:lpe0jf3h",
         "headId": "lpe0icc6",
         "subTasksNum": 23,
-        "subTasksDone": 5,
-        "progress": 21
+        "subTasksDone": 14,
+        "progress": 60
       }
     ],
     "runningTasks": [
       {
-        "id": "lpe0icc6:lpe0jf3h:lpe0jp7qThu Dec 28 2023",
-        "name": "mysql",
-        "subId": "lpe0icc6:lpe0jf3h",
+        "id": "lpe0icc6:lpe0icc6:lpe0j0z3Fri Dec 29 2023",
+        "name": "react",
+        "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
-        "subTasksNum": 23,
-        "subTasksDone": 2,
-        "progress": 8,
-        "taskId": "lpe0icc6:lpe0jf3h:lpe0jp7q",
-        "day": "Thu Dec 28 2023",
+        "subTasksNum": 200,
+        "subTasksDone": 155,
+        "progress": 77,
+        "page": "tasks",
+        "taskId": "lpe0icc6:lpe0icc6:lpe0j0z3",
+        "day": "Fri Dec 29 2023",
         "headName": "programming",
-        "subName": "backend",
+        "subName": "front end",
         "done": true
       },
       {
-        "id": "lpe0icc6:lpe0icc6:lpe0icc8Thu Dec 28 2023",
+        "id": "lpe0icc6:lpe0icc6:lpe0icc8Fri Dec 29 2023",
         "name": "html",
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
         "subTasksNum": 34,
-        "subTasksDone": 15,
-        "progress": 44,
+        "subTasksDone": 17,
+        "progress": 50,
         "page": "tasks",
         "taskId": "lpe0icc6:lpe0icc6:lpe0icc8",
-        "day": "Thu Dec 28 2023",
+        "day": "Fri Dec 29 2023",
         "headName": "programming",
         "subName": "front end",
-        "done": true
+        "done": false
       }
     ]
   }

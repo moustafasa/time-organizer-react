@@ -32,12 +32,27 @@
       }
     }
 
-    tr {
-      transition: 0.5s;
-      cursor: pointer;
-      &:hover,
-      &:has(input:checked) {
-        background-color: $blue-2-color;
+    tbody {
+      tr {
+        transition: 0.5s;
+        cursor: pointer;
+
+        &:not(:last-of-type) {
+          border-bottom: 1px solid white;
+        }
+
+        &:hover,
+        &:has(input:checked) {
+          background-color: $blue-2-color;
+          &.success {
+            background-color: rgba($color: #13455e, $alpha: 0.7);
+            backdrop-filter: blur(1px);
+          }
+        }
+        &.success {
+          background-color: rgba($color: #1a4546, $alpha: 0.35);
+          backdrop-filter: blur(1px);
+        }
       }
     }
   }

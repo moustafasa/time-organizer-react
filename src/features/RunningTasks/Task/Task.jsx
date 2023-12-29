@@ -11,6 +11,7 @@ import StartRunTask from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
 import FinishTask from "../StartRunTasks/FinishTask/FinishTask";
 import RunTasksTimer from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
 import { Link } from "react-router-dom";
+import classNames from "classnames";
 
 const Task = ({
   id,
@@ -57,8 +58,10 @@ const Task = ({
     }
   };
 
+  const trClass = classNames({ success: task.done });
+
   return (
-    <tr onClick={selectHandler}>
+    <tr onClick={selectHandler} className={trClass}>
       <td>
         <input
           type="checkbox"
@@ -85,7 +88,7 @@ const Task = ({
           >
             delete
           </button>
-          {date.getDay() === new Date().getDay() && (
+          {date.getDay() === new Date().getDay() && !task.done && (
             <Link
               className="btn btn-primary text-capitalize d-block"
               to={`/runningTasks/start?taskId=${id}`}

@@ -1,4 +1,8 @@
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
 
 const runningTasksAdapter = createEntityAdapter();
@@ -95,6 +99,20 @@ export const {
   selectById: getRunTaskById,
   selectEntities: getRunTasksEntites,
 } = runningTasksAdapter.getSelectors((state) => state ?? querySliceState);
+
+export const getRunTasksOptions = createSelector(
+  [
+    getRunTasksEntites,
+    (state) => getRunTasksIds(state).filter((id) => !state.entities[id].done),
+  ],
+  (entities, ids) => [
+    { text: "choose", value: "" },
+    ...ids.map((id) => ({
+      text: entities[id]?.name,
+      value: id,
+    })),
+  ]
+);
 
 export const {
   useAddRunTasksMutation,

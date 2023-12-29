@@ -14,6 +14,7 @@ import {
   getPomodorosNum,
   getRunTaskById,
   getRunTasksIds,
+  getRunTasksOptions,
   useGetRunningTasksQuery,
 } from "../RunningTasksSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,13 +35,7 @@ const StartRunTasks = () => {
 
   const { tasks, currentTask } = useGetRunningTasksQuery(currentDay, {
     selectFromResult: ({ data, ...rest }) => ({
-      tasks: [
-        { text: "choose", value: "" },
-        ...getRunTasksIds(data).map((id) => ({
-          text: getRunTaskById(data, id)?.name,
-          value: id,
-        })),
-      ],
+      tasks: getRunTasksOptions(data),
       currentTask: getRunTaskById(data, taskId),
       ...rest,
     }),

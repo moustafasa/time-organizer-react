@@ -12,6 +12,7 @@ import {
   getAllHeadsEntities,
   getAllSubsEntities,
   getAllTasksEntities,
+  getNotDoneTasks,
   useGetDataQuery,
 } from "../../ShowTasks/ShowTasksSlice";
 import { useAddRunTasksMutation } from "../RunningTasksSlice";
@@ -46,10 +47,10 @@ export const action = async ({ request, params }) => {
 
 const SetupRunTasks = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // const [tasksList, setTasksList] = useState([]);
   const { args } = useLoaderData();
   const { weekDays } = useRouteLoaderData("runningTasks");
-  const [day, setDay] = useState(weekDays[0].value);
+  const day = searchParams.get("day") || weekDays[0].value;
+  const setDay = (value) => setSearchParams({ day: value });
 
   const { data: heads = {} } = useGetDataQuery(
     { page: "heads" },
@@ -74,10 +75,12 @@ const SetupRunTasks = () => {
   const { data: tasks = {} } = useGetDataQuery(
     { page: "tasks", args },
     {
-      selectFromResult: ({ data, ...rest }) => ({
-        data: getAllTasksEntities(data),
-        ...rest,
-      }),
+      selectFromResult: ({ data, ...rest }) => {
+        return {
+          data: getNotDoneTasks(data),
+          ...rest,
+        };
+      },
     }
   );
 

@@ -161,6 +161,16 @@ export const getElementById = createSelector(
   }
 );
 
+export const getNotDoneTasks = createSelector(
+  getAllTasksEntities,
+  (state) => {
+    const ids = getAllTasksIds(state);
+    const entities = getAllTasksEntities(state);
+    return ids.filter((id) => entities[id]?.progress < 100);
+  },
+  (entities, ids) => Object.fromEntries(ids.map((id) => [id, entities[id]]))
+);
+
 export const {
   useGetDataQuery,
   useEditDataMutation,

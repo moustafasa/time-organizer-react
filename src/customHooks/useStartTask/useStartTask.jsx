@@ -14,6 +14,27 @@ import { modify, show } from "../../components/PopUp/PopUp";
 import RunTasksTimer from "../../features/RunningTasks/StartRunTasks/RunTasksTimer/RunTasksTimer";
 import FinishTask from "../../features/RunningTasks/StartRunTasks/FinishTask/FinishTask";
 
+const FinishButton = ({ hideHandler, args }) => {
+  const [didTask, { isError, error }] = useDidTaskMutation({
+    fixedCacheKey: "didTask",
+  });
+  const finishHandler = () => {
+    didTask({ id: args.task, subTasksDone: args.subTasksDone });
+    // hideHandler();
+  };
+
+  console.log("done");
+  return (
+    <button
+      className="btn btn-primary text-capitalize"
+      onClick={finishHandler}
+      disabled={args.subTasksDone <= 0}
+    >
+      done
+    </button>
+  );
+};
+
 const useStartTask = (task) => {
   const dispatch = useDispatch();
   const animState = useSelector(getAnimState);
@@ -39,25 +60,13 @@ const useStartTask = (task) => {
     });
   };
 
-  const [didTask] = useDidTaskMutation();
-  const finishHandler = (args, hideHandler) => {
-    didTask({ id: args.task, subTasksDone: args.subTasksDone });
-    hideHandler();
-  };
-
   const finishedTaskDialoge = async () => {
     show({
       title: "finished",
       body: <FinishTask task={task} />,
       btn: {
         jsx: (hideHandler, args) => (
-          <button
-            className="btn btn-primary text-capitalize"
-            onClick={() => finishHandler(args, hideHandler)}
-            disabled={args.subTasksDone <= 0}
-          >
-            done
-          </button>
+          <FinishButton hideHandler={hideHandler} args={args} />
         ),
       },
     });

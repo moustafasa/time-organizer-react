@@ -1,4 +1,5 @@
 const jsonServer = require("json-server");
+const WebSocket = require("ws");
 const server = jsonServer.create();
 const _ = require("lodash");
 const router = jsonServer.router("src/app/db.json");
@@ -19,6 +20,11 @@ server.use(
     "data/runningTasks/:page": "/runningTasks/:page",
   })
 );
+
+const ws = new WebSocket.Server({ server });
+ws.on("connection", () => {
+  console.log("connected");
+});
 
 /**
  * Checks whether the id of the new data already exists in the DB
@@ -461,25 +467,35 @@ server.post("/runningTasks/didTask/:id", (req, res) => {
 
   const taskRun = db.get("data").get("runningTasks").find({ id }).value();
   const task = db.get("data").get("tasks").find({ id: taskRun.taskId }).value();
-  task.subTasksDone += subTasksDone;
-  const sub = db.get("data").get("subs").find({ id: task.subId }).value();
-  const head = db.get("data").get("heads").find({ id: task.headId }).value();
+  if (task.subTasksNum - task.subTasksDone >= subTasksDone) {
+    task.subTasksDone += subTasksDone;
+    const sub = db.get("data").get("subs").find({ id: task.subId }).value();
+    const head = db.get("data").get("heads").find({ id: task.headId }).value();
 
-  calcTasks(task);
-  calcSubs(db, sub);
-  calcHeads(db, head);
+    calcTasks(task);
+    calcSubs(db, sub);
+    calcHeads(db, head);
 
-  db.get("data").get("tasks").find({ id: taskRun.taskId }).assign(task).write();
-  db.get("data").get("subs").find({ id: task.subId }).assign(sub).write();
-  db.get("data").get("heads").find({ id: task.headId }).assign(head).write();
+    db.get("data")
+      .get("tasks")
+      .find({ id: taskRun.taskId })
+      .assign(task)
+      .write();
+    db.get("data").get("subs").find({ id: task.subId }).assign(sub).write();
+    db.get("data").get("heads").find({ id: task.headId }).assign(head).write();
 
-  db.get("data")
-    .get("runningTasks")
-    .find({ id })
-    .assign({ done: true })
-    .write();
+    db.get("data")
+      .get("runningTasks")
+      .find({ id })
+      .assign({ done: true })
+      .write();
 
-  res.sendStatus(200);
+    res.sendStatus(200);
+  } else {
+    res
+      .status(422)
+      .send("the number of done subTasks is more than the number of subTasks");
+  }
 });
 
 server.use(router);
