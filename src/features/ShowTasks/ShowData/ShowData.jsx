@@ -174,7 +174,7 @@ const ShowData = ({
               >
                 delete
               </button>
-              {page === "tasks" && (
+              {page === "tasks" && element.progress < 100 && (
                 <Link
                   to={`/runningTasks/add?${new URLSearchParams(
                     args

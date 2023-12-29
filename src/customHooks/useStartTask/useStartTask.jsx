@@ -15,20 +15,19 @@ import RunTasksTimer from "../../features/RunningTasks/StartRunTasks/RunTasksTim
 import FinishTask from "../../features/RunningTasks/StartRunTasks/FinishTask/FinishTask";
 
 const FinishButton = ({ hideHandler, args }) => {
-  const [didTask, { isError, error }] = useDidTaskMutation({
-    fixedCacheKey: "didTask",
-  });
+  const [didTask] = useDidTaskMutation();
   const finishHandler = () => {
     didTask({ id: args.task, subTasksDone: args.subTasksDone });
-    // hideHandler();
+    if (args.valid) hideHandler();
   };
 
   console.log("done");
+  console.log(args.valid);
   return (
     <button
       className="btn btn-primary text-capitalize"
       onClick={finishHandler}
-      disabled={args.subTasksDone <= 0}
+      disabled={args.subTasksDone <= 0 || !args.valid}
     >
       done
     </button>

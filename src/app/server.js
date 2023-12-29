@@ -1,5 +1,5 @@
 const jsonServer = require("json-server");
-const WebSocket = require("ws");
+// const WebSocket = require("ws");
 const server = jsonServer.create();
 const _ = require("lodash");
 const router = jsonServer.router("src/app/db.json");
@@ -21,10 +21,18 @@ server.use(
   })
 );
 
-const ws = new WebSocket.Server({ server });
-ws.on("connection", () => {
-  console.log("connected");
-});
+// const ws = new WebSocket.Server({ port: 8080 });
+
+// ws.on("connection", (socket) => {
+//   socket.on("message", (message) => {
+//     console.log(`Received message => ${message}`);
+//   });
+
+//   socket.send("Hello! Message received.");
+//   setInterval(() => {
+//     socket.send("this is message");
+//   }, 1000);
+// });
 
 /**
  * Checks whether the id of the new data already exists in the DB
@@ -487,7 +495,7 @@ server.post("/runningTasks/didTask/:id", (req, res) => {
     db.get("data")
       .get("runningTasks")
       .find({ id })
-      .assign({ done: true })
+      .assign({ done: true, ...task })
       .write();
 
     res.sendStatus(200);

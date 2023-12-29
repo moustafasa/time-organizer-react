@@ -19,6 +19,8 @@ export const getWeekDays = () => {
   }
 };
 
+// date.fns
+
 export const getOptionsOfWeekDays = () => {
   const weekDays = getWeekDays();
   return weekDays.map((day, index) => {
