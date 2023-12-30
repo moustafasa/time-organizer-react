@@ -74,10 +74,10 @@ const ShowSelects = () => {
 
   return (
     <div
-      className={`${sass.selects} text-capitalize d-flex gap-3 align-items-center`}
+      className={`${sass.selects} text-capitalize d-flex gap-3 align-items-center flex-wrap`}
     >
       <div
-        className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1`}
+        className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1  flex-sm-nowrap flex-wrap`}
       >
         <label>head Name :</label>
         <SelectBox
@@ -89,7 +89,7 @@ const ShowSelects = () => {
       </div>
       {page === "tasks" && (
         <div
-          className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1`}
+          className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1 flex-sm-nowrap flex-wrap`}
         >
           <label>sub Name :</label>
           <SelectBox

@@ -32,7 +32,10 @@ function App() {
       element: (
         <>
           <Header />
-          <Outlet />
+          <div id="body">
+            <Outlet />
+          </div>
+          <PopUp />
         </>
       ),
       children: [
@@ -76,7 +79,6 @@ function App() {
   return (
     <div className="App">
       <RouterProvider router={router} />
-      <PopUp />
       <ToastContainer />
     </div>
   );

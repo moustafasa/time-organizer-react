@@ -12,6 +12,7 @@ import FinishTask from "../StartRunTasks/FinishTask/FinishTask";
 import RunTasksTimer from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
+import { format, isSameDay } from "date-fns";
 
 const Task = ({
   id,
@@ -26,16 +27,6 @@ const Task = ({
       ...rest,
     }),
   });
-
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
 
   const date = new Date(task.day);
 
@@ -72,7 +63,7 @@ const Task = ({
         />
       </td>
       <td>{index}</td>
-      {dayValue === "" && <td>{days[date.getDay()]}</td>}
+      {dayValue === "" && <td>{format(date, "eeee")}</td>}
       <td>{task.name}</td>
       <td>{task.headName}</td>
       <td>{task.subName}</td>
@@ -88,7 +79,7 @@ const Task = ({
           >
             delete
           </button>
-          {date.getDay() === new Date().getDay() && !task.done && (
+          {isSameDay(date, new Date()) && !task.done && (
             <Link
               className="btn btn-primary text-capitalize d-block"
               to={`/runningTasks/start?taskId=${id}`}

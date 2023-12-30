@@ -28,7 +28,7 @@ const StartRunTasks = () => {
   const breakTime = useSelector(getBreakTime);
 
   const taskId = searchParams.get("taskId") || "";
-  const setTaskId = (taskId) => setSearchParams({ taskId });
+  // const setTaskId = (taskId) => setSearchParams({ taskId });
   const currentDay = new Date().toDateString();
 
   const dispatch = useDispatch();
@@ -46,15 +46,15 @@ const StartRunTasks = () => {
   return (
     <section className={sass.startRunTasks}>
       <div className="container">
-        <h2 className="page-head">start task</h2>
-        <div className="mt-5 px-3">
-          <label className="text-nowrap form-label text-capitalize">
-            task :
-          </label>
+        <h2 className="page-head">start {currentTask.name} task</h2>
+        {/* <div className="mt-5 px-3">
+          <h3 className="text-nowrap text-center  text-capitalize">
+            task : <span>{currentTask.name}</span>
+          </h3>
           <SelectBox options={tasks} valueState={[taskId, setTaskId]} />
-        </div>
-        <div className="mt-4 px-3">
-          <label className="text-nowrap form-label text-capitalize">
+        </div> */}
+        <div className="mt-5 px-3">
+          <label className="form-label text-capitalize">
             number of pomodoros :
           </label>
           <input
@@ -67,7 +67,7 @@ const StartRunTasks = () => {
           />
         </div>
         <div className="mt-4 px-3">
-          <label className="text-nowrap form-label text-capitalize">
+          <label className="form-label text-capitalize">
             duration of pomodoro ( in minutes ) :
           </label>
           <input
@@ -80,7 +80,7 @@ const StartRunTasks = () => {
           />
         </div>
         <div className="mt-4 px-3">
-          <label className="text-nowrap form-label text-capitalize">
+          <label className="form-label text-capitalize">
             duration of break ( in minutes ) :
           </label>
           <input
@@ -95,6 +95,7 @@ const StartRunTasks = () => {
         <button
           className="btn btn-primary mt-5 d-block mx-auto text-capitalize w-50"
           onClick={startTask}
+          disabled={!taskId}
         >
           start
         </button>

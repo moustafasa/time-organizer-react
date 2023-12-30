@@ -1,45 +1,30 @@
-export const getWeekDays = () => {
-  const date = new Date();
-  const days = [
-    "Saturday",
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-  ];
-
-  const nowDay = date.getDay() === 6 ? 0 : date.getDay() + 1;
-
-  if (nowDay < 6) {
-    return days.slice(nowDay);
-  } else {
-    return ["friday", ...days];
-  }
-};
-
-// date.fns
+import {
+  add,
+  eachDayOfInterval,
+  endOfWeek,
+  format,
+  isSameDay,
+  startOfDay,
+} from "date-fns";
 
 export const getOptionsOfWeekDays = () => {
-  const weekDays = getWeekDays();
-  return weekDays.map((day, index) => {
-    const date = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      new Date().getDate()
-    );
+  const date = startOfDay(new Date());
 
-    if (index !== 0) {
-      date.setDate(date.getDate() + index);
-    }
-    const value = date.toDateString();
+  const weekEnd = startOfDay(
+    endOfWeek(date.getDay() === 5 ? add(date, { days: 1 }) : date, {
+      weekStartsOn: 6,
+    })
+  );
 
-    return {
-      text: value === new Date().toDateString() ? day + " ( Today )" : day,
-      value: value,
-    };
-  });
+  const days = eachDayOfInterval({
+    start: date,
+    end: weekEnd,
+  }).map((day) => ({
+    text: `${format(day, "eeee")}${isSameDay(day, date) ? " ( Today )" : ""}`,
+    value: day.toDateString(),
+  }));
+
+  return days;
 };
 
 export const formatTime = (time) => {

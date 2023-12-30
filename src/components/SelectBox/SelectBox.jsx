@@ -25,6 +25,7 @@ const SelectBox = ({
   };
   const openOptions = (e) => {
     e.stopPropagation();
+    e.target.parentElement.click();
     setOptOpenClass(!optOpenClass);
   };
   useEffect(() => {

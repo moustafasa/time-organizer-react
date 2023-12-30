@@ -9,16 +9,18 @@ import {
   useDidTaskMutation,
 } from "../../features/RunningTasks/RunningTasksSlice";
 import { useGetDataQuery } from "../../features/ShowTasks/ShowTasksSlice";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { modify, show } from "../../components/PopUp/PopUp";
 import RunTasksTimer from "../../features/RunningTasks/StartRunTasks/RunTasksTimer/RunTasksTimer";
 import FinishTask from "../../features/RunningTasks/StartRunTasks/FinishTask/FinishTask";
 
 const FinishButton = ({ hideHandler, args }) => {
   const [didTask] = useDidTaskMutation();
+  const navigator = useNavigate();
   const finishHandler = () => {
     didTask({ id: args.task, subTasksDone: args.subTasksDone });
     if (args.valid) hideHandler();
+    navigator("/runningTasks/show");
   };
 
   console.log("done");

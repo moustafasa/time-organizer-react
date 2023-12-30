@@ -16,11 +16,6 @@ import {
   useGetDataQuery,
 } from "../../ShowTasks/ShowTasksSlice";
 import { useAddRunTasksMutation } from "../RunningTasksSlice";
-import {
-  convertWeakDaysToDates,
-  getOptionsOfWeekDays,
-  getWeekDays,
-} from "../functions";
 
 export const loader = async ({ request, params }) => {
   const url = new URL(request.url);
