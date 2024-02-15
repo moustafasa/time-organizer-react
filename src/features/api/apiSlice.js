@@ -1,45 +1,91 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
+import {
+  getCurrentToken,
+  getCurrentUser,
+  logOut,
+  setCredintials,
+} from "../auth/authSlice";
 import axios from "axios";
+import { Mutex } from "async-mutex";
 
-const axiosBaseQuery =
-  ({ baseUrl = { baseUrl: "" } }) =>
-  async (config) => {
-    try {
-      let res;
-      if (typeof config === "string") {
-        res = await axios({
-          url: baseUrl + config,
-        });
-      } else {
-        const { url, method, data, headers } = config;
-        res = await axios({
-          url: baseUrl + url,
-          method,
-          data,
-          headers,
-        });
-      }
-      return { data: res.data || null };
-    } catch (axiosError) {
-      const err = axiosError;
-      return {
-        error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
-        },
-      };
-    }
+const axiosBaseQuery = async (args, { getState }, extra) => {
+  const defaultHeaders = {
+    "Content-Type": "application/json",
   };
+  const baseUrl = `http://localhost:3000`;
+  const token = getCurrentToken(getState());
+
+  if (token) defaultHeaders["Authorization"] = `Bearer ${token}`;
+
+  try {
+    let res;
+    if (typeof args === "string") {
+      res = await axios({
+        url: baseUrl + args,
+        withCredentials: true,
+        headers: defaultHeaders,
+      });
+    } else {
+      const { url, method, data, headers } = args;
+
+      res = await axios({
+        url: baseUrl + url,
+        method,
+        data,
+        headers: { ...defaultHeaders, ...headers },
+        withCredentials: true,
+      });
+    }
+    return {
+      data: res.data,
+    };
+  } catch (axiosErr) {
+    console.error(axiosErr.response);
+    return {
+      error: {
+        status: axiosErr?.response?.status,
+        data: axiosErr?.response?.data || axiosErr?.message,
+      },
+    };
+  }
+};
+
+const mutex = new Mutex();
+const reAuthBaseQuery = async (args, api, extra) => {
+  await mutex.waitForUnlock();
+  let res = await axiosBaseQuery(args, api, extra);
+  if (res?.error?.status === 401 && args !== "/refresh") {
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire();
+      try {
+        const refRes = await axiosBaseQuery("/refresh", api, extra);
+        if (refRes?.data) {
+          api.dispatch(setCredintials({ ...refRes.data }));
+          res = await axiosBaseQuery(args, api, extra);
+        } else {
+          api.dispatch(logOut());
+        }
+      } finally {
+        release();
+      }
+    } else {
+      await mutex.waitForUnlock();
+      res = await axiosBaseQuery(args, api, extra);
+    }
+  }
+  return res;
+};
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: axiosBaseQuery({ baseUrl: "http://localhost:3000" }),
+  baseQuery: reAuthBaseQuery,
   tagTypes: ["Data", "RunTasks"],
   endpoints: (builder) => ({
     getElement: builder.query({
       query: ({ type, id }) => `/${type}/${id}`,
     }),
   }),
+  keepUnusedDataFor: 0,
 });
 
 export const { useGetElementQuery } = apiSlice;

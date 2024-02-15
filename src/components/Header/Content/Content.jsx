@@ -1,5 +1,6 @@
 import React from "react";
 import contentScss from "./Content.module.scss";
+import { FaAngleDoubleDown } from "react-icons/fa";
 const Content = () => {
   return (
     <div className={contentScss.content}>
@@ -13,7 +14,7 @@ const Content = () => {
         <h2>let's organize our work</h2>
         <button className={contentScss.goDownBtn}>
           <a href="#body">
-            <i className="fa-solid fa-angles-down"></i>
+            <FaAngleDoubleDown />
           </a>
         </button>
       </div>

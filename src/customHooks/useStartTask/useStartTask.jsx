@@ -23,8 +23,6 @@ const FinishButton = ({ hideHandler, args }) => {
     navigator("/runningTasks/show");
   };
 
-  console.log("done");
-  console.log(args.valid);
   return (
     <button
       className="btn btn-primary text-capitalize"
@@ -52,6 +50,7 @@ const useStartTask = (task) => {
     show({
       title: `start ${task.name} task`,
       body: <RunTasksTimer />,
+      backdrop: "static",
       btn: {
         name: "finish",
         className: "btn btn-success text-capitalize",

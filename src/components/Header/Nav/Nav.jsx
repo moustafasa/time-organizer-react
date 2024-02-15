@@ -83,7 +83,9 @@ const Nav = () => {
       </ul>
       <div className="mobile">
         <div className="container">
-          <div className="logo">time Organiser</div>
+          <Link to={"/"} className="logo">
+            time Organiser
+          </Link>
           <button
             className={mobileButtonActive}
             onClick={(e) => setOpenParent(!openParent)}

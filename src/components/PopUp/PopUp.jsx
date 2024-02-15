@@ -3,11 +3,12 @@ import sass from "./PopUp.module.scss";
 import EventEmiiter from "events";
 import classNames from "classnames";
 import { useSelector } from "react-redux";
+import { Button, Modal } from "react-bootstrap";
 
 const emitter = new EventEmiiter();
 
-export const show = ({ title, body, btn, black = false }) =>
-  emitter.emit("show", { title, body, btn, black });
+export const show = ({ title, body, btn, backdrop, black = false }) =>
+  emitter.emit("show", { title, body, btn, black, backdrop });
 
 export const modify = ({ black, disabled, args }) =>
   emitter.emit("modify", { black, disabled, args });
@@ -43,50 +44,50 @@ const PopUp = () => {
   }, []);
 
   if (!show) return null;
-  const modalClass = classNames(sass.overlay, "modal", {
+  const overlay = classNames(sass.overlay, {
     [sass.black]: options.black,
   });
 
+  console.log(options);
   return (
-    <div className={modalClass} data-bs-theme="dark">
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="title text-capitalize">{options.title}</h5>
-            <button
-              type="button"
-              onClick={hideHandler}
-              className="btn btn-close"
-            ></button>
-          </div>
-          <div className="modal-body">{options.body}</div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              onClick={hideHandler}
-              className="btn btn-secondary text-capitalize"
-            >
-              cancel
-            </button>
-            {options.btn?.jsx ? (
-              options.btn.jsx(hideHandler, options.args || {})
-            ) : (
-              <button
-                type="button"
-                className={options.btn?.className}
-                onClick={() => {
-                  hideHandler();
-                  options.btn?.handler();
-                }}
-                disabled={options.btn.disabled}
-              >
-                {options.btn?.name}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+    <Modal
+      show={show}
+      onHide={hideHandler}
+      data-bs-theme="dark"
+      style={{ zIndex: 5000 }}
+      backdrop={options.backdrop}
+      backdropClassName={overlay}
+    >
+      <Modal.Header closeButton>
+        <h5 className="title text-capitalize">{options.title}</h5>
+      </Modal.Header>
+      <Modal.Body>{options.body}</Modal.Body>
+      <Modal.Footer>
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={hideHandler}
+          className="text-capitalize"
+        >
+          cancel
+        </Button>
+        {options.btn?.jsx ? (
+          options.btn.jsx(hideHandler, options.args || {})
+        ) : (
+          <Button
+            type="button"
+            className={options.btn?.className}
+            onClick={() => {
+              hideHandler();
+              options.btn?.handler();
+            }}
+            disabled={options.btn.disabled}
+          >
+            {options.btn?.name}
+          </Button>
+        )}
+      </Modal.Footer>
+    </Modal>
   );
 };
 

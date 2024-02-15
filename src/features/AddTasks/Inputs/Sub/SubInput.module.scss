@@ -4,12 +4,12 @@
 
 .subCont {
   display: flex;
+  justify-content: space-evenly;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 30px;
   margin-bottom: 20px;
   scroll-margin: 110px;
   .tasks {
-    flex: 1;
     @include flex-gap(40px);
   }
 }

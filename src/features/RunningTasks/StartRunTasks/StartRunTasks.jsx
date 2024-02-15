@@ -1,8 +1,4 @@
 import React from "react";
-import { show } from "../../../components/PopUp/PopUp";
-import RunTasksTimer from "./RunTasksTimer/RunTasksTimer";
-import FinishTask from "./FinishTask/FinishTask";
-import SelectBox from "../../../components/SelectBox/SelectBox";
 import sass from "./StartRunTasks.module.scss";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -13,29 +9,25 @@ import {
   getPomodoroTime,
   getPomodorosNum,
   getRunTaskById,
-  getRunTasksIds,
-  getRunTasksOptions,
   useGetRunningTasksQuery,
 } from "../RunningTasksSlice";
 import { useDispatch, useSelector } from "react-redux";
 import useStartTask from "../../../customHooks/useStartTask/useStartTask";
 
 const StartRunTasks = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const pomodorosNum = useSelector(getPomodorosNum);
   const pomodoroTime = useSelector(getPomodoroTime);
   const breakTime = useSelector(getBreakTime);
 
   const taskId = searchParams.get("taskId") || "";
-  // const setTaskId = (taskId) => setSearchParams({ taskId });
   const currentDay = new Date().toDateString();
 
   const dispatch = useDispatch();
 
-  const { tasks, currentTask } = useGetRunningTasksQuery(currentDay, {
+  const { currentTask } = useGetRunningTasksQuery(currentDay, {
     selectFromResult: ({ data, ...rest }) => ({
-      tasks: getRunTasksOptions(data),
       currentTask: getRunTaskById(data, taskId),
       ...rest,
     }),
@@ -47,12 +39,6 @@ const StartRunTasks = () => {
     <section className={sass.startRunTasks}>
       <div className="container">
         <h2 className="page-head">start {currentTask.name} task</h2>
-        {/* <div className="mt-5 px-3">
-          <h3 className="text-nowrap text-center  text-capitalize">
-            task : <span>{currentTask.name}</span>
-          </h3>
-          <SelectBox options={tasks} valueState={[taskId, setTaskId]} />
-        </div> */}
         <div className="mt-5 px-3">
           <label className="form-label text-capitalize">
             number of pomodoros :

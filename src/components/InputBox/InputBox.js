@@ -1,27 +1,28 @@
 import React from "react";
+import { Form } from "react-bootstrap";
+import scss from "./InputBox.module.scss";
 
 const InputBox = ({
-  type,
   label,
-  value,
   setValue,
   className,
-  readOnly,
-  name,
-  required = true,
+  controlId,
+  error,
+  validate,
+  ...others
 }) => {
+  const onChange = (e) => setValue(e.target.value);
   return (
-    <div className={`input-box ${className}`}>
-      <label>{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        readOnly={readOnly}
-        name={name}
-        required={required}
-      />
-    </div>
+    <Form.Group
+      controlId={controlId}
+      className={`${scss.InputBox} ${className} d-flex flex-column input-box`}
+    >
+      <Form.Label>{label}</Form.Label>
+      <Form.Control {...(setValue && { onChange })} {...others} />
+      {validate && (
+        <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+      )}
+    </Form.Group>
   );
 };
 

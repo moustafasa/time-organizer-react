@@ -51,11 +51,14 @@ const RunningTasksSlice = createSlice({
 export const runTasksQuerySlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     addRunTasks: builder.mutation({
-      query: (data) => ({
-        url: "/runningTasks",
-        method: "post",
-        data: data,
-      }),
+      query: (data) => {
+        console.log(data);
+        return {
+          url: "/runningTasks",
+          method: "post",
+          data: data,
+        };
+      },
       invalidatesTags: [{ type: "RunTasks", id: "LIST" }],
     }),
     getRunningTasks: builder.query({

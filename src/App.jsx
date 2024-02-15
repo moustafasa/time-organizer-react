@@ -1,4 +1,9 @@
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from "react-router-dom";
 import Header from "./components/Header/Header";
 import AddTasks, {
   action as addTasksAction,
@@ -7,7 +12,7 @@ import AddTasks, {
 import ShowTasks, {
   loader as showTasksLoader,
 } from "./features/ShowTasks/ShowTasks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import RunningTasks from "./features/RunningTasks/RunningTasks";
 import SetupRunTasks, {
   loader as setRunTasksLoader,
@@ -18,14 +23,45 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getOptionsOfWeekDays } from "./features/RunningTasks/functions";
 import StartRunTasks from "./features/RunningTasks/StartRunTasks/StartRunTasks";
+import Home from "./features/Home/Home";
+import SignUp, {
+  action as registerAction,
+} from "./features/auth/SignUp/SignUp";
+import Login, { action as loginAction } from "./features/auth/Login/Login";
+import { getCurrentToken, setCredintials } from "./features/auth/authSlice";
+import authApiSlice from "./features/auth/authApiSlice";
 
 const weekDaysLoader = () => {
   const weekDays = getOptionsOfWeekDays();
   return { weekDays };
 };
 
+const proctectedLoader =
+  (dispatch, token) =>
+  async ({ request }) => {
+    const url = new URL(request.url);
+    if (token) {
+      return null;
+    } else {
+      if (token === null) {
+        try {
+          console.log("dsklf");
+          const res = await dispatch(
+            authApiSlice.endpoints.refresh.initiate(undefined, { track: false })
+          ).unwrap();
+          dispatch(setCredintials(res));
+          return null;
+        } catch (err) {
+          return redirect(`/login?from=${url.pathname}`);
+        }
+      }
+      return redirect(`/login?from=${url.pathname}`);
+    }
+  };
+
 function App() {
   const dispatch = useDispatch();
+  const token = useSelector(getCurrentToken);
 
   const router = createBrowserRouter([
     {
@@ -39,39 +75,54 @@ function App() {
         </>
       ),
       children: [
-        { path: "/", element: <div>home</div> },
+        { path: "/", element: <Home /> },
         {
-          path: "/addTasks",
-          element: <AddTasks />,
-          loader: addTasksLoader(dispatch),
-          action: addTasksAction(dispatch),
-        },
-        {
-          path: "/showTasks/:page",
-          element: <ShowTasks />,
-          loader: showTasksLoader(dispatch),
-        },
-        {
-          path: "/runningTasks",
-          element: <Outlet />,
-          id: "runningTasks",
-          loader: weekDaysLoader,
+          loader: proctectedLoader(dispatch, token),
           children: [
             {
-              path: "show",
-              element: <RunningTasks />,
+              path: "/addTasks",
+              element: <AddTasks />,
+              loader: addTasksLoader(dispatch),
+              action: addTasksAction(dispatch),
             },
             {
-              path: "add",
-              element: <SetupRunTasks />,
-              loader: setRunTasksLoader,
-              action: setRunTasksAction,
+              path: "/showTasks/:page",
+              element: <ShowTasks />,
+              loader: showTasksLoader(dispatch),
             },
             {
-              path: "start",
-              element: <StartRunTasks />,
+              path: "/runningTasks",
+              element: <Outlet />,
+              id: "runningTasks",
+              loader: weekDaysLoader,
+              children: [
+                {
+                  path: "show",
+                  element: <RunningTasks />,
+                },
+                {
+                  path: "add",
+                  element: <SetupRunTasks />,
+                  loader: setRunTasksLoader,
+                  action: setRunTasksAction,
+                },
+                {
+                  path: "start",
+                  element: <StartRunTasks />,
+                },
+              ],
             },
           ],
+        },
+        {
+          path: "/register",
+          element: <SignUp />,
+          action: registerAction(dispatch),
+        },
+        {
+          path: "/login",
+          element: <Login />,
+          action: loginAction(dispatch),
         },
       ],
     },

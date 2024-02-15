@@ -36,6 +36,8 @@ const ShowData = ({
     }
   );
 
+  console.log(args);
+
   // useEffect(() => {
   //   if (isSuccess) {
   //     toast.success(`all changes are saved`);

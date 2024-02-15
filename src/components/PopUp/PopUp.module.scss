@@ -3,10 +3,9 @@
 
 .overlay {
   background-color: $overlay-color;
-  z-index: 99999999999 !important;
-  display: block !important;
-  transition: 0.5s;
+  z-index: 4000 !important;
   &.black {
-    background-color: black;
+    background-color: black !important;
+    opacity: 1 !important;
   }
 }

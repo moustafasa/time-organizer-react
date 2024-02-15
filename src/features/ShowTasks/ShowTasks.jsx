@@ -53,18 +53,17 @@ const ShowTasks = () => {
   const navigator = useNavigate();
   const [checkedItems, setCheckedItems] = useState([]);
 
-  const { data, isError, isFetching, isLoading, isSuccess, refetch, status } =
-    useGetDataQuery(
-      { page, args },
-      {
-        selectFromResult: ({ data, ...rest }) => {
-          return {
-            data: getAllDataIds(data, page),
-            ...rest,
-          };
-        },
-      }
-    );
+  const { data } = useGetDataQuery(
+    { page, args },
+    {
+      selectFromResult: ({ data, ...rest }) => {
+        return {
+          data: getAllDataIds(data, page),
+          ...rest,
+        };
+      },
+    }
+  );
   const deleteConfirm = (type, handler) => {
     show({
       title: `delete ${

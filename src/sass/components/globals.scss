@@ -1,3 +1,4 @@
+@use "../../../node_modules/bootstrap/scss/bootstrap.scss";
 @use "../helpers/mixins" as *;
 @use "../variables/colors" as *;
 @use "../variables/others" as *;
@@ -36,30 +37,6 @@ img {
   max-width: 100%;
 }
 
-// start container roles
-.container {
-  @include one-value-more-properties(15px, padding-left, padding-right);
-  margin-inline: auto;
-}
-
-/* Small */
-@include medias("more mobile") {
-  .container {
-    width: 750px;
-  }
-}
-/* Medium */
-@include medias("more small") {
-  .container {
-    width: 970px;
-  }
-}
-@include medias("large") {
-  .container {
-    width: 1170px;
-  }
-}
-
 .hidden {
   display: none !important;
 }
@@ -70,6 +47,14 @@ img {
 section {
   padding-block: $padding-top $padding-bottom;
   min-height: 100vh;
+}
+
+.input-box input.is-invalid {
+  border-color: $red-1-color;
+  &:focus {
+    border-color: $red-1-color !important;
+    box-shadow: 0 0 10px rgba($color: $red-1-color, $alpha: 0.4);
+  }
 }
 
 /* end global rules  */

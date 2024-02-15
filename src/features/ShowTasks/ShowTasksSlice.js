@@ -24,11 +24,13 @@ const showTasksQuerySlice = apiSlice.injectEndpoints({
     getData: builder.query({
       query: ({ page, args }) => {
         const searchParams = new URLSearchParams(args);
+        console.log(page);
         return {
           url: `/${page}?${searchParams.toString()}`,
         };
       },
       transformResponse: (resData, _, args) => {
+        console.log(resData);
         const adapter = {
           heads: headsAdapter,
           subs: subsAdapter,
