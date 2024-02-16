@@ -46,7 +46,6 @@ const useStartTask = (task) => {
     dispatch(changeAnimState("idle"));
     dispatch(changeCurrentPomodoro(1));
     dispatch(changeIsBreak(false));
-    console.log("done");
     show({
       title: `start ${task.name} task`,
       body: <RunTasksTimer />,

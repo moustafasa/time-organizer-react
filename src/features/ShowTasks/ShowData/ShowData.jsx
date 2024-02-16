@@ -19,11 +19,20 @@ const ShowData = ({
   editedKeys,
   deleteConfirm,
 }) => {
+  // route data
   const { page } = useParams();
   const { args } = useLoaderData();
-  const [updateElement, { isSuccess }] = useEditDataMutation();
-  const [deleteItem, { isSuccess: isDeleted }] = useDeleteElementMutation();
+  const navigator = useNavigate();
 
+  // queries and mutations
+
+  // // edit mutation
+  const [updateElement] = useEditDataMutation();
+
+  // // delete mutation
+  const [deleteItem] = useDeleteElementMutation();
+
+  // // get data query
   const { data: element = [] } = useGetDataQuery(
     { page, args },
     {
@@ -36,29 +45,20 @@ const ShowData = ({
     }
   );
 
-  console.log(args);
-
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     toast.success(`all changes are saved`);
-  //   }
-  // }, [isSuccess]);
-
-  // useEffect(() => {
-  //   if (isDeleted) {
-  //     toast.success("The element is deleted successfully");
-  //   }
-  // }, [isDeleted]);
-
+  // edited objects with {edited key : value of this edited key}
   const editedObject = editedKeys.reduce((obj, curr) => {
     obj[curr] = element[curr];
     return obj;
   }, {});
 
+  // states
+  // // is this element is in edit mode
   const [editable, setEditable] = useState(false);
-  const [elementValue, setElementValue] = useState(editedObject);
-  const navigator = useNavigate();
 
+  // // values of edited keys for this element
+  const [elementValue, setElementValue] = useState(editedObject);
+
+  // event handlers
   const editHandler = async () => {
     await updateElement({ id: elementId, page, update: elementValue, ...args });
     setEditable(false);
@@ -68,6 +68,7 @@ const ShowData = ({
     deleteConfirm("one", () => deleteItem({ id: elementId, page, ...args }));
   };
 
+  // // choose element by checkBox
   const checkHandler = (e) => {
     if (e.target.checked) {
       setCheckedItems([...checkedItems, e.target.value]);
@@ -76,6 +77,7 @@ const ShowData = ({
     }
   };
 
+  // // choose element and check checked box by clicking on row
   const selectHandler = (e) => {
     if (!e.target.closest("td:last-of-type") && !editable) {
       if (checkedItems.includes(elementId)) {
@@ -86,6 +88,7 @@ const ShowData = ({
     }
   };
 
+  // // go to show tasks of current sub or show subs of current head
   const goToHandler = (e) => {
     if (!e.target.closest("td:last-of-type") && page !== "tasks") {
       navigator(
@@ -98,6 +101,7 @@ const ShowData = ({
     }
   };
 
+  // // show edit confirm modal
   const editConfirm = () => {
     show({
       title: `edit ${page.slice(0, -1)}`,
