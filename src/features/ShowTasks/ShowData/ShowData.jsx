@@ -3,7 +3,7 @@ import {
   getElementById,
   useDeleteElementMutation,
   useEditDataMutation,
-  useGetDataQuery,
+  useGetHeadsQuery,
 } from "../ShowTasksSlice";
 import sass from "./ShowData.module.scss";
 import _ from "lodash";
@@ -33,7 +33,7 @@ const ShowData = ({
   const [deleteItem] = useDeleteElementMutation();
 
   // // get data query
-  const { data: element = [] } = useGetDataQuery(
+  const { data: element = [] } = useGetHeadsQuery(
     { page, args },
     {
       selectFromResult: ({ data, ...rest }) => {

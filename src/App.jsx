@@ -9,13 +9,12 @@ import AddTasks, {
   action as addTasksAction,
   loader as addTasksLoader,
 } from "./features/AddTasks/AddTasks";
-import ShowTasks, {
-  loader as showTasksLoader,
-} from "./features/ShowTasks/ShowTasks";
+// import ShowTasks, {
+//   loader as showTasksLoader,
+// } from "./features/ShowTasks/ShowTasks";
 import { useDispatch, useSelector } from "react-redux";
 import RunningTasks from "./features/RunningTasks/RunningTasks";
 import SetupRunTasks, {
-  loader as setRunTasksLoader,
   action as setRunTasksAction,
 } from "./features/RunningTasks/SetupRunTasks/SetupRunTasks";
 import PopUp from "./components/PopUp/PopUp";
@@ -30,6 +29,11 @@ import SignUp, {
 import Login, { action as loginAction } from "./features/auth/Login/Login";
 import { getCurrentToken, setCredintials } from "./features/auth/authSlice";
 import authApiSlice from "./features/auth/authApiSlice";
+
+import ShowTasks from "./features/ShowTasks/ShowTasks";
+import ShowHeads from "./features/ShowTasks/ShowHeads";
+import ShowSubs from "./features/ShowTasks/showSubs";
+import { action as deleteAction } from "./components/deletePage";
 
 const weekDaysLoader = () => {
   const weekDays = getOptionsOfWeekDays();
@@ -85,10 +89,18 @@ function App() {
               loader: addTasksLoader(dispatch),
               action: addTasksAction(dispatch),
             },
+
             {
-              path: "/showTasks/:page",
+              path: "/showTasks/heads",
+              element: <ShowHeads />,
+            },
+            {
+              path: "/showTasks/subs",
+              element: <ShowSubs />,
+            },
+            {
+              path: "/showTasks/tasks",
               element: <ShowTasks />,
-              loader: showTasksLoader(dispatch),
             },
             {
               path: "/runningTasks",
@@ -103,7 +115,6 @@ function App() {
                 {
                   path: "add",
                   element: <SetupRunTasks />,
-                  loader: setRunTasksLoader,
                   action: setRunTasksAction,
                 },
                 {
@@ -123,6 +134,14 @@ function App() {
           path: "/login",
           element: <Login />,
           action: loginAction(dispatch),
+        },
+        {
+          path: "/deleteOne/:page/:id",
+          action: deleteAction(dispatch),
+        },
+        {
+          path: "/delete/:page",
+          action: deleteAction(dispatch),
         },
       ],
     },

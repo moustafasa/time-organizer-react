@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-/////////////////////////////////delete/////////////////////////////
+//////////////////////////delete functions//////////////////////////
 ////////////////////////////////////////////////////////////////////
 
 const { calcSubs, calcHeads } = require("./commonFunctions");
@@ -37,41 +37,6 @@ function deleteTasks(db, id, headId, subId) {
   sub.assign(subUpdated).write();
   head.assign(headUpdated).write();
 }
-
-// heads
-const deleteHead = (db) => (req, res) => {
-  let head = db.get("data").get("heads").find({ id: req.params.id }).value();
-
-  if (head) {
-    deleteHeads(db, req.params.id);
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(404);
-  }
-};
-
-// subs
-const deleteSub = (db) => (req, res) => {
-  let sub = db.get("data").get("subs").find({ id: req.params.id }).value();
-  if (sub) {
-    deleteSubs(db, req.params.id, sub.headId);
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(404);
-  }
-};
-
-// tasks
-const deleteTask = (db) => (req, res) => {
-  let task = db.get("data").get("tasks").find({ id: req.params.id }).value();
-
-  if (task) {
-    deleteTasks(db, req.params.id, task.headId, task.subId);
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(404);
-  }
-};
 
 ////////////////////////////////////////////////////////////////////
 ///////////////////////////delete multi/////////////////////////////
@@ -132,9 +97,6 @@ const deleteMultiTasks = (db) => (req, res) => {
 };
 
 module.exports = {
-  deleteHead,
-  deleteSub,
-  deleteTask,
   deleteMultiHeads,
   deleteMultiSubs,
   deleteMultiTasks,

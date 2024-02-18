@@ -27,7 +27,7 @@ const StartRunTasks = () => {
 
   const dispatch = useDispatch();
 
-  const { currentTask } = useGetRunningTasksQuery(currentDay, {
+  const { currentTask = {} } = useGetRunningTasksQuery(currentDay, {
     selectFromResult: ({ data, ...rest }) => ({
       currentTask: getRunTaskById(data, taskId),
       ...rest,

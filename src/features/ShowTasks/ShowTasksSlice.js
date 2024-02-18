@@ -21,26 +21,36 @@ const initialState = {
 
 const showTasksQuerySlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getData: builder.query({
-      query: ({ page, args }) => {
-        const searchParams = new URLSearchParams(args);
-        console.log(page);
-        return {
-          url: `/${page}?${searchParams.toString()}`,
-        };
+    getHeads: builder.query({
+      query: () => "/heads",
+      transformResponse: (resData, _, args) =>
+        headsAdapter.setAll(initialState.heads, resData),
+      providesTags: (result = { ids: [] }, error, args) => [
+        { type: "Data", id: "LIST" },
+        ...result.ids.map((id) => ({ type: "Data", id })),
+      ],
+    }),
+    getSubs: builder.query({
+      query: (args) => {
+        return `/subs?${args}`;
       },
       transformResponse: (resData, _, args) => {
-        console.log(resData);
-        const adapter = {
-          heads: headsAdapter,
-          subs: subsAdapter,
-          tasks: tasksAdapter,
-        };
-        return adapter[args.page].setAll(initialState[args.page], resData);
+        return subsAdapter.setAll(initialState.tasks, resData);
       },
       providesTags: (result = { ids: [] }, error, args) => [
         { type: "Data", id: "LIST" },
-        { type: "Data", id: args.page },
+        ...result.ids.map((id) => ({ type: "Data", id })),
+      ],
+    }),
+    getTasks: builder.query({
+      query: (args) => {
+        return `/tasks?${args}`;
+      },
+      transformResponse: (resData, _, args) => {
+        return tasksAdapter.setAll(initialState.tasks, resData);
+      },
+      providesTags: (result = { ids: [] }, error, args) => [
+        { type: "Data", id: "LIST" },
         ...result.ids.map((id) => ({ type: "Data", id })),
       ],
     }),
@@ -103,37 +113,21 @@ const showTasksQuerySlice = apiSlice.injectEndpoints({
   }),
 });
 
-const showTasksSlice = createSlice({
-  name: "showTasks",
-  initialState: initialState,
-  reducers: {
-    changeCurrentHead(state, action) {
-      state.heads.currentHead = action.payload;
-    },
-    changeCurrentSub(state, action) {
-      state.subs.currentSub = action.payload;
-    },
-    changeCurrentPage(state, action) {
-      state.page = action.payload;
-    },
-  },
-});
-
 export const {
   selectIds: getAllTasksIds,
   selectById: getTasksById,
-  selectEntities: getAllTasksEntities,
+  selectAll: getAllTasks,
 } = tasksAdapter.getSelectors((state) => state ?? tasks);
 
 export const {
   selectIds: getAllSubsIds,
   selectById: getSubsById,
-  selectEntities: getAllSubsEntities,
+  selectAll: getAllSubs,
 } = subsAdapter.getSelectors((state) => state ?? subs);
 export const {
   selectIds: getAllHeadsIds,
   selectById: getHeadsById,
-  selectEntities: getAllHeadsEntities,
+  selectAll: getAllHeads,
 } = headsAdapter.getSelectors((state) => {
   return state ?? heads;
 });
@@ -163,23 +157,15 @@ export const getElementById = createSelector(
   }
 );
 
-export const getNotDoneTasks = createSelector(
-  getAllTasksEntities,
-  (state) => {
-    const ids = getAllTasksIds(state);
-    const entities = getAllTasksEntities(state);
-    return ids.filter((id) => entities[id]?.progress < 100);
-  },
-  (entities, ids) => Object.fromEntries(ids.map((id) => [id, entities[id]]))
+export const getNotDoneTasks = createSelector(getAllTasks, (tasks) =>
+  tasks.filter((task) => task?.progress < 100)
 );
 
 export const {
-  useGetDataQuery,
+  useGetHeadsQuery,
+  useGetSubsQuery,
+  useGetTasksQuery,
   useEditDataMutation,
   useDeleteElementMutation,
   useDeleteMultipleMutation,
 } = showTasksQuerySlice;
-
-export const { changeCurrentHead, changeCurrentSub, changeCurrentPage } =
-  showTasksSlice.actions;
-export default showTasksSlice.reducer;

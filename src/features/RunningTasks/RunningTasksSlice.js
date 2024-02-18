@@ -10,7 +10,7 @@ const runningTasksAdapter = createEntityAdapter();
 const querySliceState = runningTasksAdapter.getInitialState();
 
 const initialState = {
-  currentDay: new Date().toDateString(),
+  currentDay: "",
   pomodorosNum: 2,
   currentPomodoro: 1,
   pomodoroTime: 60,

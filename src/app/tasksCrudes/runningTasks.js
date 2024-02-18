@@ -56,20 +56,6 @@ const getRunningTasksByDay = (db) => (req, res) => {
   res.send(tasks);
 };
 
-const deleteRunningTasks = (db) => (req, res) => {
-  const task = db
-    .get("data")
-    .get("runningTasks")
-    .find({ id: req.params.id })
-    .value();
-  if (task) {
-    db.get("data").get("runningTasks").remove({ id: req.params.id }).write();
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(404);
-  }
-};
-
 // delete multi
 const deleteMultiRunTasks = (db) => (req, res) => {
   const ids = req.body;
@@ -129,7 +115,6 @@ const doRunTask = (db) => (req, res) => {
 module.exports = {
   setRunningTasks,
   getRunningTasksByDay,
-  deleteRunningTasks,
   deleteMultiRunTasks,
   doRunTask,
 };

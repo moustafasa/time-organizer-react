@@ -29,9 +29,6 @@ const {
 } = require("./tasksCrudes/updateTasks");
 
 const {
-  deleteHead,
-  deleteSub,
-  deleteTask,
   deleteMultiHeads,
   deleteMultiSubs,
   deleteMultiTasks,
@@ -40,7 +37,6 @@ const {
 const {
   setRunningTasks,
   getRunningTasksByDay,
-  deleteRunningTasks,
   deleteMultiRunTasks,
   doRunTask,
 } = require("./tasksCrudes/runningTasks");
@@ -145,19 +141,6 @@ server.patch("/subs/:id", updateSub(db));
 server.patch("/tasks/:id", updateTask(db));
 
 ////////////////////////////////////////////////////////////////////
-/////////////////////////////////delete/////////////////////////////
-////////////////////////////////////////////////////////////////////
-
-// heads
-server.delete("/heads/:id", deleteHead(db));
-
-// subs
-server.delete("/subs/:id", deleteSub(db));
-
-// tasks
-server.delete("/tasks/:id", deleteTask(db));
-
-////////////////////////////////////////////////////////////////////
 ///////////////////////////delete multi/////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
@@ -177,8 +160,6 @@ server.post("/tasks/deleteMulti", deleteMultiTasks(db));
 server.post("/runningTasks", setRunningTasks(db));
 
 server.get("/runningTasks/:day", getRunningTasksByDay(db));
-
-server.delete("/runningTasks/:id", deleteRunningTasks(db));
 
 // delete multi
 server.post("/runningTasks/deleteMulti", deleteMultiRunTasks(db));

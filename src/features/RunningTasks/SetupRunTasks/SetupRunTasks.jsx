@@ -1,132 +1,30 @@
-import React, { useState } from "react";
-import SelectBox from "../../../components/SelectBox/SelectBox";
-import axios from "axios";
+import React from "react";
 import {
   Form,
   redirect,
-  useLoaderData,
   useRouteLoaderData,
   useSearchParams,
 } from "react-router-dom";
 import {
-  getAllHeadsEntities,
-  getAllSubsEntities,
-  getAllTasksEntities,
+  getAllHeads,
+  getAllSubs,
   getNotDoneTasks,
-  useGetDataQuery,
+  useGetHeadsQuery,
+  useGetSubsQuery,
+  useGetTasksQuery,
 } from "../../ShowTasks/ShowTasksSlice";
 import { useAddRunTasksMutation } from "../RunningTasksSlice";
-
-export const loader = async ({ request, params }) => {
-  const url = new URL(request.url);
-  const head = url.searchParams.get("headId");
-  const sub = url.searchParams.get("subId");
-  const args = {};
-
-  if (head) {
-    args["headId"] = head;
-  }
-
-  if (sub) {
-    args["subId"] = sub;
-  }
-
-  return {
-    args,
-  };
-};
+import ShowSelects from "../../../components/customTable/ShowSelects";
 
 export const action = async ({ request, params }) => {
   return redirect("/runningTasks/show");
 };
 
 const SetupRunTasks = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { args } = useLoaderData();
+  const [searchParams] = useSearchParams();
   const { weekDays } = useRouteLoaderData("runningTasks");
   const day = searchParams.get("day") || weekDays[0].value;
-  const setDay = (value) => setSearchParams({ day: value });
-
-  const { data: heads = {} } = useGetDataQuery(
-    { page: "heads" },
-    {
-      selectFromResult: ({ data, ...rest }) => ({
-        data: getAllHeadsEntities(data),
-        ...rest,
-      }),
-    }
-  );
-
-  const { data: subs = {} } = useGetDataQuery(
-    { page: "subs", args },
-    {
-      selectFromResult: ({ data, ...rest }) => ({
-        data: getAllSubsEntities(data),
-        ...rest,
-      }),
-    }
-  );
-
-  const { data: tasks = {} } = useGetDataQuery(
-    { page: "tasks", args },
-    {
-      selectFromResult: ({ data, ...rest }) => {
-        return {
-          data: getNotDoneTasks(data),
-          ...rest,
-        };
-      },
-    }
-  );
-
   const [setRunTasks] = useAddRunTasksMutation();
-
-  // convert data to options
-  const convertToOptions = (elements) => [
-    { text: "choose", value: "" },
-    ...Object.keys(elements).map((id) => ({
-      text: elements[id].name,
-      value: id,
-    })),
-  ];
-
-  const selectValue = (type) => searchParams.get(`${type}Id`) || "";
-  const setSelectValue = (type) => (value) => {
-    if (!value)
-      setSearchParams((prev) => {
-        prev.delete(`${type}Id`);
-        return prev;
-      });
-    else {
-      setSearchParams((prev) => {
-        if (type === "head") prev.delete("subId");
-        if (type === "sub") prev.delete("taskId");
-        return { ...Object.fromEntries(prev), [`${type}Id`]: value };
-      });
-    }
-  };
-
-  const valueState = (type) => [selectValue(type), setSelectValue(type)];
-
-  // const addHandler = () => {
-  //   if (!tasksList.find((task) => task.id === searchParams.get("taskId")))
-  //     setTasksList([
-  //       ...tasksList,
-  //       {
-  //         id: searchParams.get("taskId"),
-  //         task: tasks.find((task) => task.value === searchParams.get("taskId"))
-  //           .text,
-  //         sub: subs.find((sub) => sub.value === searchParams.get("subId")).text,
-  //         head: heads.find((head) => head.value === searchParams.get("headId"))
-  //           .text,
-  //         day: day[0],
-  //       },
-  //     ]);
-  //   setSelectValue("task")("");
-  // };
-
-  // const tasks = [];
-  // const subs = [];
 
   return (
     <section>
@@ -142,50 +40,32 @@ const SetupRunTasks = () => {
           }}
         >
           <div className="d-flex justify-content-center  gap-3 flex-column ">
-            <fieldset className="row gap-1 align-items-center text-capitalize  ">
-              <label className="col-md-1 col-12 text-center text-md-start  mb-2 mb-md-0 ">
-                heads
-              </label>
-              <SelectBox
-                valueState={valueState("head")}
-                className="col"
-                options={convertToOptions(heads)}
-                name="head"
-              />
-            </fieldset>
-            <fieldset className="row gap-1 align-items-center text-capitalize ">
-              <label className="col-md-1 col-12 text-center text-md-start  mb-2 mb-md-0 ">
-                subs
-              </label>
-              <SelectBox
-                className="col"
-                valueState={valueState("sub")}
-                options={convertToOptions(subs)}
-                name="sub"
-              />
-            </fieldset>
-            <fieldset className="row gap-1 align-items-center text-capitalize ">
-              <label className="col-md-1 col-12 text-center text-md-start  mb-2 mb-md-0 ">
-                tasks
-              </label>
-              <SelectBox
-                className="col"
-                valueState={valueState("task")}
-                options={convertToOptions(tasks)}
-                name="task"
-              />
-            </fieldset>
-            <fieldset className="row gap-1 align-items-center text-capitalize ">
-              <label className="col-md-1 col-12 text-center text-md-start  mb-2 mb-md-0 ">
-                day
-              </label>
-              <SelectBox
-                className="col"
-                valueState={[day, setDay]}
-                options={weekDays}
-                name="day"
-              />
-            </fieldset>
+            <ShowSelects
+              label="heads"
+              name="headId"
+              extraChangedValue={{ taskId: "", subId: "" }}
+              useGetData={useGetHeadsQuery}
+              getDataSelector={getAllHeads}
+            />
+            <ShowSelects
+              label="subs"
+              name="subId"
+              extraChangedValue={{ taskId: "" }}
+              useGetData={useGetSubsQuery}
+              getDataSelector={getAllSubs}
+            />
+            <ShowSelects
+              label="tasks"
+              name="taskId"
+              useGetData={useGetTasksQuery}
+              getDataSelector={getNotDoneTasks}
+            />
+            <ShowSelects
+              label={"day"}
+              name={"day"}
+              options={weekDays}
+              defaultValue={weekDays[0].value}
+            />
           </div>
           <button
             className="btn btn-primary d-block mx-auto mt-5 text-capitalize w-50"

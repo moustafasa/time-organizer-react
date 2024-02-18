@@ -5,7 +5,8 @@ import {
   fetchData,
   getAllHeadsEntities,
   getAllSubsEntities,
-  useGetDataQuery,
+  useGetHeadsQuery,
+  useGetSubsQuery,
 } from "../ShowTasksSlice";
 import sass from "./ShowSelects.module.scss";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -26,7 +27,7 @@ const ShowSelects = () => {
     setSearchParams(newParams);
   };
 
-  const { data: heads } = useGetDataQuery(
+  const { data: heads } = useGetHeadsQuery(
     { page: "heads" },
     {
       selectFromResult: ({ data, ...rest }) => {
@@ -35,25 +36,17 @@ const ShowSelects = () => {
           ...rest,
         };
       },
-      skip: page === "heads",
     }
   );
 
-  const { data: subs } = useGetDataQuery(
-    {
-      page: "subs",
-      args: { headId: headValue },
+  const { data: subs } = useGetSubsQuery(searchParams.toString(), {
+    selectFromResult: ({ data, ...rest }) => {
+      return {
+        data: getAllSubsEntities(data),
+        ...rest,
+      };
     },
-    {
-      selectFromResult: ({ data, ...rest }) => {
-        return {
-          data: getAllSubsEntities(data),
-          ...rest,
-        };
-      },
-      skip: page !== "tasks",
-    }
-  );
+  });
 
   const headsOptions = [
     { text: "choose", value: "" },
@@ -87,19 +80,17 @@ const ShowSelects = () => {
           name="headId"
         />
       </div>
-      {page === "tasks" && (
-        <div
-          className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1 flex-sm-nowrap flex-wrap`}
-        >
-          <label>sub Name :</label>
-          <SelectBox
-            className={sass.SelectBox}
-            options={subsOptions}
-            valueState={[subValue, setSubValue]}
-            name="subId"
-          />
-        </div>
-      )}
+      <div
+        className={`${sass.selectCont} d-flex gap-3 px-3 mt-5 align-items-center flex-grow-1 flex-sm-nowrap flex-wrap`}
+      >
+        <label>sub Name :</label>
+        <SelectBox
+          className={sass.SelectBox}
+          options={subsOptions}
+          valueState={[subValue, setSubValue]}
+          name="subId"
+        />
+      </div>
     </div>
   );
 };

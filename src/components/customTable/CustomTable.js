@@ -1,24 +1,31 @@
-import React, { useState } from "react";
-import SelectBox from "../SelectBox/SelectBox";
-import ShowSelects from "./ShowSelects";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import ShowSelects from "./ShowSelects";
 
-// selectBox
-// {
-//     options,
-//     handler: [selectValue, setSelectValue],
-//     label,
-//     name
-//   },
 const CustomTable = ({
   title,
-  selectBox,
-  data,
   keys,
   addPage,
   deleteConfirm,
+  children,
+  checked: [checkedItems, setCheckedItems],
+  selectBoxes = [],
 }) => {
-  const [checkedItems, setCheckedItems] = useState([]);
+  // uncheck tr on blur
+  useEffect(() => {
+    const unCheckOnBlurHandler = (e) => {
+      if (!e.target.closest("table") && !e.target.closest("button")) {
+        setCheckedItems([]);
+      }
+    };
+    if (checkedItems.length > 0) {
+      document.addEventListener("click", unCheckOnBlurHandler);
+    }
+    return () => {
+      document.removeEventListener("click", unCheckOnBlurHandler);
+    };
+  }, [checkedItems, setCheckedItems]);
+
   return (
     <section>
       <div className="container">
@@ -26,8 +33,8 @@ const CustomTable = ({
         <div
           className={`text-capitalize d-flex gap-3 align-items-center flex-wrap`}
         >
-          {selectBox.map((select, id) => (
-            <ShowSelects key={title + id} {...select} />
+          {selectBoxes.map((select, id) => (
+            <ShowSelects key={id + select.name} {...select} />
           ))}
         </div>
         <div className="table-cont">
@@ -42,12 +49,12 @@ const CustomTable = ({
                 <th>options</th>
               </tr>
             </thead>
-            <tbody>{/* this is body */}</tbody>
+            <tbody>{children}</tbody>
           </table>
         </div>
         <div className="d-flex justify-content-center align-items-center mt-4 gap-3">
           <Link
-            to={`${addPage}?${window.location.search}`}
+            to={`${addPage}${window.location.search}`}
             className="btn btn-primary text-capitalize"
           >
             add
@@ -55,13 +62,13 @@ const CustomTable = ({
           <button
             className="btn btn-danger text-capitalize"
             disabled={checkedItems.length === 0}
-            onClick={() => deleteConfirm(() => {}, "multi")}
+            onClick={() => deleteConfirm("multi")}
           >
             delete
           </button>
           <button
             className="btn btn-danger text-capitalize"
-            onClick={() => deleteConfirm(() => {}, "all")}
+            onClick={() => deleteConfirm("all")}
           >
             delete all
           </button>

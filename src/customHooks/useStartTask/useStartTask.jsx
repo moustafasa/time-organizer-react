@@ -8,7 +8,6 @@ import {
   getPomodoroTime,
   useDidTaskMutation,
 } from "../../features/RunningTasks/RunningTasksSlice";
-import { useGetDataQuery } from "../../features/ShowTasks/ShowTasksSlice";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { modify, show } from "../../components/PopUp/PopUp";
 import RunTasksTimer from "../../features/RunningTasks/StartRunTasks/RunTasksTimer/RunTasksTimer";
