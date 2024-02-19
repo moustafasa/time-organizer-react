@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   changeCurrentDay,
   getCurrentDay,
   getRunTaskById,
   getRunTasksIds,
-  useDeleteMultiRunTasksMutation,
   useGetRunningTasksQuery,
 } from "./RunningTasksSlice";
-import Task from "./Task/Task";
-import {
-  Link,
-  useLoaderData,
-  useParams,
-  useRouteLoaderData,
-  useSearchParams,
-} from "react-router-dom";
+import { useRouteLoaderData } from "react-router-dom";
 import { getOptionsOfWeekDays } from "./functions";
-import SelectBox from "../../components/SelectBox/SelectBox";
 import { useDispatch, useSelector } from "react-redux";
-import { show } from "../../components/PopUp/PopUp";
 import CustomTable from "../../components/customTable/CustomTable";
 import TableRow from "../../components/customTable/TableRow";
 import { format } from "date-fns";
