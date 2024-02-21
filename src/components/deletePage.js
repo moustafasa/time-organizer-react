@@ -8,16 +8,12 @@ export const action =
     const { page } = params;
 
     const deleteEndPoint =
-      page === "rTasks" ? "deleteMultiRunTasks" : "deleteMultiple";
-
-    const searchArgs = Object.fromEntries(
-      new URLSearchParams(window.location.search)
-    );
+      page === "rTasks" ? "deleteMultiRunTasks" : "deleteElement";
 
     try {
       const res = await dispatch(
         apiSlice.endpoints[deleteEndPoint].initiate(
-          page === "rTasks" ? ids : { ids, page, ...searchArgs },
+          page === "rTasks" ? ids : { ids, page },
           {
             track: false,
           }

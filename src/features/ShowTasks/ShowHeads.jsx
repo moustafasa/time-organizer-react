@@ -63,7 +63,7 @@ const ShowHeads = () => {
           getElementById={(data, elementId) =>
             getElementById(data, "heads", elementId)
           }
-          index={ind + 1}
+          index={ind}
           keys={keys}
           btns={showTasksBtns}
           goToHandler={goToHandler(head)}

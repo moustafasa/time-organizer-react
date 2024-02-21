@@ -13,6 +13,7 @@ const ShowBtns = ({
   id,
   page,
   element,
+  deleteConfirm,
 }) => {
   const [updateElement] = useEditDataMutation();
 
@@ -48,7 +49,7 @@ const ShowBtns = ({
       </button>
       <button
         className="btn btn-danger text-capitalize d-block"
-        // onClick={deleteHandler}
+        onClick={() => deleteConfirm("one", [id])}
       >
         delete
       </button>

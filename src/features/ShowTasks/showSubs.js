@@ -27,15 +27,20 @@ const ShowSubs = () => {
     { title: "tasksDone" },
   ];
 
-  const { data } = useGetSubsQuery(window.location.search.slice(1), {
-    selectFromResult: ({ data, ...res }) => ({
-      data: getAllDataIds(data, "subs"),
-      ...res,
-    }),
-  });
+  const { data } = useGetSubsQuery(
+    { headId: new URLSearchParams(window.location.search).get("headId") },
+    {
+      selectFromResult: ({ data, ...res }) => ({
+        data: getAllDataIds(data, "subs"),
+        ...res,
+      }),
+    }
+  );
 
   // btns of show Tasks page
-  const showTasksBtns = (args) => <ShowBtns {...args} page={"subs"} />;
+  const showTasksBtns = (args) => (
+    <ShowBtns {...args} page={"subs"} deleteConfirm={deleteConfirm} />
+  );
 
   // // go to show tasks of current sub or show subs of current head
   const goToHandler = (elementId) => (e) => {
@@ -73,10 +78,13 @@ const ShowSubs = () => {
           getElementById={(data, elementId) =>
             getElementById(data, "subs", elementId)
           }
-          index={ind + 1}
+          index={ind}
           keys={keys}
           btns={showTasksBtns}
           goToHandler={goToHandler(head)}
+          args={{
+            headId: new URLSearchParams(window.location.search).get("headId"),
+          }}
         />
       ))}
     </CustomTable>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   getAllDataIds,
   getAllHeads,
@@ -9,12 +9,10 @@ import {
   useGetSubsQuery,
   useGetTasksQuery,
 } from "./ShowTasksSlice";
-import { show } from "../../components/PopUp/PopUp";
 import ShowBtns from "./ShowBtns";
 import CustomTable from "../../components/customTable/CustomTable";
 import TableRow from "../../components/customTable/TableRow";
 import useDeleteConfirm from "../../customHooks/useDeleteConfirm";
-import useGetOptionsFromData from "../../customHooks/useGetOptionsFromData";
 
 const ShowTasks = () => {
   const [searchParams] = useSearchParams();
@@ -27,14 +25,16 @@ const ShowTasks = () => {
   const [checkedItems, setCheckedItems] = useState([]);
   const deleteConfirm = useDeleteConfirm("tasks");
 
-  const { data } = useGetTasksQuery(searchParams.toString(), {
+  const { data } = useGetTasksQuery(Object.fromEntries(searchParams), {
     selectFromResult: ({ data }) => ({
       data: getAllDataIds(data, "tasks"),
     }),
   });
 
   // btns of show Tasks page
-  const showTasksBtns = (args) => <ShowBtns {...args} page={"tasks"} />;
+  const showTasksBtns = (args) => (
+    <ShowBtns {...args} page={"tasks"} deleteConfirm={deleteConfirm} />
+  );
 
   const selectBoxes = [
     {
@@ -49,6 +49,7 @@ const ShowTasks = () => {
       name: "subId",
       useGetData: useGetSubsQuery,
       getDataSelector: getAllSubs,
+      dependencyNames: ["headId"],
     },
   ];
 
@@ -72,9 +73,10 @@ const ShowTasks = () => {
           getElementById={(data, elementId) =>
             getElementById(data, "tasks", elementId)
           }
-          index={ind + 1}
+          index={ind}
           keys={keys}
           btns={showTasksBtns}
+          args={Object.fromEntries(searchParams)}
         />
       ))}
     </CustomTable>

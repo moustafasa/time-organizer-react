@@ -27,7 +27,7 @@ const RunningTasks = () => {
   const dayValue = useSelector(getCurrentDay);
   const dispatch = useDispatch();
   const setDayValue = (value) => dispatch(changeCurrentDay(value));
-  const { data: runTasks } = useGetRunningTasksQuery(dayValue, {
+  const { data: runTasks, isLoading } = useGetRunningTasksQuery(dayValue, {
     selectFromResult: ({ data, ...rest }) => ({
       data: getRunTasksIds(data),
       ...rest,
@@ -61,7 +61,7 @@ const RunningTasks = () => {
     keys.unshift({
       title: "day",
       func: (value) => {
-        return format(new Date(value), "eeee");
+        if (value) return format(new Date(value), "eeee");
       },
     });
   }
@@ -74,6 +74,10 @@ const RunningTasks = () => {
       customControl: [dayValue, setDayValue],
     },
   ];
+
+  const showRunBtns = (args) => (
+    <RunBtns {...args} deleteConfirm={deleteConfirm} />
+  );
 
   return (
     <CustomTable
@@ -93,9 +97,10 @@ const RunningTasks = () => {
           elementId={task}
           useGetDataFn={useGetRunningTasksQuery}
           getElementById={getRunTaskById}
-          index={ind + 1}
+          index={ind}
           keys={keys}
-          btns={RunBtns}
+          btns={showRunBtns}
+          args={dayValue}
         />
       ))}
     </CustomTable>

@@ -85,7 +85,7 @@ export const apiSlice = createApi({
       query: ({ type, id }) => `/${type}/${id}`,
     }),
   }),
-  keepUnusedDataFor: 0,
+  keepUnusedDataFor: 5,
 });
 
 export const { useGetElementQuery } = apiSlice;

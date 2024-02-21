@@ -2,12 +2,12 @@ import { isSameDay } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const RunBtns = ({ id, element }) => {
+const RunBtns = ({ id, element, deleteConfirm }) => {
   return (
     <>
       <button
         className="btn btn-danger text-capitalize d-block"
-        // onClick={() => deleteConfirm(() => deleteTask(id))}
+        onClick={() => deleteConfirm("one", [id])}
       >
         delete
       </button>

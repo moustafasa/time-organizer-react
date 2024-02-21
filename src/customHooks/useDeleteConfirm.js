@@ -3,17 +3,24 @@ import { show } from "../components/PopUp/PopUp";
 
 const useDeleteConfirm = (page) => {
   const fetcher = useFetcher();
+  const elementLabel = page === "rTasks" ? "tasks" : page;
   const deleteConfirm = (type, ids) => {
     show({
-      title: `delete ${type === "multi" || type === "all" ? "heads" : "head"}`,
+      title: `delete ${
+        type === "multi" || type === "all"
+          ? elementLabel
+          : elementLabel.slice(0, -1)
+      }`,
       body: (
         <p className="text-capitalize">
           are you sure you want to delete{" "}
           {type === "multi"
-            ? `selected heads`
+            ? `selected ${elementLabel}`
             : type === "all"
-            ? `all heads`
-            : `this head`}
+            ? `all ${page === "rTasks" ? "showed " : ""}${elementLabel}`
+            : `this ${elementLabel.slice(0, -1)}${
+                page === "rTasks" ? " from running tasks" : ""
+              }`}
           ?
         </p>
       ),

@@ -53,12 +53,14 @@ const SetupRunTasks = () => {
               extraChangedValue={{ taskId: "" }}
               useGetData={useGetSubsQuery}
               getDataSelector={getAllSubs}
+              dependencyNames={["headId"]}
             />
             <ShowSelects
               label="tasks"
               name="taskId"
               useGetData={useGetTasksQuery}
               getDataSelector={getNotDoneTasks}
+              dependencyNames={["headId", "subId"]}
             />
             <ShowSelects
               label={"day"}

@@ -12,9 +12,15 @@ const ShowSelects = ({
   getDataSelector = () => ({}),
   customControl: [customValue, setCustomValue] = [],
   defaultValue = "",
+  dependencyNames = [],
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data = [] } = useGetData(searchParams.toString(), {
+  const args = dependencyNames.length
+    ? Object.fromEntries(
+        dependencyNames.map((name) => [name, searchParams.get(name)])
+      )
+    : undefined;
+  const { data = [] } = useGetData(args, {
     selectFromResult: ({ data, ...rest }) => ({
       data: getDataSelector(data),
       ...rest,

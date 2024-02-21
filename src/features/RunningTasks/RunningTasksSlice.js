@@ -69,6 +69,7 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
         { type: "RunTasks", id: "LIST" },
         ...result.ids.map((id) => ({ type: "RunTasks", id })),
       ],
+      keepUnusedDataFor: 0,
     }),
     deleteFromRunTasks: builder.mutation({
       query: (id) => ({ url: `/runningTasks/${id}`, method: "DELETE" }),
@@ -80,8 +81,21 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
         method: "POST",
         data: ids,
       }),
-      invalidatesTags: (res, err, ids) =>
-        ids.map((id) => ({ type: "RunTasks", id })),
+
+      async onQueryStarted(ids, { dispatch, getState, queryFulfilled }) {
+        const day = getCurrentDay(getState());
+        const patchResult = dispatch(
+          apiSlice.util.updateQueryData("getRunningTasks", day, (draft) => {
+            runningTasksAdapter.removeMany(draft, ids);
+          })
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
     didTask: builder.mutation({
       query: ({ id, subTasksDone }) => {

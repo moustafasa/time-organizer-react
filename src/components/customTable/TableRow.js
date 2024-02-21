@@ -10,9 +10,10 @@ const TableRow = ({
   keys,
   btns = () => {},
   goToHandler,
+  args,
 }) => {
   // get element by id
-  const { element = {} } = useGetDataFn(window.location.search.slice(1), {
+  const { element = {} } = useGetDataFn(args, {
     selectFromResult: ({ data, ...rest }) => ({
       element: getElementById(data, elementId),
       ...rest,

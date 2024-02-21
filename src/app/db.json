@@ -8,7 +8,7 @@
         "subDone": 0,
         "tasksNum": 6,
         "tasksDone": 1,
-        "progress": 78,
+        "progress": 70,
         "userId": "18d92aa4d28"
       },
       {
@@ -42,17 +42,6 @@
         "subNum": 1,
         "subDone": 0,
         "progress": 4
-      },
-      {
-        "id": "lssvtbjc",
-        "name": "fjsdklfd",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 0,
-        "tasksDone": 0,
-        "subNum": 0,
-        "subDone": 0,
-        "progress": null
       }
     ],
     "subs": [
@@ -62,7 +51,7 @@
         "name": "front ends",
         "tasksNum": 4,
         "tasksDone": 0,
-        "progress": 62,
+        "progress": 63,
         "userId": "18d92aa4d28"
       },
       {
@@ -80,7 +69,7 @@
         "name": "backend",
         "tasksNum": 2,
         "tasksDone": 1,
-        "progress": 95,
+        "progress": 78,
         "userId": "18d92aa4d28"
       },
       {
@@ -102,6 +91,16 @@
         "tasksNum": 2,
         "tasksDone": 0,
         "progress": 4
+      },
+      {
+        "id": "lstchwx9:lstchwxa",
+        "headId": "lstchwx9",
+        "name": "afdsafds",
+        "readOnly": false,
+        "userId": "18d92aa4d28",
+        "tasksNum": 1,
+        "tasksDone": 0,
+        "progress": 6
       }
     ],
     "tasks": [
@@ -132,8 +131,8 @@
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
         "subTasksNum": 88,
-        "subTasksDone": 57,
-        "progress": 64,
+        "subTasksDone": 60,
+        "progress": 68,
         "userId": "18d92aa4d28"
       },
       {
@@ -172,9 +171,9 @@
         "name": "mysql",
         "subId": "lpe0icc6:lpe0jf3h",
         "headId": "lpe0icc6",
-        "subTasksNum": 23,
-        "subTasksDone": 21,
-        "progress": 91,
+        "subTasksNum": 25,
+        "subTasksDone": 14,
+        "progress": 56,
         "userId": "18d92aa4d28"
       },
       {
@@ -216,39 +215,33 @@
         "subTasksDone": 2,
         "userId": "18d92d483ee",
         "progress": 8
+      },
+      {
+        "id": "lstchwx9:lstchwxa:lstchwxa",
+        "name": "afdsafds",
+        "subId": "lstchwx9:lstchwxa",
+        "headId": "lstchwx9",
+        "subTasksNum": 32,
+        "subTasksDone": 2,
+        "userId": "18d92aa4d28",
+        "progress": 6
       }
     ],
     "runningTasks": [
       {
-        "id": "lpe0icc6:lpe0icc6:lpe0j0z3Sun Feb 18 2024",
-        "name": "react",
+        "id": "lpe0icc6:lpe0icc6:lpe0iody",
+        "name": "css",
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
-        "subTasksNum": 200,
-        "subTasksDone": 140,
-        "progress": 70,
-        "page": "tasks",
+        "subTasksNum": 88,
+        "subTasksDone": 60,
+        "progress": 68,
         "userId": "18d92aa4d28",
-        "taskId": "lpe0icc6:lpe0icc6:lpe0j0z3",
-        "day": "Sun Feb 18 2024",
+        "taskId": "lpe0icc6:lpe0icc6:lpe0iody",
+        "day": "Tue Feb 20 2024",
         "headName": "programming",
         "subName": "front ends",
-        "done": false
-      },
-      {
-        "id": "lpe0icc6:lpe0jf3h:lpe0jp7qSun Feb 18 2024",
-        "name": "mysql",
-        "subId": "lpe0icc6:lpe0jf3h",
-        "headId": "lpe0icc6",
-        "subTasksNum": 23,
-        "subTasksDone": 21,
-        "progress": 91,
-        "userId": "18d92aa4d28",
-        "taskId": "lpe0icc6:lpe0jf3h:lpe0jp7q",
-        "day": "Sun Feb 18 2024",
-        "headName": "programming",
-        "subName": "backend",
-        "done": false
+        "done": true
       }
     ],
     "users": [
@@ -260,7 +253,7 @@
           "USER"
         ],
         "password": "$2a$10$1u7Xlzyam5GEsWtN0DBeUOglYhUFfemFCE9mEGM67hSkv8x2U/OnW",
-        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDkyYWE0ZDI4IiwiZW1haWwiOiJtb3VzdGFmYXNhYWQ5NTRAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJkYXRlIjoiMTJiN2M4MGQ3ZjYuZDBkIiwiaWF0IjoxNzA4MzQyNDU0LCJleHAiOjE3MDg0Mjg4NTR9.RWPKGkEOzqEjjQbVHCo3qbzREb4TbG2e65lMQO7XjDI"
+        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDkyYWE0ZDI4IiwiZW1haWwiOiJtb3VzdGFmYXNhYWQ5NTRAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJkYXRlIjoiMWIwMzg1NzlmMi41MGRiIiwiaWF0IjoxNzA4NDMwMzYwLCJleHAiOjE3MDg1MTY3NjB9.Compj4K0dLBHVsrEP_ZMTUyZ3aDN6X_-Y3Zt3OncXpQ"
       },
       {
         "id": "18d92ac6c52",

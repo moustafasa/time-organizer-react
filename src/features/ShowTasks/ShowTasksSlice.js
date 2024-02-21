@@ -32,7 +32,7 @@ const showTasksQuerySlice = apiSlice.injectEndpoints({
     }),
     getSubs: builder.query({
       query: (args) => {
-        return `/subs?${args}`;
+        return `/subs?${new URLSearchParams(args).toString()}`;
       },
       transformResponse: (resData, _, args) => {
         return subsAdapter.setAll(initialState.tasks, resData);
@@ -44,7 +44,7 @@ const showTasksQuerySlice = apiSlice.injectEndpoints({
     }),
     getTasks: builder.query({
       query: (args) => {
-        return `/tasks?${args}`;
+        return `/tasks?${new URLSearchParams(args).toString()}`;
       },
       transformResponse: (resData, _, args) => {
         return tasksAdapter.setAll(initialState.tasks, resData);
@@ -61,57 +61,72 @@ const showTasksQuerySlice = apiSlice.injectEndpoints({
         data: update,
       }),
       invalidatesTags: (result, error, args) => {
+        const params = new URLSearchParams(window.location.search);
         const tagType = args.page[0].toUpperCase() + args.page.slice(1);
         const tags = [{ type: tagType, id: args.id }];
 
-        if (args.headId) {
-          tags.push({ type: "Heads", id: args.headId });
-        }
-
-        if (args.subId) {
-          tags.push({ type: "Subs", id: args.subId });
+        if (args.page === "tasks") {
+          tags.push(
+            { type: "Subs", id: params.get("subId") },
+            { type: "Heads", id: params.get("headId") }
+          );
         }
         return tags;
       },
     }),
 
-    deleteMultiple: builder.mutation({
+    deleteElement: builder.mutation({
       query: ({ page, ids }) => ({
         url: `/${page}/deleteMulti`,
         method: "POST",
         data: ids,
       }),
-      // invalidatesTags: (result, err, args) => {
-      //   const tagType = args.page[0].toUpperCase() + args.page.slice(1);
 
-      //   const tags = [{ type: tagType, id: args.page }];
+      invalidatesTags: (res, error, { page, ids }) => {
+        const params = new URLSearchParams(window.location.search);
 
-      //   if (args.headId) {
-      //     tags.push({ type: "Heads", id: args.headId });
-      //   }
+        const tags = [];
 
-      //   if (args.subId) {
-      //     tags.push({ type: "Subs", id: args.subId });
-      //   }
-      //   return tags;
-      // },
+        if (page !== "heads") {
+          tags.push({ type: "Heads", id: params.get("headId") });
+        }
+
+        if (page === "tasks") {
+          tags.push({ type: "Subs", id: params.get("subId") });
+        }
+        return tags;
+      },
+
       async onQueryStarted(
         { page, ids, ...rest },
         { dispatch, queryFulfilled }
       ) {
         const endPoint = `get${page[0].toUpperCase() + page.slice(1)}`;
 
-        console.log(window.location.search.slice(1));
+        const params = new URLSearchParams(window.location.search);
+
+        let args = {};
+
+        if (page !== "heads") {
+          args["headId"] = params.get("headId");
+        } else {
+          args = undefined;
+        }
+
+        if (page === "tasks") {
+          args["subId"] = params.get("subId");
+        }
 
         const patchResult = dispatch(
-          apiSlice.util.updateQueryData(
-            endPoint,
-            window.location.search.slice(1),
-            (draft) => {
-              console.log(draft);
-              draft = draft.filter((element) => !ids.includes(element.id));
-            }
-          )
+          apiSlice.util.updateQueryData(endPoint, args, (draft) => {
+            const adapter =
+              page === "tasks"
+                ? tasksAdapter
+                : page === "subs"
+                ? subsAdapter
+                : headsAdapter;
+            draft = adapter.removeMany(draft, ids);
+          })
         );
 
         try {
@@ -178,5 +193,4 @@ export const {
   useGetTasksQuery,
   useEditDataMutation,
   useDeleteElementMutation,
-  useDeleteMultipleMutation,
 } = showTasksQuerySlice;
