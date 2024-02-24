@@ -28,7 +28,7 @@ const initialState = {
   tasks: tasksState,
 };
 
-const addTasksQuerySlice = apiSlice.injectEndpoints({
+export const addTasksQuerySlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     addAll: builder.mutation({
       queryFn: async (_, { getState }, options, baseQuery) => {
@@ -48,6 +48,17 @@ const addTasksQuerySlice = apiSlice.injectEndpoints({
         return res;
       },
       invalidatesTags: [{ type: "Data", id: "LIST" }],
+    }),
+    addSubToHead: builder.mutation({
+      query: (headId) => `heads/${headId}`,
+      // async onQueryStarted(headId, { dispatch, queryFulfilled }) {
+      //   // const res = await queryFulfilled;
+      //   // console.log(res);
+      //   // dispatch(
+      //   //   addHeads([{ id: res.data.id, name: res.data.name, readOnly: true }])
+      //   // );
+      //   // dispatch(changeNumberOfSubs({ num: 1, headId: res.data.id }));
+      // },
     }),
   }),
 });
@@ -243,4 +254,5 @@ export const getTasksEntitiesOfSub = createSelector(
 export const getCurrentHead = (state) => state.addTasks.heads.currentHead;
 export const getCurrentSub = (state) => state.addTasks.subs.currentSub;
 export const getCurrentTask = (state) => state.addTasks.tasks.currentTask;
-export const { useAddAllMutation } = addTasksQuerySlice;
+export const { useAddAllMutation, useAddSubToHeadMutation } =
+  addTasksQuerySlice;

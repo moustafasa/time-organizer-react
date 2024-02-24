@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addSubToHead,
   addTaskToSub,
+  addTasksQuerySlice,
   changeNumberOfHeads,
   clear,
   getHeads,
+  useAddSubToHeadMutation,
 } from "./AddTasksSlice";
 import Inputs from "./Inputs/Inputs";
 import {
@@ -26,7 +28,16 @@ export const loader =
     const subId = url.searchParams.get("subId");
     dispatch(clear());
     if (headId && !subId) {
-      dispatch(addSubToHead(headId));
+      // try {
+      //   dispatch(
+      //     addTasksQuerySlice.endpoints.addSubToHead.initiate(headId, {
+      //       track: false,
+      //     })
+      //   ).unwrap();
+      // } catch (err) {
+      //   console.log(err);
+      // }
+      // dispatch(addSubToHead(headId));
     } else if (subId && headId) {
       dispatch(addTaskToSub({ headId, subId }));
     }
@@ -55,6 +66,16 @@ export const action =
 const AddTasks = () => {
   const numberOfHeads = useSelector(getHeads);
   const { headId } = useLoaderData();
+  const [getSub, { data, error }] = useAddSubToHeadMutation();
+
+  console.log(error, data);
+  useEffect(() => {
+    const res = getSub(
+      new URLSearchParams(window.location.search).get("headId")
+    );
+    console.log(res);
+  }, [getSub]);
+
   return (
     <section className={sass.addTasks}>
       <div className={sass.container + " container"}>
