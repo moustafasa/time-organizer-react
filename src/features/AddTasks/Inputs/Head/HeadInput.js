@@ -25,6 +25,7 @@ const HeadInput = ({ id, index }) => {
   const headRef = useRef();
 
   useScrollChangeValue(id, changeCurrentHead, headRef, getCurrentHead);
+  console.log(subs);
 
   return (
     <div className={sass.headCont} ref={headRef} id={id}>

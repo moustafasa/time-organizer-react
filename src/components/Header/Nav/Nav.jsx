@@ -45,7 +45,9 @@ const Nav = () => {
     <nav>
       <ul className={showParentClass}>
         <li>
-          <Link to="/addTasks">add tasks </Link>
+          <Link to="/addTasks" preventScrollReset>
+            add tasks
+          </Link>
         </li>
         <li className={showTasksClass}>
           <button
@@ -57,13 +59,19 @@ const Nav = () => {
           </button>
           <ul className="showTasks child">
             <li data-showed="heads">
-              <Link to="/showTasks/heads">show heads</Link>
+              <Link to="/showTasks/heads" preventScrollReset>
+                show heads
+              </Link>
             </li>
             <li data-showed="subjects">
-              <Link to="/showTasks/subs">show subjects</Link>
+              <Link preventScrollReset to="/showTasks/subs">
+                show subjects
+              </Link>
             </li>
             <li data-showed="tasks">
-              <Link to="/showTasks/tasks">show tasks</Link>
+              <Link preventScrollReset to="/showTasks/tasks">
+                show tasks
+              </Link>
             </li>
           </ul>
         </li>
@@ -73,17 +81,21 @@ const Nav = () => {
           </button>
           <ul className="runTasks child ">
             <li data-showed="add">
-              <Link to="/runningTasks/add">set run tasks</Link>
+              <Link preventScrollReset to="/runningTasks/add">
+                set run tasks
+              </Link>
             </li>
             <li data-showed="day">
-              <Link to="/runningTasks/show">show run Tasks</Link>
+              <Link preventScrollReset to="/runningTasks/show">
+                show run Tasks
+              </Link>
             </li>
           </ul>
         </li>
       </ul>
       <div className="mobile">
         <div className="container">
-          <Link to={"/"} className="logo">
+          <Link preventScrollReset to={"/"} className="logo">
             time Organiser
           </Link>
           <button

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { startTransition, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {} from "../../features/AddTasks/AddTasksSlice";
 
@@ -11,7 +11,7 @@ const useScrollChangeValue = (id, changeFunction, elementRef) => {
         const elementRect = elementRef.current.getBoundingClientRect();
         const vh = document.documentElement.clientHeight;
         if (elementRect.top < vh / 2) {
-          dispatch(changeFunction(id));
+          startTransition(() => dispatch(changeFunction(id)));
         }
       }
     };

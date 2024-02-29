@@ -107,7 +107,7 @@ const RunningTasks = () => {
   );
 
   // return (
-  //   <section>
+  //   <div>
   //     <div className="container">
   //       <h2 className="page-head">running tasks</h2>
   //       <div className="mt-5 d-flex gap-4 align-items-center px-3 flex-wrap flex-sm-nowrap">
@@ -172,7 +172,7 @@ const RunningTasks = () => {
   //         </button>
   //       </div>
   //     </div>
-  //   </section>
+  //   </div>
   // );
 };
 

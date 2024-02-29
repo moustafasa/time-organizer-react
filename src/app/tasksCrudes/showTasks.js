@@ -9,7 +9,11 @@ const getHeads = (db) => (req, res) => {
 };
 const getHeadById = (db) => (req, res) => {
   const head = db.get("data").get("heads").find({ id: req.params.id }).value();
-  res.send(head);
+  if (head) {
+    res.send(head);
+  } else {
+    res.sendStatus(404);
+  }
 };
 
 // subs
@@ -26,7 +30,11 @@ const getSubs = (db) => (req, res) => {
 
 const getSubById = (db) => (req, res) => {
   const sub = db.get("data").get("subs").find({ id: req.params.id }).value();
-  res.send(sub);
+  if (sub) {
+    res.send(sub);
+  } else {
+    res.sendStatus(404);
+  }
 };
 
 // tasks

@@ -27,7 +27,7 @@ const SetupRunTasks = () => {
   const [setRunTasks] = useAddRunTasksMutation();
 
   return (
-    <section>
+    <div>
       <div className="container">
         <h2 className="page-head mb-5">setup runTasks</h2>
         <Form
@@ -111,7 +111,7 @@ const SetupRunTasks = () => {
           </button> */}
         </Form>
       </div>
-    </section>
+    </div>
   );
 };
 

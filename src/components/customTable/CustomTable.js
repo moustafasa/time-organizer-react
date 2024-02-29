@@ -27,7 +27,7 @@ const CustomTable = ({
   }, [checkedItems, setCheckedItems]);
 
   return (
-    <section>
+    <div>
       <div className="container">
         <h2 className="page-head">{title}</h2>
         <div
@@ -74,7 +74,7 @@ const CustomTable = ({
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

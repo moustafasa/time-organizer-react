@@ -1,24 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import sass from "./AddTasks.module.scss";
 import HeadNum from "./HeadNum/HeadNum";
 import StatusBar from "./StatusBar/StatusBar";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   addSubToHead,
   addTaskToSub,
-  addTasksQuerySlice,
   changeNumberOfHeads,
   clear,
   getHeads,
-  useAddSubToHeadMutation,
 } from "./AddTasksSlice";
 import Inputs from "./Inputs/Inputs";
-import {
-  Form,
-  redirect,
-  useLoaderData,
-  useSearchParams,
-} from "react-router-dom";
+import { redirect, useLoaderData } from "react-router-dom";
 
 export const loader =
   (dispatch) =>
@@ -28,18 +21,17 @@ export const loader =
     const subId = url.searchParams.get("subId");
     dispatch(clear());
     if (headId && !subId) {
-      // try {
-      //   dispatch(
-      //     addTasksQuerySlice.endpoints.addSubToHead.initiate(headId, {
-      //       track: false,
-      //     })
-      //   ).unwrap();
-      // } catch (err) {
-      //   console.log(err);
-      // }
-      // dispatch(addSubToHead(headId));
+      try {
+        await dispatch(addSubToHead(headId));
+      } catch (err) {
+        console.log(err);
+      }
     } else if (subId && headId) {
-      dispatch(addTaskToSub({ headId, subId }));
+      try {
+        await dispatch(addTaskToSub({ headId, subId })).unwrap();
+      } catch (err) {
+        console.log(err);
+      }
     }
     return { headId, subId };
   };
@@ -64,24 +56,15 @@ export const action =
   };
 
 const AddTasks = () => {
-  const numberOfHeads = useSelector(getHeads);
+  const heads = useSelector(getHeads);
   const { headId } = useLoaderData();
-  const [getSub, { data, error }] = useAddSubToHeadMutation();
-
-  console.log(error, data);
-  useEffect(() => {
-    const res = getSub(
-      new URLSearchParams(window.location.search).get("headId")
-    );
-    console.log(res);
-  }, [getSub]);
 
   return (
-    <section className={sass.addTasks}>
+    <div className={sass.addTasks}>
       <div className={sass.container + " container"}>
         <h2 className="page-head"> setup your tasks </h2>
         <div className={sass.add}>
-          {numberOfHeads.length <= 0 && !headId ? (
+          {heads.length <= 0 && !headId ? (
             <HeadNum />
           ) : (
             <>
@@ -91,7 +74,7 @@ const AddTasks = () => {
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -49,16 +49,12 @@ export const addTasksQuerySlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: [{ type: "Data", id: "LIST" }],
     }),
-    addSubToHead: builder.mutation({
-      query: (headId) => `heads/${headId}`,
-      // async onQueryStarted(headId, { dispatch, queryFulfilled }) {
-      //   // const res = await queryFulfilled;
-      //   // console.log(res);
-      //   // dispatch(
-      //   //   addHeads([{ id: res.data.id, name: res.data.name, readOnly: true }])
-      //   // );
-      //   // dispatch(changeNumberOfSubs({ num: 1, headId: res.data.id }));
-      // },
+
+    getSub: builder.mutation({
+      query: (subId) => `/subs/${subId}`,
+    }),
+    getHead: builder.mutation({
+      query: (headId) => `/heads/${headId}`,
     }),
   }),
 });
@@ -165,33 +161,62 @@ export const changeNumberOfSubs =
 
 export const addSubToHead = createAsyncThunk(
   "addTasks/addSubToHead",
-  async (headId, { dispatch }) => {
-    const res = await axios(`http://localhost:3000/heads/${headId}`);
-    dispatch(
-      addHeads([{ id: res.data.id, name: res.data.name, readOnly: true }])
-    );
-    dispatch(changeNumberOfSubs({ num: 1, headId: res.data.id }));
+  async (headId, { dispatch, rejectWithValue }) => {
+    try {
+      // get head by id
+      const head = await dispatch(
+        addTasksQuerySlice.endpoints.getHead.initiate(headId, {
+          track: false,
+        })
+      ).unwrap();
+
+      // add the data of head
+      dispatch(addHeads([{ id: head.id, name: head.name, readOnly: true }]));
+
+      dispatch(changeNumberOfSubs({ num: 1, headId }));
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
   }
 );
+
 export const addTaskToSub = createAsyncThunk(
   "addTasks/addTasToSub",
-  async ({ headId, subId }, { dispatch }) => {
-    const hRes = await axios(`http://localhost:3000/heads/${headId}`);
-    const sRes = await axios(`http://localhost:3000/subs/${subId}`);
-    dispatch(
-      addHeads([{ id: hRes.data.id, name: hRes.data.name, readOnly: true }])
-    );
-    dispatch(
-      addSubs([
-        {
-          id: sRes.data.id,
-          name: sRes.data.name,
-          headId: headId,
-          readOnly: true,
-        },
-      ])
-    );
-    dispatch(changeNumberOfTasks({ num: 1, subId: sRes.data.id }));
+  async ({ headId, subId }, { dispatch, rejectWithValue }) => {
+    try {
+      // get head by id
+      const head = await dispatch(
+        addTasksQuerySlice.endpoints.getHead.initiate(headId, {
+          track: false,
+        })
+      ).unwrap();
+
+      // get sub by id
+      const sub = await dispatch(
+        addTasksQuerySlice.endpoints.getSub.initiate(subId, {
+          track: false,
+        })
+      ).unwrap();
+
+      // add the data of head
+      dispatch(addHeads([{ id: head.id, name: head.name, readOnly: true }]));
+
+      // add the data of sub
+      dispatch(
+        addSubs([
+          {
+            id: sub.id,
+            name: sub.name,
+            readOnly: true,
+            headId,
+          },
+        ])
+      );
+
+      dispatch(changeNumberOfTasks({ num: 1, subId }));
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
   }
 );
 

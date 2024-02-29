@@ -9,12 +9,13 @@ const authSlice = createSlice({
     setCredintials(state, action) {
       state.token = action.payload.accessToken;
     },
+
     logOut(state, action) {
       state.token = "";
     },
   },
 });
 
-export const { setCredintials, logOut } = authSlice.actions;
+export const { setCredintials, logOut, setRefreshedTrue } = authSlice.actions;
 export default authSlice.reducer;
 export const getCurrentToken = (state) => state.auth.token;

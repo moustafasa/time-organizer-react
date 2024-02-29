@@ -37,7 +37,7 @@ const StartRunTasks = () => {
   const startTask = useStartTask(currentTask);
 
   return (
-    <section className={sass.startRunTasks}>
+    <div className={sass.startRunTasks}>
       <div className="container">
         <h2 className="page-head">start {currentTask.name} task</h2>
         <div className="m-auto" style={{ maxWidth: "600px" }}>
@@ -79,7 +79,7 @@ const StartRunTasks = () => {
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

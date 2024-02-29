@@ -1,10 +1,12 @@
 import { Field, Formik } from "formik";
 import React, { useEffect } from "react";
 import {
+  Navigate,
   Form as RouteForm,
   redirect,
   useActionData,
   useNavigate,
+  useNavigation,
   useSearchParams,
 } from "react-router-dom";
 import * as yup from "yup";
@@ -12,8 +14,8 @@ import sass from "../form.module.scss";
 import { Alert, Button, Form } from "react-bootstrap";
 import InputBox from "../../../components/InputBox/InputBox";
 import { authApiSlice } from "../authApiSlice";
-import { setCredintials } from "../authSlice";
-import { useDispatch } from "react-redux";
+import { getCurrentToken, setCredintials } from "../authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export const action =
   (dispatch) =>
@@ -44,17 +46,23 @@ const Login = () => {
 
   const { error, data } = useActionData() || {};
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const token = useSelector(getCurrentToken);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (data) {
       dispatch(setCredintials(data));
-      navigate(searchParams.get("from") || "/");
     }
-  }, [data, dispatch, navigate, searchParams]);
+  }, [data, dispatch]);
 
-  return (
-    <section>
+  if (token) {
+    return <Navigate to={searchParams.get("from") || "/"} replace />;
+  }
+
+  return navigation.state !== "idle" || (!token && !!data) ? (
+    <div>loading...</div>
+  ) : (
+    <div>
       <div className="container">
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -108,7 +116,7 @@ const Login = () => {
           )}
         </Formik>
       </div>
-    </section>
+    </div>
   );
 };
 

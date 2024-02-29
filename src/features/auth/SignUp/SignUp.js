@@ -68,7 +68,7 @@ const SignUp = () => {
   }, [data, dispatch, navigate]);
 
   return (
-    <section>
+    <div>
       <div className="container">
         <Formik
           initialValues={{ name: "", email: "", password: "", passConf: "" }}
@@ -144,7 +144,7 @@ const SignUp = () => {
           )}
         </Formik>
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -58,6 +58,8 @@ const StatusBar = () => {
     }),
   ];
 
+  const navigator = useNavigate();
+
   return (
     <div className={sass.statusBar}>
       <ul className={sass.map}>
@@ -69,7 +71,8 @@ const StatusBar = () => {
               currentHead,
               (value) => {
                 dispatch(changeCurrentHead(value));
-                window.location.hash = `#${value}`;
+                navigator(`#${value}`);
+                // window.location.hash = `#${value}`;
               },
             ]}
             className={sass.SelectBox}
