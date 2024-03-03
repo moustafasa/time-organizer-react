@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import "./SelectBox.scss";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
@@ -12,14 +12,17 @@ import { FaCaretDown, FaCaretUp } from "react-icons/fa";
  * @returns customize select box
  */
 const SelectBox = ({
+  as,
   options,
   className,
   valueState: [selectValue, setSelectValue],
+  to,
   name,
 }) => {
   const [optOpenClass, setOptOpenClass] = useState(false);
 
   const chooseHandler = (e) => {
+    e.stopPropagation();
     setSelectValue(e.target.dataset.value);
     setOptOpenClass(false);
   };
@@ -37,6 +40,7 @@ const SelectBox = ({
     document.addEventListener("click", blurHandler);
     return () => document.removeEventListener("click", blurHandler);
   }, []);
+
   return (
     <div className={`select-box ${className}`}>
       <div className="overlay" onClick={openOptions}>
@@ -66,7 +70,7 @@ const SelectBox = ({
             data-value={opt.value}
             className={`${selectValue === opt.value ? "active" : ""}`}
           >
-            {opt.text}
+            {to ? <a href={to}>{opt.text}</a> : opt.text}
           </li>
         ))}
       </ul>

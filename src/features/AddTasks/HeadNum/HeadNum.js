@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import sass from "./HeadNum.module.scss";
-import { useDispatch } from "react-redux";
-import { changeNumberOfHeads } from "../AddTasksSlice";
 import InputBox from "../../../components/InputBox/InputBox";
-import { Form, useFetcher } from "react-router-dom";
+import { useFetcher } from "react-router-dom";
 
 const HeadNum = () => {
   const fetcher = useFetcher();

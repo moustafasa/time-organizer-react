@@ -25,7 +25,6 @@ const HeadInput = ({ id, index }) => {
   const headRef = useRef();
 
   useScrollChangeValue(id, changeCurrentHead, headRef, getCurrentHead);
-  console.log(subs);
 
   return (
     <div className={sass.headCont} ref={headRef} id={id}>
@@ -35,11 +34,17 @@ const HeadInput = ({ id, index }) => {
         value={head.name}
         setValue={setHeadName}
         readOnly={head.readOnly}
+        onFocus={() => headRef.current.scrollIntoView()}
       />
 
       <div className={sass.subjects}>
         {subs.map((sub, index) => (
-          <SubInput key={sub} id={sub} index={index + 1} />
+          <SubInput
+            key={sub}
+            id={sub}
+            index={index + 1}
+            last={index === subs.length - 1}
+          />
         ))}
         {!subId && (
           <button

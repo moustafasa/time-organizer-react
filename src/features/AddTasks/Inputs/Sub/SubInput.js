@@ -1,7 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
   changeCurrentSub,
   changeNumberOfTasks,
+  getCurrentHead,
   getCurrentSub,
   getSubById,
   getTasksOfSub,
@@ -14,14 +15,24 @@ import InputBox from "../../../../components/InputBox/InputBox";
 import TaskInput from "../Task/TaskInput";
 import sass from "./SubInput.module.scss";
 
-const SubInput = ({ id, index }) => {
+const SubInput = ({ id, index, last }) => {
   const sub = useSelector((state) => getSubById(state, id));
   const dispatch = useDispatch();
   const setSubName = (value) =>
     dispatch(updateSub({ id, changes: { name: value } }));
-  const tasks = useSelector((state) => getTasksOfSub(state, id));
+  const tasks = useSelector((state) => getTasksOfSub(state, id), shallowEqual);
   const subRef = useRef();
-  useScrollChangeValue(id, changeCurrentSub, subRef, getCurrentSub);
+  const currentHead = useSelector(getCurrentHead);
+
+  useScrollChangeValue(
+    id,
+    changeCurrentSub,
+    subRef,
+    getCurrentSub,
+    sub.headId === currentHead,
+    last,
+    index
+  );
   return (
     <div className={sass.subCont} ref={subRef} id={id}>
       <InputBox
@@ -30,10 +41,18 @@ const SubInput = ({ id, index }) => {
         value={sub.name}
         setValue={setSubName}
         readOnly={sub.readOnly}
+        onFocus={() => {
+          subRef.current.scrollIntoView();
+        }}
       />
       <div className={sass.tasks}>
         {tasks.map((task, index) => (
-          <TaskInput key={task} id={task} index={index + 1} />
+          <TaskInput
+            key={task}
+            id={task}
+            index={index + 1}
+            last={index === tasks.length - 1}
+          />
         ))}
         <button
           className="input-modify-btn plus-btn"

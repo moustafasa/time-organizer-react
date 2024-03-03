@@ -19,7 +19,7 @@ export const loader =
     const url = new URL(request.url);
     const headId = url.searchParams.get("headId");
     const subId = url.searchParams.get("subId");
-    dispatch(clear());
+    // dispatch(clear());
     if (headId && !subId) {
       try {
         await dispatch(addSubToHead(headId));
