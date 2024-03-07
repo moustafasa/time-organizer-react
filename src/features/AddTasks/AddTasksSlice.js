@@ -161,28 +161,32 @@ export const changeNumberOfSubs =
 
 export const addSubToHead = createAsyncThunk(
   "addTasks/addSubToHead",
-  async (headId, { dispatch, rejectWithValue }) => {
-    try {
-      // get head by id
-      const head = await dispatch(
-        addTasksQuerySlice.endpoints.getHead.initiate(headId, {
-          track: false,
-        })
-      ).unwrap();
+  async (headId, { dispatch, rejectWithValue, getState }) => {
+    const subs = getSubsEntities(getState());
 
-      // add the data of head
-      dispatch(addHeads([{ id: head.id, name: head.name, readOnly: true }]));
+    if (!subs.length)
+      try {
+        // get head by id
+        const head = await dispatch(
+          addTasksQuerySlice.endpoints.getHead.initiate(headId, {
+            track: false,
+          })
+        ).unwrap();
 
-      dispatch(changeNumberOfSubs({ num: 1, headId }));
-    } catch (err) {
-      throw rejectWithValue(err);
-    }
+        // add the data of head
+        dispatch(addHeads([{ id: head.id, name: head.name, readOnly: true }]));
+
+        const subs = getSubsOfHead(getState());
+        if (!subs.length) dispatch(changeNumberOfSubs({ num: 1, headId }));
+      } catch (err) {
+        throw rejectWithValue(err);
+      }
   }
 );
 
 export const addTaskToSub = createAsyncThunk(
   "addTasks/addTasToSub",
-  async ({ headId, subId }, { dispatch, rejectWithValue }) => {
+  async ({ headId, subId }, { dispatch, rejectWithValue, getState }) => {
     try {
       // get head by id
       const head = await dispatch(
@@ -213,7 +217,9 @@ export const addTaskToSub = createAsyncThunk(
         ])
       );
 
-      dispatch(changeNumberOfTasks({ num: 1, subId }));
+      const tasks = getTasksOfSub(getState());
+
+      if (!tasks.length) dispatch(changeNumberOfTasks({ num: 1, subId }));
     } catch (err) {
       throw rejectWithValue(err);
     }
@@ -261,11 +267,17 @@ export const {
 
 export const getSubsOfHead = createSelector(
   [getSubs, (state, headId) => headId],
-  (subs, headId) => subs.filter((sub) => sub.search(headId) >= 0)
+  (subs, headId) => {
+    return subs.filter((sub) => sub.slice(0, sub.indexOf(":")) === headId);
+  }
 );
 export const getTasksOfSub = createSelector(
   [getTasks, (state, subId) => subId],
-  (tasks, subId) => tasks.filter((task) => task.search(subId) >= 0)
+  (tasks, subId) => {
+    return tasks.filter((task) => {
+      return task.slice(0, task.lastIndexOf(":")) === subId;
+    });
+  }
 );
 export const getSubsEntitiesOfHead = createSelector(
   [getSubsEntities, (state, headId) => headId],

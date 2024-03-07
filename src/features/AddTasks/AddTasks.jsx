@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import sass from "./AddTasks.module.scss";
 import HeadNum from "./HeadNum/HeadNum";
 import StatusBar from "./StatusBar/StatusBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addSubToHead,
   addTaskToSub,
@@ -19,13 +19,10 @@ export const loader =
     const url = new URL(request.url);
     const headId = url.searchParams.get("headId");
     const subId = url.searchParams.get("subId");
-    // dispatch(clear());
     if (headId && !subId) {
       try {
         await dispatch(addSubToHead(headId));
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     } else if (subId && headId) {
       try {
         await dispatch(addTaskToSub({ headId, subId })).unwrap();
@@ -58,6 +55,19 @@ export const action =
 const AddTasks = () => {
   const heads = useSelector(getHeads);
   const { headId } = useLoaderData();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!headId) {
+      dispatch(clear());
+    }
+  }, [headId, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clear());
+    };
+  }, [dispatch]);
 
   return (
     <div className={sass.addTasks}>

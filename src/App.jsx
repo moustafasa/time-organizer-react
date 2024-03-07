@@ -4,6 +4,7 @@ import {
   ScrollRestoration,
   createBrowserRouter,
   redirect,
+  useLocation,
 } from "react-router-dom";
 import Header from "./components/Header/Header";
 import AddTasks, {
@@ -34,6 +35,7 @@ import ShowSubs from "./features/ShowTasks/showSubs";
 import { action as deleteAction } from "./components/deletePage";
 import { Spinner } from "react-bootstrap";
 import { useCallback, useEffect, useState } from "react";
+import RequireAuth from "./features/auth/RequireAuth";
 
 const weekDaysLoader = () => {
   const weekDays = getOptionsOfWeekDays();
@@ -147,7 +149,6 @@ function App() {
               path: "/login",
               element: <Login />,
               action: loginAction(dispatch),
-              id: "jsdklfa",
             },
             {
               path: "/deleteOne/:page/:id",

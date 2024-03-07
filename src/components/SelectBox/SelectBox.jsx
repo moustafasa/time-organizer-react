@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import "./SelectBox.scss";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 /**
  * @param {options} param0 the options you need to be in select it should be like
@@ -16,14 +17,15 @@ const SelectBox = ({
   options,
   className,
   valueState: [selectValue, setSelectValue],
-  to,
   name,
+  anchor,
 }) => {
   const [optOpenClass, setOptOpenClass] = useState(false);
 
   const chooseHandler = (e) => {
     e.stopPropagation();
-    setSelectValue(e.target.dataset.value);
+    const li = e.target.closest("li");
+    setSelectValue(li.dataset.value);
     setOptOpenClass(false);
   };
   const openOptions = (e) => {
@@ -70,7 +72,7 @@ const SelectBox = ({
             data-value={opt.value}
             className={`${selectValue === opt.value ? "active" : ""}`}
           >
-            {to ? <a href={to}>{opt.text}</a> : opt.text}
+            {anchor ? <Link to={`#${opt.value}`}>{opt.text}</Link> : opt.text}
           </li>
         ))}
       </ul>

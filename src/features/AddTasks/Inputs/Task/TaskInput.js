@@ -22,7 +22,6 @@ const TaskInput = ({ id, index, last }) => {
   const setSubTasksDone = (value) =>
     dispatch(updateTask({ id, changes: { subTasksDone: value } }));
   const taskRef = useRef();
-
   const currentSub = useSelector(getCurrentSub);
 
   useScrollChangeValue(

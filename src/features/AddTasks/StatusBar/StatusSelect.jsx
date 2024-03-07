@@ -1,6 +1,7 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import SelectBox from "../../../components/SelectBox/SelectBox";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const StatusSelect = ({
   entities,
@@ -10,15 +11,24 @@ const StatusSelect = ({
   sass,
 }) => {
   const dispatch = useDispatch();
-  const options = [
-    { text: "choose", value: "" },
-    ...entities.map((entity, index) => {
-      return {
-        text: entity.name !== "" ? entity.name : `${label} ${index + 1}`,
-        value: entity.id,
-      };
-    }),
-  ];
+  const options = useMemo(
+    () =>
+      entities?.length
+        ? entities.map((entity, index) => {
+            return {
+              text: entity.name !== "" ? entity.name : `${label} ${index + 1}`,
+              value: entity.id,
+            };
+          })
+        : [{ text: "choose", value: "" }],
+    [entities, label]
+  );
+
+  useEffect(() => {
+    if (!options.find((opt) => opt.value === currentEntity)) {
+      dispatch(changeEntity(options[0].value));
+    }
+  }, [changeEntity, currentEntity, dispatch, options]);
 
   return (
     <li className={sass.selectCont}>
@@ -28,10 +38,12 @@ const StatusSelect = ({
         valueState={[
           currentEntity,
           (value) => {
-            dispatch(changeEntity(value));
+            // it will changed from useChangeScrollValue
+            // dispatch(changeEntity(value));
           },
         ]}
         className={sass.SelectBox}
+        anchor
       />
     </li>
   );

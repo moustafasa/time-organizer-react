@@ -46,12 +46,24 @@
     overflow-y: auto;
     z-index: 10000;
     color: white;
-    li {
+    li:not(:has(a)),
+    li:has(a) a {
+      display: block;
       cursor: pointer;
       transition: 0.5s;
       padding: 10px;
-      &:hover,
-      &.active {
+
+      &:hover {
+        background-color: $blue-2-color;
+        padding-right: 10px;
+        border-radius: 5px;
+        // color: $yellow-color;
+      }
+    }
+
+    li.active {
+      &:has(a) a,
+      &:not(:has(a)) {
         background-color: $blue-2-color;
         padding-right: 10px;
         border-radius: 5px;

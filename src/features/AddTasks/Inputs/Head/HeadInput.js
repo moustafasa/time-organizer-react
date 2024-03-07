@@ -8,12 +8,12 @@ import {
   removeHead,
   updateHead,
 } from "../../AddTasksSlice";
-import { memo, useRef } from "react";
+import { memo, startTransition, useEffect, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import SubInput from "../Sub/SubInput";
 import sass from "./HeadInput.module.scss";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 
 const HeadInput = ({ id, index }) => {
   const head = useSelector((state) => getHeadById(state, id));
@@ -25,6 +25,28 @@ const HeadInput = ({ id, index }) => {
   const headRef = useRef();
 
   useScrollChangeValue(id, changeCurrentHead, headRef, getCurrentHead);
+
+  const callback = (entries) => {
+    const entry = entries[0];
+    console.log(entry);
+  };
+
+  const options = {
+    root: null, // Use the browser viewport as the root
+    rootMargin: "80px", // No margin adjustments
+    threshold: [0.5, 1], // Execute callback when 50% of the element is visible
+  };
+
+  useEffect(() => {
+    const element = headRef.current;
+    const observer = new IntersectionObserver(callback, options);
+    observer.observe(element);
+
+    // Optional cleanup function
+    return () => {
+      observer.unobserve(element);
+    };
+  }, []);
 
   return (
     <div className={sass.headCont} ref={headRef} id={id}>

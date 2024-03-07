@@ -55,6 +55,7 @@ const Login = () => {
     }
   }, [data, dispatch]);
 
+  console.log("done");
   if (token) {
     return <Navigate to={searchParams.get("from") || "/"} replace />;
   }

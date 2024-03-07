@@ -30,9 +30,9 @@ const SubInput = ({ id, index, last }) => {
     subRef,
     getCurrentSub,
     sub.headId === currentHead,
-    last,
-    index
+    last
   );
+
   return (
     <div className={sass.subCont} ref={subRef} id={id}>
       <InputBox
