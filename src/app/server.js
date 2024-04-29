@@ -44,7 +44,7 @@ const {
 const jsonServer = require("json-server");
 // const WebSocket = require("ws");
 const server = jsonServer.create();
-const router = jsonServer.router("./db.json");
+const router = jsonServer.router("src/app/db.json");
 const middlewares = jsonServer.defaults();
 const port = process.env.PORT || 3000;
 const cookieParser = require("cookie-parser");
