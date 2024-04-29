@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header/Header";
-import { Outlet, ScrollRestoration } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import PopUp from "./PopUp/PopUp";
 
 const LayOut = () => {
@@ -11,11 +11,6 @@ const LayOut = () => {
         <Outlet />
       </section>
       <PopUp />
-      <ScrollRestoration
-        getKey={(location, matches) => {
-          return location.pathname;
-        }}
-      />
     </>
   );
 };
