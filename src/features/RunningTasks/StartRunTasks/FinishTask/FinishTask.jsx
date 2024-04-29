@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { modify } from "../../../../components/PopUp/PopUp";
-import { useDidTaskMutation } from "../../RunningTasksSlice";
 import classNames from "classnames";
 
 const FinishTask = ({ task }) => {
@@ -9,6 +8,8 @@ const FinishTask = ({ task }) => {
 
   useEffect(() => {
     modify({ args: { subTasksDone: +subTasksDone, task: task.id, valid } });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subTasksDone]);
 
   const inputClass = classNames({ "is-invalid": !valid }, "form-control");

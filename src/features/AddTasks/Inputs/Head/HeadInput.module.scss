@@ -6,16 +6,9 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 2rem;
   margin-top: 50px;
-  padding-inline: 50px;
   scroll-margin: 110px;
-  @include medias("mobile") {
-    border: 1px solid $green-2-color;
-    border-radius: 0.5rem;
-    padding-block: 2rem;
-    padding-inline: 2rem;
-    flex-direction: column;
-    gap: 6rem;
-  }
+
+  @include addTasksBorder(3rem, "subjects");
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SelectBox from "../SelectBox/SelectBox";
 import { useSearchParams } from "react-router-dom";
 import useGetOptionsFromData from "../../customHooks/useGetOptionsFromData";

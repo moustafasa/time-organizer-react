@@ -9,7 +9,6 @@ import sass from "./ShowData.module.scss";
 import _ from "lodash";
 import { Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { show } from "../../../components/PopUp/PopUp";
-import { toast } from "react-toastify";
 
 const ShowData = ({
   elementId,

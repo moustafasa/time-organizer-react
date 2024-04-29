@@ -1,5 +1,7 @@
 ﻿@use "sass:meta";
 @use "sass:map";
+@use "../variables/colors" as *;
+
 @mixin animation($name) {
   @-webkit-keyframes #{$name} {
     @content;
@@ -202,4 +204,31 @@
   display: $display;
   flex-direction: column;
   gap: $gap;
+}
+
+@mixin addTasksBorder($gap, $class) {
+  @include medias("mobile") {
+    flex-direction: column;
+    gap: $gap;
+    .#{$class} {
+      border: 1px solid $green-2-color;
+      padding: 2rem 1rem;
+      border-radius: 0.5rem;
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        height: $gap;
+        background-color: $green-2-color;
+        inset: 0 auto auto 50%;
+        translate: -50% -100%;
+      }
+    }
+  }
+}
+
+@mixin centerbygrid() {
+  display: grid;
+  place-items: center;
 }

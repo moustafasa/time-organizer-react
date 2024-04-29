@@ -27,7 +27,7 @@ const RunningTasks = () => {
   const dayValue = useSelector(getCurrentDay);
   const dispatch = useDispatch();
   const setDayValue = (value) => dispatch(changeCurrentDay(value));
-  const { data: runTasks, isLoading } = useGetRunningTasksQuery(dayValue, {
+  const { data: runTasks } = useGetRunningTasksQuery(dayValue, {
     selectFromResult: ({ data, ...rest }) => ({
       data: getRunTasksIds(data),
       ...rest,

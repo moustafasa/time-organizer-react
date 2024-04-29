@@ -11,6 +11,7 @@ import { memo, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import sass from "./TaskInput.module.scss";
+import AddFieldButton from "../../../../components/AddFieldButton/AddFieldButton";
 
 const TaskInput = ({ id, index, last }) => {
   const task = useSelector((state) => getTaskById(state, id));
@@ -58,14 +59,11 @@ const TaskInput = ({ id, index, last }) => {
         setValue={setSubTasksDone}
         onFocus={onFocusHandler}
       />
-      <button
-        className="input-modify-btn minus-btn"
+      <AddFieldButton
         onClick={(e) => dispatch(deleteTasks([id]))}
         title={`remove task ${index}`}
-        type="button"
-      >
-        -
-      </button>
+        type="minus"
+      />
     </div>
   );
 };

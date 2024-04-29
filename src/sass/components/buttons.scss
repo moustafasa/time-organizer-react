@@ -11,20 +11,6 @@ button {
   color: inherit;
 }
 
-// start header buttons
-
-.bar-btn {
-  @include centerbyflex(null);
-  height: $nav-height;
-  padding: 10px 20px;
-  border-radius: 10px;
-  box-shadow: $black-shadow;
-  font-size: 20px;
-  transition: 0.5s;
-  cursor: pointer;
-  @include oneValue("&:hover,&.active", background-color, $purple-1-color);
-}
-// end header buttons
 // start add tasks buttons
 .start {
   padding: 10px 20px;
@@ -41,29 +27,6 @@ button {
   }
 }
 
-.input-modify-btn {
-  @include centerbyflex(null);
-  width: 100%;
-  padding: 10px 20px;
-  margin: auto auto 0;
-  border-radius: 6px;
-  border: 1px solid var(--btn-color);
-  color: var(--btn-color);
-  transition: 0.5s;
-  @include oneValue("i", color, var(--btn-color));
-  &.minus-btn {
-    --btn-color: #{$red-1-color};
-    &:hover {
-      box-shadow: 0 0 10px $red-2-color;
-    }
-  }
-  &.plus-btn {
-    --btn-color: #{$green-2-color};
-    &:hover {
-      box-shadow: $blue-shadow;
-    }
-  }
-}
 .submit-button {
   @include centerbyflex(null, null);
   width: calc(100% - 100px);

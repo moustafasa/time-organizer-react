@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Form, Link, NavLink, useLocation } from "react-router-dom";
 import "./Nav.scss";
 import classNames from "classnames";
+import { Button, Dropdown, Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { getCurrentToken } from "../../../features/auth/authSlice";
+import { jwtDecode } from "jwt-decode";
+
+import { FaBars } from "react-icons/fa6";
 
 const Nav = () => {
   const [showTasksToggle, setShowTasksToggle] = useState(false);
@@ -12,6 +18,8 @@ const Nav = () => {
   const showParentClass = classNames({ clicked: openParent }, "parent");
   const mobileButtonActive = classNames({ active: openParent }, "bar-btn");
   const location = useLocation();
+  const token = useSelector(getCurrentToken);
+  const decoded = token ? jwtDecode(token) : "";
 
   useEffect(() => {
     setShowTasksToggle(false);
@@ -41,13 +49,40 @@ const Nav = () => {
     };
   }, []);
 
-  return (
-    <nav>
+  const withAuthNav = (
+    <>
+      <Dropdown>
+        <Dropdown.Toggle
+          className="text-capitalize d-flex align-items-center justify-content-center"
+          variant="none"
+          id="dropdown-basic-button"
+        >
+          <div className="d-flex justify-content-center align-items-center gap-1">
+            <div className="rounded-circle text-capitalize name-circle">
+              {decoded?.name?.at(0)}
+            </div>
+            <span className="d-none d-sm-block">{decoded.name}</span>
+          </div>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Form action="/logout" method="POST">
+            <Dropdown.Item as={Button} type="submit">
+              logOut
+            </Dropdown.Item>
+          </Form>
+        </Dropdown.Menu>
+      </Dropdown>
+
       <ul className={showParentClass}>
         <li>
-          <Link to="/addTasks" preventScrollReset>
+          <NavLink to="/" preventScrollReset>
+            home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/addTasks" preventScrollReset>
             add tasks
-          </Link>
+          </NavLink>
         </li>
         <li className={showTasksClass}>
           <button
@@ -59,19 +94,19 @@ const Nav = () => {
           </button>
           <ul className="showTasks child">
             <li data-showed="heads">
-              <Link to="/showTasks/heads" preventScrollReset>
+              <NavLink to="/showTasks/heads" preventScrollReset>
                 show heads
-              </Link>
+              </NavLink>
             </li>
             <li data-showed="subjects">
-              <Link preventScrollReset to="/showTasks/subs">
+              <NavLink preventScrollReset to="/showTasks/subs">
                 show subjects
-              </Link>
+              </NavLink>
             </li>
             <li data-showed="tasks">
-              <Link preventScrollReset to="/showTasks/tasks">
+              <NavLink preventScrollReset to="/showTasks/tasks">
                 show tasks
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </li>
@@ -81,31 +116,58 @@ const Nav = () => {
           </button>
           <ul className="runTasks child ">
             <li data-showed="add">
-              <Link preventScrollReset to="/runningTasks/add">
+              <NavLink preventScrollReset to="/runningTasks/add">
                 set run tasks
-              </Link>
+              </NavLink>
             </li>
             <li data-showed="day">
-              <Link preventScrollReset to="/runningTasks/show">
+              <NavLink preventScrollReset to="/runningTasks/show">
                 show run Tasks
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </li>
       </ul>
       <div className="mobile">
-        <div className="container">
-          <Link preventScrollReset to={"/"} className="logo">
-            time Organiser
-          </Link>
-          <button
-            className={mobileButtonActive}
-            onClick={(e) => setOpenParent(!openParent)}
-          >
-            <i className="fa-solid fa-bars"></i>
-          </button>
-        </div>
+        <Link preventScrollReset to={"/"} className="logo">
+          time Organiser
+        </Link>
+        <button
+          className={mobileButtonActive}
+          onClick={(e) => setOpenParent(!openParent)}
+        >
+          <FaBars />
+        </button>
       </div>
+    </>
+  );
+
+  const withOutAuthNav = (
+    <>
+      <Link preventScrollReset to={"/"} className="logo">
+        time Organiser
+      </Link>
+      <ul className={showParentClass}>
+        <li>
+          <NavLink to={"/login"}>login</NavLink>
+        </li>
+        <li>
+          <NavLink to={"/register"}>register</NavLink>
+        </li>
+      </ul>
+    </>
+  );
+
+  const content = token ? withAuthNav : withOutAuthNav;
+
+  return (
+    <nav>
+      <Container
+        fluid
+        className="d-flex justify-content-between align-items-center gap-3 nav-cont "
+      >
+        {content}
+      </Container>
     </nav>
   );
 };

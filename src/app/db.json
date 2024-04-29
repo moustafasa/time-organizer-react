@@ -4,22 +4,24 @@
       {
         "id": "lpe0icc6",
         "name": "programming",
-        "subNum": 4,
+        "subNum": 2,
         "subDone": 0,
-        "tasksNum": 9,
+        "tasksNum": 4,
         "tasksDone": 1,
-        "progress": 35,
-        "userId": "18d92aa4d28"
+        "progress": 62,
+        "userId": "18d92aa4d28",
+        "readOnly": true
       },
       {
         "id": "lpe0icc7",
         "name": "pharmacy",
         "subNum": 1,
         "subDone": 0,
-        "tasksNum": 2,
-        "tasksDone": 1,
-        "progress": 54,
-        "userId": "18d92aa4d28"
+        "tasksNum": 4,
+        "tasksDone": 0,
+        "progress": 0,
+        "userId": "18d92aa4d28",
+        "readOnly": true
       },
       {
         "id": "lsliuu2q",
@@ -42,39 +44,6 @@
         "subNum": 1,
         "subDone": 0,
         "progress": 4
-      },
-      {
-        "id": "lt4zdp5m",
-        "name": "fdsafdsa",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "subNum": 1,
-        "subDone": 0,
-        "progress": 71
-      },
-      {
-        "id": "lt4zdp5n",
-        "name": "dsafdsa",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "subNum": 1,
-        "subDone": 0,
-        "progress": 8
-      },
-      {
-        "id": "lt501qmx",
-        "name": "djsakfjdsafdsafdsadfa",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "subNum": 1,
-        "subDone": 0,
-        "progress": 6
       }
     ],
     "subs": [
@@ -82,19 +51,11 @@
         "id": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
         "name": "front ends",
-        "tasksNum": 5,
-        "tasksDone": 0,
-        "progress": 52,
-        "userId": "18d92aa4d28"
-      },
-      {
-        "id": "lpe0icc7:lpe0icca",
-        "headId": "lpe0icc7",
-        "name": "organic",
         "tasksNum": 2,
-        "tasksDone": 1,
-        "progress": 54,
-        "userId": "18d92aa4d28"
+        "tasksDone": 0,
+        "progress": 47,
+        "userId": "18d92aa4d28",
+        "readOnly": true
       },
       {
         "id": "lpe0icc6:lpe0jf3h",
@@ -146,111 +107,20 @@
         "progress": 8
       },
       {
-        "id": "lt4zdp5m:lt4zdp5m",
-        "headId": "lt4zdp5m",
-        "name": "dfsafd",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 71
-      },
-      {
-        "id": "lt4zdp5n:lt4zdp5n",
-        "headId": "lt4zdp5n",
-        "name": "23fadfds",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 8
-      },
-      {
-        "id": "lpe0icc7:lt500ske",
+        "id": "lpe0icc7:lvjlwzs1",
         "headId": "lpe0icc7",
-        "name": "fdsaf",
+        "name": "enterpreneurship midterm",
         "readOnly": false,
         "userId": "18d92aa4d28",
-        "tasksNum": 1,
+        "tasksNum": 4,
         "tasksDone": 0,
         "progress": 0
-      },
-      {
-        "id": "lt501qmx:lt501qmx",
-        "headId": "lt501qmx",
-        "name": "jfkldsajfkdls",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 6
-      },
-      {
-        "id": "lpe0icc6:lt9acx2l",
-        "headId": "lpe0icc6",
-        "name": "fasdfd",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 6
-      },
-      {
-        "id": "lpe0icc6:lt9ad46s",
-        "headId": "lpe0icc6",
-        "name": "gdfgdfd",
-        "readOnly": false,
-        "userId": "18d92aa4d28",
-        "tasksNum": 1,
-        "tasksDone": 0,
-        "progress": 6
       }
     ],
     "tasks": [
       {
-        "id": "lpe0icc6:lpe0icc6:lpe0icc8",
-        "name": "html",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 34,
-        "subTasksDone": 14,
-        "progress": 41,
-        "page": "tasks",
-        "userId": "18d92aa4d28"
-      },
-      {
-        "id": "lpe0icc7:lpe0icca:lpe0icca",
-        "name": "lec 1",
-        "subId": "lpe0icc7:lpe0icca",
-        "headId": "lpe0icc7",
-        "subTasksNum": 32,
-        "subTasksDone": 32,
-        "progress": 100,
-        "userId": "18d92aa4d28"
-      },
-      {
-        "id": "lpe0icc6:lpe0icc6:lpe0iody",
-        "name": "css",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 88,
-        "subTasksDone": 62,
-        "progress": 70,
-        "userId": "18d92aa4d28"
-      },
-      {
-        "id": "lpe0icc6:lpe0icc6:lpe0iulq",
-        "name": "js",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 188,
-        "subTasksDone": 141,
-        "progress": 75,
-        "userId": "18d92aa4d28"
-      },
-      {
         "id": "lpe0icc6:lpe0icc6:lpe0j0z3",
-        "name": "reacf",
+        "name": "react e-comerse by nagib darwish",
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
         "subTasksNum": 200,
@@ -277,16 +147,6 @@
         "subTasksNum": 25,
         "subTasksDone": 14,
         "progress": 56,
-        "userId": "18d92aa4d28"
-      },
-      {
-        "id": "lpe0icc7:lpe0icca:ls8op890",
-        "name": "lec 4",
-        "subId": "lpe0icc7:lpe0icca",
-        "headId": "lpe0icc7",
-        "subTasksNum": 23,
-        "subTasksDone": 2,
-        "progress": 8,
         "userId": "18d92aa4d28"
       },
       {
@@ -380,36 +240,6 @@
         "progress": 71
       },
       {
-        "id": "lpe0icc6:lpe0icc6:lt4x5195",
-        "name": "dsfafda",
-        "subId": "lpe0icc6:lpe0icc6",
-        "headId": "lpe0icc6",
-        "subTasksNum": 23,
-        "subTasksDone": 2,
-        "userId": "18d92aa4d28",
-        "progress": 8
-      },
-      {
-        "id": "lt4zdp5m:lt4zdp5m:lt4zdp5n",
-        "name": "safdsads",
-        "subId": "lt4zdp5m:lt4zdp5m",
-        "headId": "lt4zdp5m",
-        "subTasksNum": 32,
-        "subTasksDone": 23,
-        "userId": "18d92aa4d28",
-        "progress": 71
-      },
-      {
-        "id": "lt4zdp5n:lt4zdp5n:lt4zdp5n",
-        "name": "fdsafdsa23",
-        "subId": "lt4zdp5n:lt4zdp5n",
-        "headId": "lt4zdp5n",
-        "subTasksNum": 23,
-        "subTasksDone": 2,
-        "userId": "18d92aa4d28",
-        "progress": 8
-      },
-      {
         "id": "lpe0icc7:lt4zzdqw:lt4zzdqw",
         "name": "fdsafdsa",
         "subId": "lpe0icc7:lt4zzdqw",
@@ -420,81 +250,131 @@
         "progress": 1
       },
       {
-        "id": "lpe0icc7:lt500ske:lt500ske",
-        "name": "dsafdsa",
-        "subId": "lpe0icc7:lt500ske",
+        "id": "lpe0icc7:lvjlwzs1:lvjlwzs2",
+        "name": "lec 1",
+        "subId": "lpe0icc7:lvjlwzs1",
         "headId": "lpe0icc7",
-        "subTasksNum": 32,
+        "subTasksNum": 1,
         "subTasksDone": 0,
         "userId": "18d92aa4d28",
         "progress": 0
       },
       {
-        "id": "lt501qmx:lt501qmx:lt501qmx",
-        "name": "jkfldsajfklds",
-        "subId": "lt501qmx:lt501qmx",
-        "headId": "lt501qmx",
-        "subTasksNum": 32,
-        "subTasksDone": 2,
-        "userId": "18d92aa4d28",
-        "progress": 6
-      },
-      {
-        "id": "lpe0icc6:lt9acx2l:lt9acx2l",
-        "name": "safdsafds",
-        "subId": "lpe0icc6:lt9acx2l",
-        "headId": "lpe0icc6",
-        "subTasksNum": 32,
-        "subTasksDone": 2,
-        "userId": "18d92aa4d28",
-        "progress": 6
-      },
-      {
-        "id": "lpe0icc6:lt9ad46s:lt9ad46s",
-        "name": "fdsafdsaf",
-        "subId": "lpe0icc6:lt9ad46s",
-        "headId": "lpe0icc6",
-        "subTasksNum": 32,
-        "subTasksDone": 2,
-        "userId": "18d92aa4d28",
-        "progress": 6
-      },
-      {
-        "id": "lpe0icc7:lpe0icca:lt9aema7",
-        "name": "hjdjfcdsa",
-        "subId": "lpe0icc7:lpe0icca",
+        "id": "lpe0icc7:lvjlwzs1:lvjlxn5f",
+        "name": "lec 2",
+        "subId": "lpe0icc7:lvjlwzs1",
         "headId": "lpe0icc7",
-        "subTasksNum": 23,
-        "subTasksDone": 2,
-        "userId": "18d92aa4d28",
-        "progress": 8
-      },
-      {
-        "id": "lpe0icc7:lpe0icca:lt9aeskx",
-        "name": "fsadfsd",
-        "subId": "lpe0icc7:lpe0icca",
-        "headId": "lpe0icc7",
-        "subTasksNum": 322,
-        "subTasksDone": 2,
+        "subTasksNum": 1,
+        "subTasksDone": 0,
         "userId": "18d92aa4d28",
         "progress": 0
+      },
+      {
+        "id": "lpe0icc7:lvjlwzs1:lvjlxxhc",
+        "name": "lec 3",
+        "subId": "lpe0icc7:lvjlwzs1",
+        "headId": "lpe0icc7",
+        "subTasksNum": 1,
+        "subTasksDone": 0,
+        "userId": "18d92aa4d28",
+        "progress": 0
+      },
+      {
+        "id": "lpe0icc7:lvjlwzs1:lvjly514",
+        "name": "lec 4",
+        "subId": "lpe0icc7:lvjlwzs1",
+        "headId": "lpe0icc7",
+        "subTasksNum": 1,
+        "subTasksDone": 0,
+        "userId": "18d92aa4d28",
+        "progress": 0
+      },
+      {
+        "id": "lpe0icc6:lpe0icc6:lvjm13u3",
+        "name": "davegray nextjs course",
+        "subId": "lpe0icc6:lpe0icc6",
+        "headId": "lpe0icc6",
+        "subTasksNum": 41,
+        "subTasksDone": 10,
+        "userId": "18d92aa4d28",
+        "progress": 24
       }
     ],
     "runningTasks": [
       {
-        "id": "lpe0icc6:lpe0icc6:lpe0iody",
-        "name": "css",
+        "id": "lpe0icc7:lvjlwzs1:lvjlwzs2Mon Apr 29 2024",
+        "name": "lec 1",
+        "subId": "lpe0icc7:lvjlwzs1",
+        "headId": "lpe0icc7",
+        "subTasksNum": 1,
+        "subTasksDone": 0,
+        "userId": "18d92aa4d28",
+        "progress": 0,
+        "taskId": "lpe0icc7:lvjlwzs1:lvjlwzs2",
+        "day": "Mon Apr 29 2024",
+        "headName": "pharmacy",
+        "subName": "enterpreneurship midterm",
+        "done": false
+      },
+      {
+        "id": "lpe0icc7:lvjlwzs1:lvjlxn5fMon Apr 29 2024",
+        "name": "lec 2",
+        "subId": "lpe0icc7:lvjlwzs1",
+        "headId": "lpe0icc7",
+        "subTasksNum": 1,
+        "subTasksDone": 0,
+        "userId": "18d92aa4d28",
+        "progress": 0,
+        "taskId": "lpe0icc7:lvjlwzs1:lvjlxn5f",
+        "day": "Mon Apr 29 2024",
+        "headName": "pharmacy",
+        "subName": "enterpreneurship midterm",
+        "done": false
+      },
+      {
+        "id": "lpe0icc7:lvjlwzs1:lvjlxxhcMon Apr 29 2024",
+        "name": "lec 3",
+        "subId": "lpe0icc7:lvjlwzs1",
+        "headId": "lpe0icc7",
+        "subTasksNum": 1,
+        "subTasksDone": 0,
+        "userId": "18d92aa4d28",
+        "progress": 0,
+        "taskId": "lpe0icc7:lvjlwzs1:lvjlxxhc",
+        "day": "Mon Apr 29 2024",
+        "headName": "pharmacy",
+        "subName": "enterpreneurship midterm",
+        "done": false
+      },
+      {
+        "id": "lpe0icc7:lvjlwzs1:lvjly514Mon Apr 29 2024",
+        "name": "lec 4",
+        "subId": "lpe0icc7:lvjlwzs1",
+        "headId": "lpe0icc7",
+        "subTasksNum": 1,
+        "subTasksDone": 0,
+        "userId": "18d92aa4d28",
+        "progress": 0,
+        "taskId": "lpe0icc7:lvjlwzs1:lvjly514",
+        "day": "Mon Apr 29 2024",
+        "headName": "pharmacy",
+        "subName": "enterpreneurship midterm",
+        "done": false
+      },
+      {
+        "id": "lpe0icc6:lpe0icc6:lvjm13u3Mon Apr 29 2024",
+        "name": "davegray nextjs course",
         "subId": "lpe0icc6:lpe0icc6",
         "headId": "lpe0icc6",
-        "subTasksNum": 88,
-        "subTasksDone": 62,
-        "progress": 70,
+        "subTasksNum": 41,
+        "subTasksDone": 10,
         "userId": "18d92aa4d28",
-        "taskId": "lpe0icc6:lpe0icc6:lpe0iody",
-        "day": "Sun Mar 03 2024",
+        "progress": 24,
+        "taskId": "lpe0icc6:lpe0icc6:lvjm13u3",
+        "day": "Mon Apr 29 2024",
         "headName": "programming",
         "subName": "front ends",
-        "done": true
+        "done": false
       }
     ],
     "users": [
@@ -506,57 +386,7 @@
           "USER"
         ],
         "password": "$2a$10$1u7Xlzyam5GEsWtN0DBeUOglYhUFfemFCE9mEGM67hSkv8x2U/OnW",
-        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDkyYWE0ZDI4IiwiZW1haWwiOiJtb3VzdGFmYXNhYWQ5NTRAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJkYXRlIjoiZGU0ZmQ1NzM2Yi5mYzU4IiwiaWF0IjoxNzA5NzI5MjAxLCJleHAiOjE3MDk4MTU2MDF9.T9FwhgTuB-Rj4z9nyihxldEb8qN78nc08v57loDymmQ"
-      },
-      {
-        "id": "18d92ac6c52",
-        "name": "abdallah",
-        "email": "abdallah@gmail.com",
-        "roles": [
-          "USER"
-        ],
-        "password": "$2a$10$Ku8TmDpAQ0eibY6sJ3g/Be32FLyEHyXRyaHNn9tIXgm/8rfx1EgxO",
-        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDkyYWM2YzUyIiwibmFtZSI6ImFiZGFsbGFoIiwiZW1haWwiOiJhYmRhbGxhaEBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIl0sImRhdGUiOiJlZThhZWJhYTJkLmY4NCIsImlhdCI6MTcwNzU2Mjc4OSwiZXhwIjoxNzA3NTYyODQ5fQ.pjjmghecsLAl4Ki-tWOzRpsjg9FvcGprm_xqH_H2J8s"
-      },
-      {
-        "id": "18d92d483ee",
-        "name": "moustafasaad",
-        "email": "moustafasaad603@gmail.com",
-        "roles": [
-          "USER"
-        ],
-        "password": "$2a$10$SzZ56wf8u.PjecQ3a1GOuuNLxLol.4byGYooIHUL8U5WZ3lUr4IqK",
-        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDkyZDQ4M2VlIiwiZW1haWwiOiJtb3VzdGFmYXNhYWQ2MDNAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJkYXRlIjoiZGQ4Y2M4ZWJlNC45YjQiLCJpYXQiOjE3MDc4OTg3OTIsImV4cCI6MTcwNzk4NTE5Mn0.d-KtgTdP-fD3Jb-7D3j_SVeW0_S6_3qZBwaDjTxH5oI"
-      },
-      {
-        "id": "18d9743317c",
-        "name": "abas",
-        "email": "abas@gmail.com",
-        "roles": [
-          "USER"
-        ],
-        "password": "$2a$10$2HbsOqiJVworT7pSwxsOu.ODCoFsFTbIe7TXhQrHcpz24TMnsquhe",
-        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDk3NDMzMTdjIiwiZW1haWwiOiJhYmFzQGdtYWlsLmNvbSIsInJvbGVzIjpbIlVTRVIiXSwiZGF0ZSI6IjExNWY1NGNkYzEyLmUzNiIsImlhdCI6MTcwODgwNjk4MiwiZXhwIjoxNzA4ODkzMzgyfQ.A8b3gFz767ULJTIpQHZta5RA5B-Sejw4PW_69sQ1YCQ"
-      },
-      {
-        "id": "18d9745d08e",
-        "name": "mahmoud",
-        "email": "mahmoud@gmail.com",
-        "roles": [
-          "USER"
-        ],
-        "password": "$2a$10$9DK76leek/05W6YD8Nkho.5BlxK1NVnx7H1qeJubcwKj17z.Rcfzm",
-        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDk3NDVkMDhlIiwibmFtZSI6Im1haG1vdWQiLCJlbWFpbCI6Im1haG1vdWRAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJkYXRlIjoiMTY5NzAwNDIyZmUuYzY0IiwiaWF0IjoxNzA3NjM5OTUxLCJleHAiOjE3MDc2Mzk5NjF9.yKS4wc_x5Eh4hrIlimJuv88-4-mPRsK0jJjyv3BZW6M"
-      },
-      {
-        "id": "18da2c2ca42",
-        "name": "elsayed",
-        "email": "elsayed@gmail.com",
-        "roles": [
-          "USER"
-        ],
-        "password": "$2a$10$032TSB8FSeuUpEd6todHbextzxTLCNf9m0p.ikpQ/xVn3f0yTqjPK",
-        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZGEyYzJjYTQyIiwibmFtZSI6ImVsc2F5ZWQiLCJlbWFpbCI6ImVsc2F5ZWRAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJkYXRlIjoiMmY4NjMyZmM3LjAyNmUiLCJpYXQiOjE3MDc4MzI2OTEsImV4cCI6MTcwNzgzMjcwMX0.S3dCx04cdyjo7P3-hdU2VvLo5Jq9uuQpNL5Ck-Krzzw"
+        "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4ZDkyYWE0ZDI4IiwiZW1haWwiOiJtb3VzdGFmYXNhYWQ5NTRAZ21haWwuY29tIiwibmFtZSI6Im1vdXN0YWZhc2FhZCIsInJvbGVzIjpbIlVTRVIiXSwiZGF0ZSI6IjE5OWY5NmMyZTIuNDc3IiwiaWF0IjoxNzE0MzM4MzY1LCJleHAiOjE3MTQ0MjQ3NjV9._3szRQkhmxDGEBqAxZxqxOiYHNLoWzxTWNVrntgYyc4"
       }
     ]
   }

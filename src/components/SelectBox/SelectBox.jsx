@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import "./SelectBox.scss";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { Link } from "react-router-dom";

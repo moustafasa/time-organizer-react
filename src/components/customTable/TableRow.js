@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
 
 const TableRow = ({
   checked: [checkedItems, setCheckedItems],
@@ -19,6 +18,20 @@ const TableRow = ({
       ...rest,
     }),
   });
+
+  // edited objects with {edited key : value of this edited key}
+  const editedObject = keys.reduce((obj, key) => {
+    if (key.edit) obj[key.name || key.title] = element[key.name || key.title];
+    return obj;
+  }, {});
+
+  // states
+
+  // // is this field is editable or not
+  const [editable, setEditable] = useState(false);
+
+  // // values of fields with edit:true
+  const [elementValue, setElementValue] = useState(editedObject);
 
   // handlers
 
@@ -42,22 +55,13 @@ const TableRow = ({
     }
   };
 
-  // edited objects with {edited key : value of this edited key}
-  const editedObject = keys.reduce((obj, key) => {
-    if (key.edit) obj[key.name || key.title] = element[key.name || key.title];
-    return obj;
-  }, {});
-
-  // states
-
-  // // is this field is editable or not
-  const [editable, setEditable] = useState(false);
-
-  // // values of fields with edit:true
-  const [elementValue, setElementValue] = useState(editedObject);
-
   return (
-    <tr onClick={selectHandler} onDoubleClick={goToHandler}>
+    <tr
+      onClick={selectHandler}
+      onDoubleClick={(e) => {
+        if (!editable && goToHandler) goToHandler(e);
+      }}
+    >
       <td>
         <input
           type="checkbox"

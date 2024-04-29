@@ -13,12 +13,21 @@ function insert(db, collection, data) {
     subs: () => calcSubs(db, data),
     heads: () => calcHeads(db, data),
   };
+
   calc[collection]();
   const table = db.get("data").get(collection);
+  const compareObj = { name: data.name, userId: data.userId };
 
-  if (_.isEmpty(table.find({ name: data.name }).value())) {
+  if (collection !== "heads") compareObj["headId"] = data.headId;
+
+  if (collection === "tasks") compareObj["subId"] = data.subId;
+
+  if (_.isEmpty(table.find(compareObj).value())) {
     table.push(data).write();
   } else {
+    if (!_.isEmpty(table.find({ id: data.id }).value())) {
+      table.find({ id: data.id }).assign(data).write();
+    }
   }
 }
 function add(data, type, db, user) {

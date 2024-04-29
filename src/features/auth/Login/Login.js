@@ -1,34 +1,30 @@
 import { Field, Formik } from "formik";
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  Navigate,
   Form as RouteForm,
   redirect,
   useActionData,
-  useNavigate,
   useNavigation,
-  useSearchParams,
 } from "react-router-dom";
 import * as yup from "yup";
 import sass from "../form.module.scss";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Container, Form } from "react-bootstrap";
 import InputBox from "../../../components/InputBox/InputBox";
 import { authApiSlice } from "../authApiSlice";
-import { getCurrentToken, setCredintials } from "../authSlice";
-import { useDispatch, useSelector } from "react-redux";
 
 export const action =
   (dispatch) =>
   async ({ request }) => {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
+    const searchParams = new URLSearchParams(window.location.search);
     try {
-      const res = await dispatch(
+      await dispatch(
         authApiSlice.endpoints.login.initiate(data, { track: false })
       ).unwrap();
-      return { data: res };
+
+      return redirect(searchParams.get("from") || "/");
     } catch (error) {
-      console.log(error);
       return { error };
     }
   };
@@ -42,29 +38,15 @@ const Login = () => {
     password: yup.string().required("the password is required field"),
   });
 
-  const [searchParams] = useSearchParams();
+  const { error } = useActionData() || {};
 
-  const { error, data } = useActionData() || {};
-  const dispatch = useDispatch();
-  const token = useSelector(getCurrentToken);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    if (data) {
-      dispatch(setCredintials(data));
-    }
-  }, [data, dispatch]);
-
-  console.log("done");
-  if (token) {
-    return <Navigate to={searchParams.get("from") || "/"} replace />;
-  }
-
-  return navigation.state !== "idle" || (!token && !!data) ? (
+  return navigation.formData ? (
     <div>loading...</div>
   ) : (
     <div>
-      <div className="container">
+      <Container>
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={schema}
@@ -75,10 +57,11 @@ const Login = () => {
               className={"p-3 pb-5 rounded " + sass.form}
               method="post"
               onSubmit={(e) => !isValid && e.preventDefault()}
+              replace
             >
               {error && (
                 <Alert variant="danger" className="mb-4 text-capitalize">
-                  {error}
+                  {error.data}
                 </Alert>
               )}
               <h2 className="page-head mb-5">log in</h2>
@@ -116,7 +99,7 @@ const Login = () => {
             </Form>
           )}
         </Formik>
-      </div>
+      </Container>
     </div>
   );
 };

@@ -10,11 +10,12 @@ import "./Inputs.scss";
 
 import HeadInput from "./Head/HeadInput";
 import { Form, useLoaderData } from "react-router-dom";
+import AddFieldButton from "../../../components/AddFieldButton/AddFieldButton";
 
 const Inputs = () => {
   const headsIds = useSelector(getHeads);
   const { headId } = useLoaderData();
-  const [addAll, { isLoading, isError, error }] = useAddAllMutation();
+  const [addAll] = useAddAllMutation();
   const dispatch = useDispatch();
 
   return (
@@ -24,14 +25,12 @@ const Inputs = () => {
       ))}
 
       {!headId && (
-        <button
-          className="input-modify-btn plus-btn"
-          onClick={(e) => dispatch(changeNumberOfHeads(1))}
-          style={{ marginTop: "50px" }}
-          type="button"
-        >
-          +
-        </button>
+        <div style={{ marginTop: "50px" }}>
+          <AddFieldButton
+            onClick={(e) => dispatch(changeNumberOfHeads(1))}
+            type="plus"
+          />
+        </div>
       )}
 
       <button className="submit-button" type="submit">

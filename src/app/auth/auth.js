@@ -129,6 +129,7 @@ const login = (db) => (req, res) => {
           const payload = {
             id: user.id,
             email: email.toLowerCase(),
+            name: user.name,
             roles: user.roles,
           };
           // Passwords match, create a token for the user
@@ -168,6 +169,7 @@ const refresh = (db) => (req, res) => {
         {
           id: user.id,
           email: user.email,
+          name: user.name,
           roles: user.roles,
         },
         "access"

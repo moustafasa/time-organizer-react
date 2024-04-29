@@ -14,6 +14,7 @@ import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/u
 import InputBox from "../../../../components/InputBox/InputBox";
 import TaskInput from "../Task/TaskInput";
 import sass from "./SubInput.module.scss";
+import AddFieldButton from "../../../../components/AddFieldButton/AddFieldButton";
 
 const SubInput = ({ id, index, last }) => {
   const sub = useSelector((state) => getSubById(state, id));
@@ -54,24 +55,18 @@ const SubInput = ({ id, index, last }) => {
             last={index === tasks.length - 1}
           />
         ))}
-        <button
-          className="input-modify-btn plus-btn"
+        <AddFieldButton
           onClick={(e) => dispatch(changeNumberOfTasks({ num: 1, subId: id }))}
           title="add task"
-          type="button"
-        >
-          +
-        </button>
+          type="plus"
+        />
       </div>
       {!sub.readOnly && (
-        <button
-          className="input-modify-btn minus-btn"
+        <AddFieldButton
           onClick={(e) => dispatch(removeSub(id))}
           title={`remove sub ${index}`}
-          type="button"
-        >
-          -
-        </button>
+          type="minus"
+        />
       )}
     </div>
   );

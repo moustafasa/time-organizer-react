@@ -4,7 +4,6 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import axios from "axios";
 import { apiSlice } from "../api/apiSlice";
 
 const headsAdapter = createEntityAdapter();

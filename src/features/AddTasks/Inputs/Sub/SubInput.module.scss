@@ -13,22 +13,5 @@
     @include flex-gap(40px);
   }
 
-  @include medias("mobile") {
-    border: 1px solid $green-2-color;
-    border-radius: 0.5rem;
-    padding-block: 1rem;
-    padding-inline: 1rem;
-    flex-direction: column;
-    gap: 5rem;
-    position: relative;
-    &::before {
-      content: "";
-      position: absolute;
-      background-color: #0e8388;
-      width: 2px;
-      height: 6rem;
-      translate: -50% -100%;
-      inset: 0 auto 0 50%;
-    }
-  }
+  @include addTasksBorder(3rem, "tasks");
 }

@@ -1,22 +1,13 @@
-import {
-  Outlet,
-  RouterProvider,
-  ScrollRestoration,
-  createBrowserRouter,
-  redirect,
-  useLocation,
-} from "react-router-dom";
-import Header from "./components/Header/Header";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import AddTasks, {
   action as addTasksAction,
   loader as addTasksLoader,
 } from "./features/AddTasks/AddTasks";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import RunningTasks from "./features/RunningTasks/RunningTasks";
 import SetupRunTasks, {
   action as setRunTasksAction,
 } from "./features/RunningTasks/SetupRunTasks/SetupRunTasks";
-import PopUp from "./components/PopUp/PopUp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getOptionsOfWeekDays } from "./features/RunningTasks/functions";
@@ -26,146 +17,124 @@ import SignUp, {
   action as registerAction,
 } from "./features/auth/SignUp/SignUp";
 import Login, { action as loginAction } from "./features/auth/Login/Login";
-import { getCurrentToken, setCredintials } from "./features/auth/authSlice";
-import authApiSlice from "./features/auth/authApiSlice";
-
 import ShowTasks from "./features/ShowTasks/ShowTasks";
 import ShowHeads from "./features/ShowTasks/ShowHeads";
 import ShowSubs from "./features/ShowTasks/showSubs";
 import { action as deleteAction } from "./components/deletePage";
-import { Spinner } from "react-bootstrap";
-import { useCallback, useEffect, useState } from "react";
+import { useMemo } from "react";
 import RequireAuth from "./features/auth/RequireAuth";
+import { action as logOutLoader } from "./features/auth/Logout";
+import PersistLogin from "./features/auth/PersistLogin";
+import LayOut from "./components/LayOut";
+import BackToAuth from "./features/auth/BackToAuth";
 
 const weekDaysLoader = () => {
   const weekDays = getOptionsOfWeekDays();
   return { weekDays };
 };
 
-const proctectedLoader =
-  (token) =>
-  async ({ request }) => {
-    const url = new URL(request.url);
-    if (token) {
-      return null;
-    } else {
-      return redirect(`/login?from=${url.pathname}`);
-    }
-  };
-
 function App() {
   const dispatch = useDispatch();
-  const token = useSelector(getCurrentToken);
-  const [refreshed, setRefreshed] = useState(false);
 
-  useEffect(() => {
-    const persist = async () => {
-      try {
-        const res = await dispatch(
-          authApiSlice.endpoints.refresh.initiate(undefined, { track: false })
-        ).unwrap();
-        dispatch(setCredintials(res));
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setRefreshed(true);
-      }
-    };
-    persist();
-  }, [dispatch]);
-
-  const router = useCallback(
+  const router = useMemo(
     () =>
       createBrowserRouter([
         {
-          element: (
-            <>
-              <Header />
-              <section id="body">
-                <Outlet />
-              </section>
-              <PopUp />
-              <ScrollRestoration
-                getKey={(location, matches) => {
-                  return location.pathname;
-                }}
-              />
-            </>
-          ),
+          element: <PersistLogin />,
           children: [
-            { path: "/", element: <Home /> },
-
             {
-              loader: proctectedLoader(token),
+              path: "/",
+              element: <LayOut />,
               children: [
-                {
-                  path: "/addTasks",
-                  element: <AddTasks />,
-                  loader: addTasksLoader(dispatch),
-                  action: addTasksAction(dispatch),
-                },
+                // public routes
+                { index: true, element: <Home /> },
 
                 {
-                  path: "/showTasks/heads",
-                  element: <ShowHeads />,
-                },
-                {
-                  path: "/showTasks/subs",
-                  element: <ShowSubs />,
-                },
-                {
-                  path: "/showTasks/tasks",
-                  element: <ShowTasks />,
-                },
-                {
-                  path: "/runningTasks",
-                  element: <Outlet />,
-                  id: "runningTasks",
-                  loader: weekDaysLoader,
+                  element: <BackToAuth />,
                   children: [
                     {
-                      path: "show",
-                      element: <RunningTasks />,
+                      path: "/register",
+                      element: <SignUp />,
+                      action: registerAction(dispatch),
                     },
                     {
-                      path: "add",
-                      element: <SetupRunTasks />,
-                      action: setRunTasksAction,
-                    },
-                    {
-                      path: "start",
-                      element: <StartRunTasks />,
+                      path: "/login",
+                      element: <Login />,
+                      action: loginAction(dispatch),
                     },
                   ],
                 },
+
+                // protected routes
+                {
+                  element: <RequireAuth />,
+                  children: [
+                    {
+                      path: "/addTasks",
+                      element: <AddTasks />,
+                      loader: addTasksLoader(dispatch),
+                      action: addTasksAction(dispatch),
+                    },
+
+                    {
+                      path: "/showTasks/heads",
+                      element: <ShowHeads />,
+                    },
+                    {
+                      path: "/showTasks/subs",
+                      element: <ShowSubs />,
+                    },
+                    {
+                      path: "/showTasks/tasks",
+                      element: <ShowTasks />,
+                    },
+                    {
+                      path: "/runningTasks",
+                      element: <Outlet />,
+                      id: "runningTasks",
+                      loader: weekDaysLoader,
+                      children: [
+                        {
+                          path: "show",
+                          element: <RunningTasks />,
+                        },
+                        {
+                          path: "add",
+                          element: <SetupRunTasks />,
+                          action: setRunTasksAction,
+                        },
+                        {
+                          path: "start",
+                          element: <StartRunTasks />,
+                        },
+                      ],
+                    },
+                  ],
+                },
+
+                // actions
+                {
+                  path: "/deleteOne/:page/:id",
+                  action: deleteAction(dispatch),
+                },
+                {
+                  path: "/delete/:page",
+                  action: deleteAction(dispatch),
+                },
+                {
+                  path: "/logout",
+                  action: logOutLoader(dispatch),
+                },
               ],
-            },
-            {
-              path: "/register",
-              element: <SignUp />,
-              action: registerAction(dispatch),
-            },
-            {
-              path: "/login",
-              element: <Login />,
-              action: loginAction(dispatch),
-            },
-            {
-              path: "/deleteOne/:page/:id",
-              action: deleteAction(dispatch),
-            },
-            {
-              path: "/delete/:page",
-              action: deleteAction(dispatch),
             },
           ],
         },
       ]),
-    [dispatch, token]
+    [dispatch]
   );
   return (
     <div className="App">
-      {!refreshed ? <Spinner /> : <RouterProvider router={router()} />}
+      <RouterProvider router={router} />
       <ToastContainer />
     </div>
   );

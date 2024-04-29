@@ -48,7 +48,6 @@ const PopUp = () => {
     [sass.black]: options.black,
   });
 
-  console.log(options);
   return (
     <Modal
       show={show}

@@ -5,10 +5,9 @@ import {
   changeCurrentPomodoro,
   changeIsBreak,
   getAnimState,
-  getPomodoroTime,
   useDidTaskMutation,
 } from "../../features/RunningTasks/RunningTasksSlice";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { modify, show } from "../../components/PopUp/PopUp";
 import RunTasksTimer from "../../features/RunningTasks/StartRunTasks/RunTasksTimer/RunTasksTimer";
 import FinishTask from "../../features/RunningTasks/StartRunTasks/FinishTask/FinishTask";

@@ -1,0 +1,45 @@
+@use "../../sass/helpers/mixins" as *;
+@use "../../sass/variables/colors" as *;
+@use "../../sass/variables/others" as *;
+.add-field-btn {
+  @include centerbyflex(null);
+  width: 100%;
+  position: relative;
+  padding: 0.75rem;
+  opacity: 0.1;
+
+  transition: opacity 0.5s;
+
+  &.minus-btn {
+    --btn-color: #{$red-1-color};
+    &:hover::before {
+      box-shadow: 0 0 10px $red-2-color;
+    }
+  }
+  &.plus-btn {
+    --btn-color: #{$green-2-color};
+    &:hover::before {
+      box-shadow: $blue-shadow;
+    }
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 50% 1rem auto 1rem;
+    height: 2px;
+    z-index: -1;
+    background-color: var(--btn-color);
+
+    transition: box-shadow background-color 0.5s;
+  }
+
+  .icon {
+    color: var(--btn-color);
+    background-color: $blue-1-color;
+  }
+}

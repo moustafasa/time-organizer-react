@@ -8,12 +8,13 @@ import {
   removeHead,
   updateHead,
 } from "../../AddTasksSlice";
-import { memo, startTransition, useEffect, useRef } from "react";
+import { memo, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import SubInput from "../Sub/SubInput";
 import sass from "./HeadInput.module.scss";
 import { useLoaderData } from "react-router-dom";
+import AddFieldButton from "../../../../components/AddFieldButton/AddFieldButton";
 
 const HeadInput = ({ id, index }) => {
   const head = useSelector((state) => getHeadById(state, id));
@@ -25,28 +26,6 @@ const HeadInput = ({ id, index }) => {
   const headRef = useRef();
 
   useScrollChangeValue(id, changeCurrentHead, headRef, getCurrentHead);
-
-  const callback = (entries) => {
-    const entry = entries[0];
-    console.log(entry);
-  };
-
-  const options = {
-    root: null, // Use the browser viewport as the root
-    rootMargin: "80px", // No margin adjustments
-    threshold: [0.5, 1], // Execute callback when 50% of the element is visible
-  };
-
-  useEffect(() => {
-    const element = headRef.current;
-    const observer = new IntersectionObserver(callback, options);
-    observer.observe(element);
-
-    // Optional cleanup function
-    return () => {
-      observer.unobserve(element);
-    };
-  }, []);
 
   return (
     <div className={sass.headCont} ref={headRef} id={id}>
@@ -69,27 +48,21 @@ const HeadInput = ({ id, index }) => {
           />
         ))}
         {!subId && (
-          <button
-            className="input-modify-btn plus-btn"
+          <AddFieldButton
             onClick={(e) =>
               dispatch(changeNumberOfSubs({ num: 1, headId: id }))
             }
-            type="button"
-            title="add Sub"
-          >
-            +
-          </button>
+            type={"plus"}
+            title={"add Sub"}
+          />
         )}
       </div>
       {!head.readOnly && (
-        <button
-          className="input-modify-btn minus-btn"
+        <AddFieldButton
           title={`remove head ${index}`}
+          type={"minus"}
           onClick={(e) => dispatch(removeHead(id))}
-          type="button"
-        >
-          -
-        </button>
+        />
       )}
     </div>
   );

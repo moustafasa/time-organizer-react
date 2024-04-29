@@ -1,10 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  getCurrentToken,
-  getCurrentUser,
-  logOut,
-  setCredintials,
-} from "../auth/authSlice";
+import { getCurrentToken, logOut, setCredintials } from "../auth/authSlice";
 import axios from "axios";
 import { Mutex } from "async-mutex";
 
@@ -40,7 +35,6 @@ const axiosBaseQuery = async (args, { getState }, extra) => {
       data: res.data,
     };
   } catch (axiosErr) {
-    console.error(axiosErr.response);
     return {
       error: {
         status: axiosErr?.response?.status,

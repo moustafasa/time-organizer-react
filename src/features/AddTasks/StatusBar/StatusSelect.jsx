@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useMemo } from "react";
 import SelectBox from "../../../components/SelectBox/SelectBox";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
 
 const StatusSelect = ({
   entities,

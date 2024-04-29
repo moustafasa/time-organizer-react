@@ -1,17 +1,16 @@
+import React from "react";
 import { useSelector } from "react-redux";
 import { getCurrentToken } from "./authSlice";
 import { Navigate, Outlet, useNavigation } from "react-router-dom";
 
-const RequireAuth = () => {
+const BackToAuth = () => {
   const token = useSelector(getCurrentToken);
   const navigation = useNavigation();
-  return navigation.state === "submitting" || token === null ? (
-    <p>require loading...</p>
-  ) : token ? (
-    <Outlet />
+  return token && navigation.state === "idle" ? (
+    <Navigate to={"/"} replace />
   ) : (
-    <Navigate to={`/login?from=${window.location.pathname}`} replace />
+    <Outlet />
   );
 };
 
-export default RequireAuth;
+export default BackToAuth;

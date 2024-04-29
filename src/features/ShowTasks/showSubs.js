@@ -3,12 +3,10 @@ import { useNavigate } from "react-router-dom";
 import {
   getAllDataIds,
   getAllHeads,
-  getAllHeadsEntities,
   getElementById,
   useGetHeadsQuery,
   useGetSubsQuery,
 } from "./ShowTasksSlice";
-import { show } from "../../components/PopUp/PopUp";
 import ShowBtns from "./ShowBtns";
 import CustomTable from "../../components/customTable/CustomTable";
 import TableRow from "../../components/customTable/TableRow";

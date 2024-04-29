@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  startTransition,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import sass from "./RunTaskTimer.module.scss";
 import classNames from "classnames";
 import { formatTime } from "../../functions";
@@ -16,6 +21,14 @@ import {
 } from "../../RunningTasksSlice";
 
 const RunTasksTimer = () => {
+  const desktopNotify = useCallback(async (text) => {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        new Notification(text);
+      }
+    }
+  }, []);
+
   // idle - played - paused - done
   const animState = useSelector(getAnimState);
   const pomodoroTime = useSelector((state) => getPomodoroTime(state) * 60);
@@ -38,6 +51,10 @@ const RunTasksTimer = () => {
   );
 
   useEffect(() => {
+    startTransition(() => Notification.requestPermission());
+  }, []);
+
+  useEffect(() => {
     let timeInterval;
     if (animState === "played") {
       timeInterval = window.setInterval(() => {
@@ -54,24 +71,43 @@ const RunTasksTimer = () => {
 
   useEffect(() => {
     setTimer(duration);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBreak]);
 
   useEffect(() => {
     if (timer < 0) {
       if (currentPomodoro === pomodorosNum) {
         setAnimState("done");
+        desktopNotify(
+          `congratulations! you done all of pomodoros for this task`
+        );
       } else {
         setAnimState("idle");
         if (isBreak) {
+          const remainingPomodors = pomodorosNum - (currentPomodoro + 1);
+          desktopNotify(
+            `the break is finished let's start pomdoro number ${
+              currentPomodoro + 1
+            } ${
+              remainingPomodors !== 0
+                ? `only ${remainingPomodors} pomdoro is remaining`
+                : `this is the last pomodoro`
+            }`
+          );
           dispatch(changeCurrentPomodoro(currentPomodoro + 1));
           setDuration(pomodoroTime);
         } else {
-          console.log("done");
+          desktopNotify(
+            `you done ${currentPomodoro} / ${pomodorosNum} pomodoros let's take a break`
+          );
           setDuration(breakTime);
         }
         dispatch(changeIsBreak(!isBreak));
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer]);
 
   return (

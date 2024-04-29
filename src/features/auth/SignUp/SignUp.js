@@ -1,71 +1,60 @@
-import React, { useEffect } from "react";
+import React, { useMemo } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import InputBox from "../../../components/InputBox/InputBox";
 import sass from "../form.module.scss";
 import { Field, Formik } from "formik";
 import * as yup from "yup";
-import {
-  Form as RouteForm,
-  useActionData,
-  useNavigate,
-} from "react-router-dom";
+import { Form as RouteForm, redirect, useActionData } from "react-router-dom";
 import { authApiSlice } from "../authApiSlice";
-import { setCredintials } from "../authSlice";
-import { useDispatch } from "react-redux";
 
 export const action =
   (dispatch) =>
   async ({ request }) => {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
+    const searchParams = new URLSearchParams(window.location.search);
     try {
-      const res = await dispatch(
+      await dispatch(
         authApiSlice.endpoints.register.initiate(data, { track: false })
       ).unwrap();
-      return { data: res };
+      return redirect(searchParams.get("from") || "/");
     } catch (err) {
       return { error: "email is already exist" };
     }
   };
 
 const SignUp = () => {
-  const schema = yup.object({
-    name: yup
-      .string()
-      .min(3)
-      .matches(
-        /^[a-zA-Z\s]*$/,
-        "the name must be less than 3 and only has letters or spaces"
-      )
-      .required("the name is required field"),
-    email: yup
-      .string()
-      .email("please write valid email")
-      .required("the email is required field"),
-    password: yup
-      .string()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%/]).{8,24}$/,
-        "password should contain capital and small letters , numbers ,@#$%^&+/= and should be between 8 to 20 character"
-      )
-      .required("the password is required field"),
-    passConf: yup
-      .string()
-      .oneOf([yup.ref("password"), "passwords must matches"])
-      .required("the password is required field"),
-  });
+  const schema = useMemo(
+    () =>
+      yup.object({
+        name: yup
+          .string()
+          .min(3)
+          .matches(
+            /^[a-zA-Z\s]*$/,
+            "the name must be less than 3 and only has letters or spaces"
+          )
+          .required("the name is required field"),
+        email: yup
+          .string()
+          .email("please write valid email")
+          .required("the email is required field"),
+        password: yup
+          .string()
+          .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%/]).{8,24}$/,
+            "password should contain capital and small letters , numbers ,@#$%^&+/= and should be between 8 to 20 character"
+          )
+          .required("the password is required field"),
+        passConf: yup
+          .string()
+          .oneOf([yup.ref("password"), "passwords must matches"])
+          .required("the password is required field"),
+      }),
+    []
+  );
 
-  const { error, data } = useActionData() || {};
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (data) {
-      dispatch(setCredintials(data));
-      navigate("/", { replace: true });
-    }
-  }, [data, dispatch, navigate]);
+  const { error } = useActionData() || {};
 
   return (
     <div>
@@ -80,6 +69,7 @@ const SignUp = () => {
               className={"p-3 pb-5 rounded " + sass.form}
               method="post"
               onSubmit={(e) => !isValid && e.preventDefault()}
+              replace
             >
               {error && (
                 <Alert variant="danger" className="mb-4 text-capitalize">

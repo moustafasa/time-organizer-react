@@ -31,20 +31,16 @@ const updateSub = (db) => (req, res) => {
 };
 
 const updateTask = (db) => (req, res) => {
-  let task = db.get("data").get("tasks").find({ id: req.params.id }).value();
+  const taskDb = db.get("data").get("tasks").find({ id: req.params.id });
+  const task = taskDb.value();
   if (task) {
-    task = _.merge(task, req.body);
-    if (req.body.subTasksNum || req.body.subTasksDone) {
-      calcTasks(task);
-    }
-
-    db.get("data")
-      .get("heads")
-      .find({ id: req.params.id })
-      .assign(task)
-      .write();
+    const mergedTask = _.merge(task, req.body);
 
     if (req.body.subTasksNum || req.body.subTasksDone) {
+      //calc task
+      calcTasks(mergedTask);
+      taskDb.assign(task).write();
+
       // calc subs
       const subLowDb = db.get("data").get("subs").find({ id: task.subId });
       const subUpdated = subLowDb.value();
@@ -56,6 +52,8 @@ const updateTask = (db) => (req, res) => {
       const headUpdated = headLowDb.value();
       calcHeads(db, headUpdated);
       headLowDb.assign(headUpdated).write();
+    } else {
+      taskDb.assign(task).write();
     }
 
     res.send({ ...req.body, progress: task.progress });
