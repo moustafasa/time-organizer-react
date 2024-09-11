@@ -71,9 +71,7 @@ const RunTasksTimer = () => {
 
   useEffect(() => {
     setTimer(duration);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBreak]);
+  }, [duration]);
 
   useEffect(() => {
     if (timer < 0) {
@@ -101,6 +99,7 @@ const RunTasksTimer = () => {
           desktopNotify(
             `you done ${currentPomodoro} / ${pomodorosNum} pomodoros let's take a break`
           );
+          console.log("done");
           setDuration(breakTime);
         }
         dispatch(changeIsBreak(!isBreak));
