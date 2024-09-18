@@ -37,7 +37,7 @@ const useStartTask = (task) => {
   const animState = useSelector(getAnimState);
 
   useEffect(() => {
-    modify({ disabled: animState !== "done", black: animState === "played" });
+    modify({ disabled: animState !== "played", black: animState === "played" });
   }, [animState]);
 
   const runTaskDialoge = () => {

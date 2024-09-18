@@ -1,9 +1,4 @@
-import React, {
-  startTransition,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { startTransition, useCallback, useEffect, useState } from "react";
 import sass from "./RunTaskTimer.module.scss";
 import classNames from "classnames";
 import { formatTime } from "../../functions";

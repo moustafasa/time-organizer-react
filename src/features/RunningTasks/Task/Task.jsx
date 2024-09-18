@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   getCurrentDay,
@@ -6,10 +5,6 @@ import {
   useDeleteFromRunTasksMutation,
   useGetRunningTasksQuery,
 } from "../RunningTasksSlice";
-import { show } from "../../../components/PopUp/PopUp";
-import StartRunTask from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
-import FinishTask from "../StartRunTasks/FinishTask/FinishTask";
-import RunTasksTimer from "../StartRunTasks/RunTasksTimer/RunTasksTimer";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import { format, isSameDay } from "date-fns";

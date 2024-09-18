@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import sass from "./PopUp.module.scss";
 import EventEmiiter from "events";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
 import { Button, Modal } from "react-bootstrap";
 
 const emitter = new EventEmiiter();
@@ -27,6 +26,7 @@ const PopUp = () => {
       setOptions(obj);
     };
     const modifyHandler = (obj) => {
+      console.log(obj);
       setOptions((opts) => ({
         ...opts,
         black: obj.black,
