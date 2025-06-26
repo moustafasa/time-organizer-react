@@ -1,0 +1,17 @@
+@use "../../../../sass/helpers/mixins" as *;
+@use "../../../../sass/variables/colors" as *;
+@use "../../../../sass/variables/others" as *;
+
+.subCont {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 20px;
+  scroll-margin: 110px;
+  .tasks {
+    @include flex-gap(40px);
+  }
+
+  @include addTasksBorder(3rem, "tasks");
+}
