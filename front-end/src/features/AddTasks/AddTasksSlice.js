@@ -268,14 +268,14 @@ export const {
 export const getSubsOfHead = createSelector(
   [getSubs, (state, headId) => headId],
   (subs, headId) => {
-    return subs.filter((sub) => sub.headId === headId);
+    return subs.filter((sub) => sub.slice(0, sub.indexOf(":")) === headId);
   }
 );
 export const getTasksOfSub = createSelector(
   [getTasks, (state, subId) => subId],
   (tasks, subId) => {
     return tasks.filter((task) => {
-      return task.subId === subId;
+      return task.slice(0, task.lastIndexOf(":")) === subId;
     });
   }
 );

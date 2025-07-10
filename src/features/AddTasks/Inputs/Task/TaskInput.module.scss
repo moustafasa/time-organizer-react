@@ -1,8 +1,0 @@
-@use "../../../../sass/helpers/mixins" as *;
-@use "../../../../sass/variables/colors" as *;
-@use "../../../../sass/variables/others" as *;
-
-.task {
-  scroll-margin: 110px;
-  @include flex-gap(20px);
-}

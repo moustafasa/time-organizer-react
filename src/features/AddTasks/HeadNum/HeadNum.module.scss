@@ -1,7 +1,0 @@
-@use "../../../sass/helpers/mixins" as *;
-
-.headNum {
-  @include centerbyflex(null);
-  @include flex-gap(40px, null);
-  padding: 10px;
-}
