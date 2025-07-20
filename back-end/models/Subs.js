@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Heads = require("./Heads");
 
 const subsSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, default: "" },
   readOnly: { type: Boolean, default: false },
   headId: {
     type: mongoose.Schema.Types.ObjectId,

@@ -5,6 +5,7 @@ import {
   getCurrentHead,
   getCurrentSub,
   getSubById,
+  getTasksLoadingStatus,
   getTasksOfSub,
   removeSub,
   updateSub,
@@ -18,6 +19,9 @@ import AddFieldButton from "../../../../components/AddFieldButton/AddFieldButton
 
 const SubInput = ({ id, index, last }) => {
   const sub = useSelector((state) => getSubById(state, id));
+  const tasksLoadingState = useSelector((state) =>
+    getTasksLoadingStatus(state, id)
+  );
   const dispatch = useDispatch();
   const setSubName = (value) =>
     dispatch(updateSub({ id, changes: { name: value } }));
@@ -47,6 +51,7 @@ const SubInput = ({ id, index, last }) => {
         }}
       />
       <div className={sass.tasks}>
+        {tasksLoadingState && <div>loading...</div>}
         {tasks.map((task, index) => (
           <TaskInput
             key={task}
@@ -55,11 +60,17 @@ const SubInput = ({ id, index, last }) => {
             last={index === tasks.length - 1}
           />
         ))}
-        <AddFieldButton
-          onClick={(e) => dispatch(changeNumberOfTasks({ num: 1, subId: id }))}
-          title="add task"
-          type="plus"
-        />
+        {!tasksLoadingState && (
+          <AddFieldButton
+            onClick={(e) =>
+              dispatch(
+                changeNumberOfTasks({ num: 1, subId: id, headId: sub.headId })
+              )
+            }
+            title="add task"
+            type="plus"
+          />
+        )}
       </div>
       {!sub.readOnly && (
         <AddFieldButton

@@ -4,6 +4,7 @@ import {
   changeNumberOfSubs,
   getCurrentHead,
   getHeadById,
+  getSubsLoadingStatus,
   getSubsOfHead,
   removeHead,
   updateHead,
@@ -19,6 +20,9 @@ import AddFieldButton from "../../../../components/AddFieldButton/AddFieldButton
 const HeadInput = ({ id, index }) => {
   const head = useSelector((state) => getHeadById(state, id));
   const subs = useSelector((state) => getSubsOfHead(state, id));
+  const subLoadingStatus = useSelector((state) =>
+    getSubsLoadingStatus(state, id)
+  );
   const { subId } = useLoaderData();
   const dispatch = useDispatch();
   const setHeadName = (value) =>
@@ -39,6 +43,7 @@ const HeadInput = ({ id, index }) => {
       />
 
       <div className={sass.subjects}>
+        {subLoadingStatus && <div>loading...</div>}
         {subs.map((sub, index) => (
           <SubInput
             key={sub}
@@ -47,7 +52,7 @@ const HeadInput = ({ id, index }) => {
             last={index === subs.length - 1}
           />
         ))}
-        {!subId && (
+        {!subId && !subLoadingStatus && (
           <AddFieldButton
             onClick={(e) =>
               dispatch(changeNumberOfSubs({ num: 1, headId: id }))

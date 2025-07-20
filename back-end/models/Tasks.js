@@ -3,14 +3,14 @@ const Subs = require("./Subs");
 
 const tasksSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, default: "" },
     subId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Sub" },
     headId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Head",
     },
-    subTasksNum: { type: Number, required: true },
+    subTasksNum: { type: Number, default: 0 },
     subTasksDone: { type: Number, default: 0 },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

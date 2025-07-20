@@ -9,16 +9,19 @@ import { apiSlice } from "../api/apiSlice";
 const headsAdapter = createEntityAdapter();
 const headsState = headsAdapter.getInitialState({
   currentHead: "",
+  loadingStatus: false,
 });
 
 const subsAdapter = createEntityAdapter();
 const subsState = subsAdapter.getInitialState({
   currentSub: "",
+  loadingStatus: false,
 });
 
 const tasksAdapter = createEntityAdapter();
 const tasksState = tasksAdapter.getInitialState({
   currentTask: "",
+  loadingStatus: false,
 });
 
 const initialState = {
@@ -34,10 +37,6 @@ export const addTasksQuerySlice = apiSlice.injectEndpoints({
         const heads = getHeadsEntities(getState());
         const subs = getSubsEntities(getState());
         const tasks = getTasksEntities(getState());
-        console.log(heads, subs, tasks);
-
-        delete heads["readOnly"];
-        delete subs["readOnly"];
 
         const res = await baseQuery({
           url: "/all",
@@ -50,6 +49,30 @@ export const addTasksQuerySlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "Data", id: "LIST" }],
     }),
 
+    addHeads: builder.mutation({
+      query: (heads) => ({
+        url: "/heads",
+        method: "POST",
+        data: heads,
+      }),
+      invalidatesTags: [{ type: "Data", id: "LIST" }],
+    }),
+    addSubs: builder.mutation({
+      query: (subs) => ({
+        url: "/subs",
+        method: "POST",
+        data: subs,
+      }),
+      invalidatesTags: [{ type: "Data", id: "LIST" }],
+    }),
+    addTasks: builder.mutation({
+      query: (tasks) => ({
+        url: "/tasks",
+        method: "POST",
+        data: tasks,
+      }),
+      invalidatesTags: [{ type: "Data", id: "LIST" }],
+    }),
     getSub: builder.mutation({
       query: (subId) => `/subs/${subId}`,
     }),
@@ -70,19 +93,8 @@ const addTasksSlice = createSlice({
     addSubs(state, action) {
       subsAdapter.addMany(state.subs, action.payload);
     },
-    changeNumberOfTasks(state, action) {
-      const lastIndex = Date.now();
-      const tasks = [...Array(action.payload.num)].map((_, index) => {
-        return {
-          id: `${action.payload.subId}:${(index + lastIndex).toString(36)}`,
-          name: "",
-          subId: action.payload.subId,
-          headId: action.payload.subId.split(":")[0],
-          subTasksNum: 0,
-          subTasksDone: 0,
-        };
-      });
-      tasksAdapter.addMany(state.tasks, tasks);
+    addTasks(state, action) {
+      tasksAdapter.addMany(state.tasks, action.payload);
     },
 
     // delete
@@ -123,41 +135,123 @@ const addTasksSlice = createSlice({
       state.tasks.currentTask = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(changeNumberOfHeads.pending, (state, action) => {
+      state.heads.loadingStatus = true;
+    });
+    builder.addCase(changeNumberOfSubs.pending, (state, action) => {
+      state.subs.loadingStatus = true;
+    });
+    builder.addCase(changeNumberOfTasks.pending, (state, action) => {
+      state.tasks.loadingStatus = true;
+    });
+    builder.addMatcher(
+      (action) =>
+        action.type.search("changeNumberOfHeads") >= 0 &&
+        action.type !== changeNumberOfHeads.pending().type,
+      (state, action) => {
+        state.heads.loadingStatus = false;
+      }
+    );
+    builder.addMatcher(
+      (action) =>
+        action.type.search("changeNumberOfSubs") >= 0 &&
+        action.type !== changeNumberOfSubs.pending().type,
+      (state, action) => {
+        state.subs.loadingStatus = false;
+      }
+    );
+    builder.addMatcher(
+      (action) =>
+        action.type.search("changeNumberOfTasks") >= 0 &&
+        action.type !== changeNumberOfTasks.pending().type,
+      (state, action) => {
+        state.tasks.loadingStatus = false;
+      }
+    );
+  },
 });
 
 const { addHeads, addSubs, deleteHeads, deleteSubs } = addTasksSlice.actions;
 
-export const changeNumberOfHeads = (headNum) => (dispatch) => {
-  const lastIndex = Date.now();
-  const heads = [...Array(headNum)].map((_, index) => {
-    const id = (index + lastIndex).toString(36);
-    dispatch(changeNumberOfSubs({ num: 1, headId: id }));
-    return {
-      id,
-      name: "",
-      readOnly: false,
-    };
-  });
-  dispatch(addHeads(heads));
-};
+export const changeNumberOfHeads = createAsyncThunk(
+  "addTasks/changeNumberOfHeads",
+  async (headNum, { dispatch }) => {
+    const headIndexes = [...Array(headNum)];
 
-export const changeNumberOfSubs =
-  ({ num, headId }) =>
-  (dispatch) => {
-    const lastIndex = Date.now();
-    const subs = [...Array(num)].map((_, index) => {
-      const id = `${headId}:${(index + lastIndex).toString(36)}`;
-      dispatch(changeNumberOfTasks({ num: 1, subId: id }));
-      return {
-        id,
-        headId,
-        name: "",
-        readOnly: false,
+    await headIndexes.reduce(async (promise, _) => {
+      await promise;
+
+      const head = { name: "", readOnly: false };
+      const [newHead] = await dispatch(
+        addTasksQuerySlice.endpoints.addHeads.initiate([head])
+      ).unwrap();
+
+      const modifiedHead = {
+        ...newHead,
+        id: newHead._id.toString(),
       };
-    });
+      dispatch(addHeads([modifiedHead]));
 
-    dispatch(addSubs(subs));
-  };
+      await dispatch(
+        changeNumberOfSubs({
+          num: 1,
+          headId: modifiedHead.id,
+        })
+      );
+    }, Promise.resolve());
+  }
+);
+
+export const changeNumberOfSubs = createAsyncThunk(
+  "addTasks/changeNumberOfSubs",
+  async ({ num, headId }, { dispatch }) => {
+    const subIndexes = [...Array(num)];
+
+    await subIndexes.reduce(async (promise, _) => {
+      await promise;
+
+      const sub = { name: "", headId, readOnly: false };
+      const [newSub] = await dispatch(
+        addTasksQuerySlice.endpoints.addSubs.initiate([sub])
+      ).unwrap();
+
+      const modifiedSub = {
+        ...newSub,
+        id: newSub._id.toString(),
+      };
+      dispatch(addSubs([modifiedSub]));
+
+      await dispatch(
+        changeNumberOfTasks({
+          num: 1,
+          subId: modifiedSub.id,
+          headId,
+        })
+      );
+    }, Promise.resolve());
+  }
+);
+
+export const changeNumberOfTasks = createAsyncThunk(
+  "addTasks/changeNumberOfTasks",
+  async ({ num, headId, subId }, { dispatch }) => {
+    const tasks = [...Array(num)].fill({
+      name: "",
+      subId,
+      headId,
+    });
+    const newTasks = await dispatch(
+      addTasksQuerySlice.endpoints.addTasks.initiate(tasks)
+    ).unwrap();
+    const modifiedNewTasks = newTasks.map(({ _id, ...rest }) => ({
+      ...rest,
+      id: _id.toString(),
+    }));
+    console.log(modifiedNewTasks, " jdsfkla");
+    dispatch(addTasks(modifiedNewTasks));
+  }
+);
 
 export const addSubToHead = createAsyncThunk(
   "addTasks/addSubToHead",
@@ -201,6 +295,7 @@ export const addTaskToSub = createAsyncThunk(
           track: false,
         })
       ).unwrap();
+      console.log(sub, " head in addTaskToSub");
 
       // add the data of head
       dispatch(addHeads([{ id: head._id, name: head.name, readOnly: true }]));
@@ -219,7 +314,8 @@ export const addTaskToSub = createAsyncThunk(
 
       const tasks = getTasksOfSub(getState());
 
-      if (!tasks.length) dispatch(changeNumberOfTasks({ num: 1, subId }));
+      if (!tasks.length)
+        dispatch(changeNumberOfTasks({ num: 1, subId, headId }));
     } catch (err) {
       throw rejectWithValue(err);
     }
@@ -239,7 +335,7 @@ export const removeSub = (sub) => (dispatch, getState) => {
 
 export default addTasksSlice.reducer;
 export const {
-  changeNumberOfTasks,
+  addTasks,
   updateHead,
   updateSub,
   updateTask,
@@ -266,17 +362,23 @@ export const {
 } = tasksAdapter.getSelectors((state) => state.addTasks.tasks);
 
 export const getSubsOfHead = createSelector(
-  [getSubs, (state, headId) => headId],
+  [getSubsEntities, (state, headId) => headId],
   (subs, headId) => {
-    return subs.filter((sub) => sub.slice(0, sub.indexOf(":")) === headId);
+    return subs
+      .filter((sub) => {
+        return sub.headId === headId;
+      })
+      .map((sub) => sub.id);
   }
 );
 export const getTasksOfSub = createSelector(
-  [getTasks, (state, subId) => subId],
+  [getTasksEntities, (state, subId) => subId],
   (tasks, subId) => {
-    return tasks.filter((task) => {
-      return task.slice(0, task.lastIndexOf(":")) === subId;
-    });
+    return tasks
+      .filter((task) => {
+        return task.subId === subId;
+      })
+      .map((task) => task.id);
   }
 );
 export const getSubsEntitiesOfHead = createSelector(
@@ -287,9 +389,24 @@ export const getTasksEntitiesOfSub = createSelector(
   [getTasksEntities, (state, subId) => subId],
   (tasks, subId) => tasks.filter((task) => task.subId === subId)
 );
+export const getSubsLoadingStatus = createSelector(
+  [getSubsOfHead, (state) => state.addTasks.subs.loadingStatus],
+  (subs, loadingStatus) => {
+    return subs.length === 0 && loadingStatus;
+  }
+);
+export const getTasksLoadingStatus = createSelector(
+  [getTasksOfSub, (state) => state.addTasks.tasks.loadingStatus],
+  (tasks, loadingStatus) => {
+    return tasks.length === 0 && loadingStatus;
+  }
+);
 
+export const getHeadsLoadingStatus = (state) =>
+  state.addTasks.heads.loadingStatus;
 export const getCurrentHead = (state) => state.addTasks.heads.currentHead;
 export const getCurrentSub = (state) => state.addTasks.subs.currentSub;
 export const getCurrentTask = (state) => state.addTasks.tasks.currentTask;
+
 export const { useAddAllMutation, useAddSubToHeadMutation } =
   addTasksQuerySlice;

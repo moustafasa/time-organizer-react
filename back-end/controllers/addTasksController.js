@@ -8,21 +8,15 @@ async function insert(collection, data) {
     subs: Subs,
     heads: Heads,
   };
-  const compareObj = { name: data.name, userId: data.userId };
+  const newObj = { userId: data.userId };
 
-  if (collection !== "heads") compareObj["headId"] = data.headId;
+  if (collection !== "heads") newObj["headId"] = data.headId;
 
-  if (collection === "tasks") compareObj["subId"] = data.subId;
+  if (collection === "tasks") newObj["subId"] = data.subId;
 
-  const isFound = await dbObj[collection].findOne(compareObj);
+  const newTask = await dbObj[collection].create(data);
 
-  if (isFound) {
-    const task = await dbObj[collection].updateOne({ _id: isFound._id }, data);
-    return task;
-  } else {
-    const newTask = await dbObj[collection].create(data);
-    return newTask;
-  }
+  return newTask.toJSON();
 }
 async function add(data, type, user) {
   if (Array.isArray(data)) {
@@ -34,46 +28,24 @@ async function add(data, type, user) {
     );
     return newTasks;
   } else {
-    const newTask = await insert(type, data); // Add a post
+    const newTask = await insert(type, { ...data, userId: user }); // Add a post
     return newTask;
   }
 }
 
 const addAll = async (req, res) => {
   try {
-    const heads = await add(
-      req.body.heads.map(({ id, ...rest }) => rest),
-      "heads",
-      req.userId
-    );
+    req.body.heads.map(async (head) => {
+      await Heads.updateOne({ _id: head.id }, head);
+    });
 
-    const subs = await add(
-      req.body.subs.map(({ id, ...rest }) => ({
-        ...rest,
-        headId:
-          heads[
-            req.body.heads.findIndex((h) => h.id === rest.headId)
-          ]._id.toString(),
-      })),
-      "subs",
-      req.userId
-    );
+    req.body.subs.map(async (sub) => {
+      await Subs.updateOne({ _id: sub.id }, sub);
+    });
 
-    await add(
-      req.body.tasks.map(({ id, ...rest }) => ({
-        ...rest,
-        headId:
-          heads[
-            req.body.heads.findIndex((h) => h.id === rest.headId)
-          ]._id.toString(),
-        subId:
-          subs[
-            req.body.subs.findIndex((s) => s.id === rest.subId)
-          ]._id.toString(),
-      })),
-      "tasks",
-      req.userId
-    );
+    req.body.tasks.map(async (task) => {
+      await Tasks.updateOne({ _id: task.id }, task);
+    });
 
     res.sendStatus(200);
   } catch (error) {
@@ -84,8 +56,8 @@ const addAll = async (req, res) => {
 
 const addHeads = async (req, res) => {
   try {
-    await add(req.body, "heads", req.userId);
-    res.sendStatus(200);
+    const newHead = await add(req.body, "heads", req.userId);
+    res.send(newHead);
   } catch (error) {
     console.error("Error adding heads:", error);
     res.status(500).send("Internal Server Error");
@@ -94,8 +66,8 @@ const addHeads = async (req, res) => {
 
 const addSubs = async (req, res) => {
   try {
-    await add(req.body, "subs", req.userId);
-    res.sendStatus(200);
+    const newSub = await add(req.body, "subs", req.userId);
+    res.send(newSub);
   } catch (error) {
     console.error("Error adding subs:", error);
     res.status(500).send("Internal Server Error");
@@ -104,11 +76,21 @@ const addSubs = async (req, res) => {
 
 const addTasks = async (req, res) => {
   try {
-    await add(req.body, "tasks", req.userId);
-    res.sendStatus(200);
+    const newTask = await add(req.body, "tasks", req.userId);
+    res.send(newTask);
   } catch (error) {
     console.error("Error adding tasks:", error);
     res.status(500).send("Internal Server Error");
+  }
+};
+
+const clearDraft = async () => {
+  try {
+    await Heads.deleteMany({ name: "" });
+    await Subs.deleteMany({ name: "" });
+    await Tasks.deleteMany({ name: "" });
+  } catch (error) {
+    console.error("Error clearing draft:", error);
   }
 };
 
@@ -119,4 +101,5 @@ module.exports = {
   addHeads,
   addSubs,
   addTasks,
+  clearDraft,
 };

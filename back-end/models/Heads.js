@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const headsSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: false, default: "" },
   readOnly: { type: Boolean, default: false },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

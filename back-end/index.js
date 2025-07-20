@@ -11,6 +11,12 @@ const addTasksRouter = require("./routes/addTasksRoutes");
 const showTasksRouter = require("./routes/showTasksRoutes");
 const server = express();
 const PORT = process.env.PORT || 3000;
+const cron = require("node-cron");
+const { clearDraft } = require("./controllers/addTasksController");
+
+cron.schedule("0 * * * *", async () => {
+  await clearDraft();
+});
 
 dbConnect();
 

@@ -5,7 +5,7 @@ const Tasks = require("../models/Tasks");
 // heads
 const getHeads = async (req, res) => {
   try {
-    const heads = await Heads.find({ userId: req.userId });
+    const heads = await Heads.find({ userId: req.userId, name: { $ne: "" } });
     res.send(
       heads
         .map((head) => head.toObject({ flattenObjectIds: true }))
@@ -18,8 +18,7 @@ const getHeads = async (req, res) => {
 const getHeadById = async (req, res) => {
   const head = await Heads.findById(req.params.id);
   if (head) {
-    const { _id, ...rest } = head;
-    res.send({ ...rest, id: _id });
+    res.send(head.toJSON());
   } else {
     res.sendStatus(404);
   }
@@ -29,7 +28,11 @@ const getHeadById = async (req, res) => {
 const getSubs = async (req, res) => {
   try {
     const headId = req.query.headId;
-    const subs = await Subs.find({ headId, userId: req.userId });
+    const subs = await Subs.find({
+      headId,
+      userId: req.userId,
+      name: { $ne: "" },
+    });
     res.send(
       subs
         .map((sub) => sub.toObject({ flattenObjectIds: true }))
@@ -43,8 +46,7 @@ const getSubs = async (req, res) => {
 const getSubById = async (req, res) => {
   const sub = await Subs.findById(req.params.id);
   if (sub) {
-    const { _id, ...rest } = sub;
-    res.send({ ...rest, id: _id });
+    res.send(sub.toJSON());
   } else {
     res.sendStatus(404);
   }
@@ -55,7 +57,12 @@ const getTasks = async (req, res) => {
   const headId = req.query.headId;
   const subId = req.query.subId;
   try {
-    const tasks = await Tasks.find({ headId, subId, userId: req.userId });
+    const tasks = await Tasks.find({
+      headId,
+      subId,
+      userId: req.userId,
+      name: { $ne: "" },
+    });
     res.send(
       tasks
         .map((task) => task.toObject({ flattenObjectIds: true }))
