@@ -32,30 +32,34 @@ tasksSchema.virtual("progress").get(function () {
 });
 
 // Add this before the post-save middleware
-tasksSchema.pre("save", async function (next) {
-  // Store the isNew status before save
-  this._wasNew = this.isNew;
-  if (this.isNew) this._previousProgress = 0;
-  else this._previousProgress = this.progress;
+tasksSchema.pre("updateOne", async function (next) {
+  const docToUpdate = await this.model.findOne(this.getQuery());
+  this.updatedTask = docToUpdate;
+  this._wasNew = docToUpdate && docToUpdate.name === "";
+  this._previousProgress = docToUpdate.progress;
+
   next();
 });
-tasksSchema.post("save", async function (doc, next) {
+tasksSchema.post("updateOne", async function (_, next) {
+  const doc = await this.model.findOne(this.getQuery());
+
   const sub = await Subs.findById(doc.subId).populate("headId");
 
-  if (doc._wasNew) {
+  if (this._wasNew) {
     sub.tasksNum += 1;
     sub.headId.tasksNum += 1;
   }
-  if (doc.get("progress") >= 100 && doc._previousProgress < 100) {
+
+  if (doc.progress >= 100 && this._previousProgress < 100) {
     sub.tasksDone += 1;
     sub.headId.tasksDone += 1;
   }
 
-  if (doc.get("progress") !== doc._previousProgress) {
+  if (doc.progress !== this._previousProgress) {
     sub.progress =
-      (sub.progress * (sub.tasksNum - 1) + doc.get("progress")) / sub.tasksNum;
+      (sub.progress * (sub.tasksNum - 1) + doc.progress) / sub.tasksNum;
     sub.headId.progress =
-      (sub.headId.progress * (sub.tasksNum - 1) + doc.get("progress")) /
+      (sub.headId.progress * (sub.tasksNum - 1) + doc.progress) /
       sub.headId.tasksNum;
   }
 

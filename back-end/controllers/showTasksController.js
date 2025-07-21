@@ -75,7 +75,6 @@ const getTasks = async (req, res) => {
 
 const deleteTasks = async (req, res) => {
   const ids = req.body;
-  console.log(req.userId);
   try {
     await Tasks.deleteMany({
       _id: { $in: ids },
@@ -100,6 +99,24 @@ const deleteSubs = async (req, res) => {
     res.sendStatus(500);
   }
 };
+const deleteHeads = async (req, res) => {
+  const ids = req.body;
+  try {
+    const test = await Tasks.deleteMany({
+      headId: { $in: ids },
+    });
+    const subTest = await Subs.deleteMany({
+      headId: { $in: ids },
+    });
+    const headTest = await Heads.deleteMany({
+      _id: { $in: ids },
+    });
+    console.log(test, subTest, headTest);
+    res.sendStatus(204);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+};
 
 module.exports = {
   getHeads,
@@ -109,4 +126,5 @@ module.exports = {
   getTasks,
   deleteTasks,
   deleteSubs,
+  deleteHeads,
 };

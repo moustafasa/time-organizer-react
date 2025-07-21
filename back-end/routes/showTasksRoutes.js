@@ -7,6 +7,7 @@ const {
   getTasks,
   deleteTasks,
   deleteSubs,
+  deleteHeads,
 } = require("../controllers/showTasksController");
 const server = express();
 const showTasksRouter = server.router;
@@ -19,5 +20,6 @@ showTasksRouter.get("/tasks", getTasks);
 
 showTasksRouter.post("/tasks/deleteMulti", deleteTasks);
 showTasksRouter.post("/subs/deleteMulti", deleteSubs);
+showTasksRouter.post("/heads/deleteMulti", deleteHeads);
 
 module.exports = showTasksRouter;

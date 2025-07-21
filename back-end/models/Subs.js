@@ -19,26 +19,35 @@ const subsSchema = new mongoose.Schema({
   progress: { type: Number, default: 0 },
 });
 
-// Add this before the post-save middleware
-subsSchema.pre("save", async function (next) {
-  // Store the isNew status before save
-  this._wasNew = this.isNew;
-  this._previousProgress = this.progress;
+subsSchema.pre("updateOne", async function (next) {
+  const docToUpdate = await this.model.findOne(this.getQuery());
+  this.updatedSub = docToUpdate;
+  this._wasNew = docToUpdate && docToUpdate.name === "";
+  this._previousProgress = docToUpdate.progress;
   next();
 });
-subsSchema.post("save", async function (doc, next) {
-  const head = await Heads.findById(doc.headId);
 
-  if (doc._wasNew) {
-    head.subNum += 1;
+subsSchema.post("updateOne", async function (_, next) {
+  try {
+    const updatedSub = await this.model.findOne(this.getQuery());
+
+    const head = await Heads.findById(updatedSub.headId);
+
+    if (this._wasNew) {
+      head.subNum += 1;
+    }
+
+    if (updatedSub.progress >= 100 && this._previousProgress < 100) {
+      head.subDone += 1;
+    }
+
+    await head.save();
+
+    next();
+  } catch (error) {
+    console.error("Error in Subs post updateOne middleware:", error);
+    next(error);
   }
-  if (doc.progress >= 100 && doc._previousProgress < 100) {
-    head.subDone += 1;
-  }
-
-  await head.save();
-
-  return next();
 });
 
 module.exports = mongoose.model("Sub", subsSchema);

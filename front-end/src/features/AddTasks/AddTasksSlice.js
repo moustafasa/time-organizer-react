@@ -46,7 +46,7 @@ export const addTasksQuerySlice = apiSlice.injectEndpoints({
 
         return res;
       },
-      invalidatesTags: [{ type: "Data", id: "LIST" }],
+      invalidatesTags: [{ type: "Heads", id: "LIST" }],
     }),
 
     addHeads: builder.mutation({
