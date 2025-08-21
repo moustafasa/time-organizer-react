@@ -1,5 +1,4 @@
 import _ from "lodash";
-import React from "react";
 import { show } from "../../components/PopUp/PopUp";
 import { useEditDataMutation } from "./ShowTasksSlice";
 import { Link } from "react-router-dom";

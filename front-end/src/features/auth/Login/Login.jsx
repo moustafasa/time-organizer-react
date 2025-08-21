@@ -1,5 +1,4 @@
 import { Field, Formik } from "formik";
-import React from "react";
 import {
   Form as RouteForm,
   redirect,
@@ -31,10 +30,7 @@ export const action =
 
 const Login = () => {
   const schema = yup.object({
-    email: yup
-      .string()
-      .email("please write valid email")
-      .required("the email is required field"),
+    email: yup.string().required("the email is required field"),
     password: yup.string().required("the password is required field"),
   });
 
@@ -51,7 +47,7 @@ const Login = () => {
           initialValues={{ email: "", password: "" }}
           validationSchema={schema}
         >
-          {({ errors, touched, validateForm, isValid }) => (
+          {({ errors, touched, isValid }) => (
             <Form
               as={RouteForm}
               className={"p-3 pb-5 rounded " + sass.form}

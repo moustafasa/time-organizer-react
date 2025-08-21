@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import contentScss from "./Content.module.scss";
 import { FaAngleDoubleDown } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";

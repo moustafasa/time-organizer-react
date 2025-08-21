@@ -248,7 +248,6 @@ export const changeNumberOfTasks = createAsyncThunk(
       ...rest,
       id: _id.toString(),
     }));
-    console.log(modifiedNewTasks, " jdsfkla");
     dispatch(addTasks(modifiedNewTasks));
   }
 );
@@ -295,8 +294,6 @@ export const addTaskToSub = createAsyncThunk(
           track: false,
         })
       ).unwrap();
-      console.log(sub, " head in addTaskToSub");
-
       // add the data of head
       dispatch(addHeads([{ id: head._id, name: head.name, readOnly: true }]));
 

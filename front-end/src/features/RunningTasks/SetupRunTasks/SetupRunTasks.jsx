@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Form,
   redirect,
@@ -76,39 +75,6 @@ const SetupRunTasks = () => {
           >
             add
           </button>
-          {/* <div>
-            <h3 className="text-capitalize text-center mt-5">added tasks</h3>
-            <table
-              className="table mt-3 text-center align-middle text-capitalize"
-              data-bs-theme="dark"
-            >
-              <thead>
-                <tr>
-                  <th>taskName</th>
-                  <th>subName</th>
-                  <th>headName</th>
-                  <th>day</th>
-                  <th>options</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tasksList.map((task) => (
-                  <tr key={task.id}>
-                    <td>{task.task}</td>
-                    <td>{task.sub}</td>
-                    <td>{task.head}</td>
-                    <td>{task.day}</td>
-                    <td>
-                      <button className="btn btn-danger">delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button className="btn btn-success d-block mt-5 w-50 mx-auto">
-            confirm
-          </button> */}
         </Form>
       </div>
     </div>

@@ -8,8 +8,6 @@ export const action = (dispatch) => async () => {
         track: false,
       })
     ).unwrap();
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
   return redirect("/?index");
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import sass from "./PopUp.module.scss";
 import EventEmiiter from "events";
 import classNames from "classnames";
@@ -26,7 +26,6 @@ const PopUp = () => {
       setOptions(obj);
     };
     const modifyHandler = (obj) => {
-      console.log(obj);
       setOptions((opts) => ({
         ...opts,
         black: obj.black,

@@ -5,6 +5,13 @@
 .table-cont {
   padding-top: 50px;
   overflow-x: auto;
+  .empty-label {
+    text-align: center;
+    text-transform: capitalize;
+    margin-top: 40px;
+    font-size: 30px;
+    margin-bottom: 100px;
+  }
   .custom-table {
     width: 100%;
     text-align: center;

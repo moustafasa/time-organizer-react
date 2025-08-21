@@ -2,63 +2,126 @@
 @use "../../sass/variables/colors" as *;
 @use "../../sass/variables/others" as *;
 
-.spinnerCont {
-  width: 100%;
+.inlineSpinnerCont {
   @include centerbyflex(null);
-  flex-direction: column;
-  padding-block: 50px;
-  gap: 20px;
+  gap: 8px;
   font-family: $main-font;
+
+  &.small {
+    .spinner {
+      width: 16px;
+      height: 16px;
+      &::before {
+        @include circle(calc(100% + 6px));
+        border-width: 3px;
+      }
+      &::after {
+        @include circle(calc(100% + 12px));
+        border-width: 3px;
+      }
+    }
+    .label {
+      font-size: 0.9rem;
+    }
+  }
+
+  &.medium {
+    .spinner {
+      width: 20px;
+      height: 20px;
+      &::before {
+        @include circle(calc(100% + 8px));
+        border-width: 4px;
+      }
+      &::after {
+        @include circle(calc(100% + 16px));
+        border-width: 4px;
+      }
+    }
+    .label {
+      font-size: 1rem;
+    }
+  }
+
+  &.large {
+    height: 90px;
+    .spinner {
+      width: 24px;
+      height: 24px;
+      &::before {
+        @include circle(calc(100% + 10px));
+        border-width: 5px;
+      }
+      &::after {
+        @include circle(calc(100% + 20px));
+        border-width: 5px;
+      }
+    }
+    .label {
+      font-size: 1.1rem;
+    }
+  }
+
   .spinner {
     position: relative;
-    width: 20px;
-    height: 30px;
     background-color: $black-1-color;
-    box-shadow: 0 0 10px $black-1-color;
+    box-shadow: 0 0 8px rgba($black-1-color, 0.3);
     border-radius: 50%;
+
     &::before {
       content: "";
       @include centerbyposition("both", absolute);
-      @include circle(calc(100% + 10px));
       border-radius: 50%;
       background-color: transparent;
-      border: 5px solid $green-3-color;
+      border: 3px solid $green-3-color;
       border-top-color: transparent;
       box-sizing: content-box;
-      animation: spinner-circle-1 3s linear infinite;
+      animation: inline-spinner-circle-1 1.5s linear infinite;
     }
+
     &::after {
       content: "";
       @include centerbyposition("both", absolute);
-      @include circle(calc(100% + 20px));
       border-radius: 50%;
       background-color: transparent;
-      border: 5px solid $blue-3-color;
+      border: 3px solid $blue-3-color;
       border-bottom-color: transparent;
       box-sizing: content-box;
-      animation: spinner-circle-2 3s linear infinite;
+      animation: inline-spinner-circle-2 2s linear infinite;
     }
   }
 
   .label {
-    color: $black-1-color;
-    font-size: 1.2rem;
+    color: white;
+    font-weight: 500;
+    opacity: 0.8;
+    text-indent: 15px;
   }
 }
 
-@keyframes spinner-circle-1 {
+@keyframes inline-spinner-rotate {
   0% {
-    rotate: 0deg;
+    transform: rotate(0deg);
   }
   100% {
-    rotate: 0 1 0 360deg;
+    transform: rotate(360deg);
   }
 }
-@keyframes spinner-circle-2 {
+
+@keyframes inline-spinner-circle-1 {
   0% {
-    rotate: 0deg;
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   100% {
-    rotate: -360deg;
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes inline-spinner-circle-2 {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
   }
 }

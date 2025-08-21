@@ -1,4 +1,4 @@
-import React, { memo, useRef } from "react";
+import { memo, useRef } from "react";
 import sass from "./StatusBar.module.scss";
 import { shallowEqual, useSelector } from "react-redux";
 import {

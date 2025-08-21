@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import sass from "./HeadNum.module.scss";
 import InputBox from "../../../components/InputBox/InputBox";
 import { useFetcher } from "react-router-dom";
@@ -6,6 +6,11 @@ import { useFetcher } from "react-router-dom";
 const HeadNum = () => {
   const fetcher = useFetcher();
   const [numberOfHeads, setNumberOfHeads] = useState(0);
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.focus();
+  }, []);
 
   return (
     <fetcher.Form
@@ -21,6 +26,7 @@ const HeadNum = () => {
         value={numberOfHeads}
         setValue={setNumberOfHeads}
         name="headNum"
+        ref={inputRef}
       />
       <button className="start" type="submit">
         start

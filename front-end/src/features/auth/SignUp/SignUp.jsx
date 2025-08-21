@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import InputBox from "../../../components/InputBox/InputBox";
 import sass from "../form.module.scss";
@@ -19,7 +19,6 @@ export const action =
       ).unwrap();
       return redirect(searchParams.get("from") || "/");
     } catch (err) {
-      console.log(err);
       return { error: "email is already exist" };
     }
   };

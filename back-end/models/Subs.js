@@ -19,6 +19,31 @@ const subsSchema = new mongoose.Schema({
   progress: { type: Number, default: 0 },
 });
 
+subsSchema.pre("deleteMany", async function (next) {
+  try {
+    this._deletedSubs = await this.model.find(this.getQuery());
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+subsSchema.post("deleteMany", async function (_, next) {
+  try {
+    if (!this._deletedSubs?.length) return next();
+    if (this._deletedSubs[0].name === "") return next();
+    for (const deletedSub of this._deletedSubs) {
+      const head = await Heads.findById(deletedSub.headId);
+      if (!head) continue;
+      head.subNum -= 1;
+      await head.save();
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 subsSchema.pre("updateOne", async function (next) {
   const docToUpdate = await this.model.findOne(this.getQuery());
   this.updatedSub = docToUpdate;

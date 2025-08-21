@@ -1,5 +1,4 @@
 import { isSameDay } from "date-fns";
-import React from "react";
 import { Link } from "react-router-dom";
 
 const RunBtns = ({ id, element, deleteConfirm }) => {

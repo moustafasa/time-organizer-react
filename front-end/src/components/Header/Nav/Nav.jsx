@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Link, NavLink, useLocation } from "react-router-dom";
 import "./Nav.scss";
 import classNames from "classnames";

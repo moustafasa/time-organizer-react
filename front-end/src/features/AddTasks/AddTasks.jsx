@@ -27,7 +27,7 @@ export const loader =
       try {
         await dispatch(addTaskToSub({ headId, subId })).unwrap();
       } catch (err) {
-        console.log(err);
+        //
       }
     }
     return { headId, subId };

@@ -25,7 +25,7 @@ const ShowSubs = () => {
     { title: "tasksDone" },
   ];
 
-  const { data } = useGetSubsQuery(
+  const { data, isLoading } = useGetSubsQuery(
     { headId: new URLSearchParams(window.location.search).get("headId") },
     {
       selectFromResult: ({ data, ...res }) => ({
@@ -66,6 +66,8 @@ const ShowSubs = () => {
         deleteConfirm(type, type === "multi" ? checkedItems : data)
       }
       selectBoxes={selectBoxes}
+      empty={data.length <= 0}
+      isLoading={isLoading}
     >
       {data.map((head, ind) => (
         <TableRow

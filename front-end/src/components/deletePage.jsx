@@ -11,7 +11,7 @@ export const action =
       page === "rTasks" ? "deleteMultiRunTasks" : "deleteElement";
 
     try {
-      const res = await dispatch(
+      await dispatch(
         apiSlice.endpoints[deleteEndPoint].initiate(
           page === "rTasks" ? ids : { ids, page },
           {
@@ -19,9 +19,8 @@ export const action =
           }
         )
       ).unwrap();
-      console.log(res);
     } catch (err) {
-      console.log(err);
+      //
     }
 
     return null;

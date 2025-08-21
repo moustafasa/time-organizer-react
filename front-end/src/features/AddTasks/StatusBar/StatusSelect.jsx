@@ -14,7 +14,6 @@ const StatusSelect = ({
     () =>
       entities?.length
         ? entities.map((entity, index) => {
-            console.log(entity._id);
             return {
               text: entity.name !== "" ? entity.name : `${label} ${index + 1}`,
               value: entity._id,

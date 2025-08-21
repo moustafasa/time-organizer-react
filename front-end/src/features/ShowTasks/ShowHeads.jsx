@@ -25,7 +25,7 @@ const ShowHeads = () => {
     { title: "tasksDone" },
   ];
 
-  const { data } = useGetHeadsQuery(undefined, {
+  const { data, isLoading } = useGetHeadsQuery(undefined, {
     selectFromResult: ({ data, ...res }) => ({
       data: getAllDataIds(data, "heads"),
       ...res,
@@ -53,6 +53,8 @@ const ShowHeads = () => {
       deleteConfirm={(type) =>
         deleteConfirm(type, type === "multi" ? checkedItems : data)
       }
+      empty={data.length <= 0}
+      isLoading={isLoading}
     >
       {data.map((head, ind) => (
         <TableRow

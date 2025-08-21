@@ -14,6 +14,7 @@ import { memo, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import TaskInput from "../Task/TaskInput";
+import Spinner from "../../../../components/Spinner/Spinner";
 import sass from "./SubInput.module.scss";
 import AddFieldButton from "../../../../components/AddFieldButton/AddFieldButton";
 
@@ -51,7 +52,10 @@ const SubInput = ({ id, index, last }) => {
         }}
       />
       <div className={sass.tasks}>
-        {tasksLoadingState && <div>loading...</div>}
+        {tasksLoadingState && (
+          <Spinner size="small" showLabel label="tasks loading" />
+        )}
+
         {tasks.map((task, index) => (
           <TaskInput
             key={task}

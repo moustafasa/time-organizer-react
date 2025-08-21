@@ -44,7 +44,6 @@ const hashPassword = (req, res, next) => {
     req.path !== "/login" &&
     req.body?.password
   ) {
-    console.log("done");
     // Hash the password with bcrypt
     bcrypt.hash(req.body.password, SALT_ROUNDS, (err, hash) => {
       if (err) {
@@ -136,7 +135,6 @@ const login = async (req, res) => {
 };
 
 const refresh = async (req, res) => {
-  console.log("refresh");
   // Get the refresh token from the cookie
   const refreshToken = req.cookies.refreshToken;
 
@@ -210,7 +208,6 @@ const checkAuth = (req, res, next) => {
       const decoded = verifyToken(token, "access");
       // Check if the token is valid
       if (decoded && !decoded.message) {
-        console.log("done");
         // Token is valid, set the user id and roles in the request object
         req.userId = decoded.id;
         req.userRoles = decoded.roles;

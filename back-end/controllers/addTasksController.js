@@ -35,17 +35,17 @@ async function add(data, type, user) {
 
 const addAll = async (req, res) => {
   try {
-    req.body.heads.map(async (head) => {
+    for (const head of req.body.heads) {
       await Heads.updateOne({ _id: head.id }, head);
-    });
+    }
 
-    req.body.subs.map(async (sub) => {
+    for (const sub of req.body.subs) {
       await Subs.updateOne({ _id: sub.id }, sub);
-    });
+    }
 
-    req.body.tasks.map(async (task) => {
+    for (const task of req.body.tasks) {
       await Tasks.updateOne({ _id: task.id }, task);
-    });
+    }
 
     res.sendStatus(200);
   } catch (error) {

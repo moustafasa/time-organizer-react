@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ShowSelects from "./ShowSelects";
+import classNames from "classnames";
+import Spinner from "../Spinner/Spinner";
 
 const CustomTable = ({
   title,
@@ -10,6 +12,8 @@ const CustomTable = ({
   children,
   checked: [checkedItems, setCheckedItems],
   selectBoxes = [],
+  empty = false,
+  isLoading = false,
 }) => {
   // uncheck tr on blur
   useEffect(() => {
@@ -38,21 +42,33 @@ const CustomTable = ({
           ))}
         </div>
         <div className="table-cont">
-          <table className="custom-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>id</th>
-                {keys.map((key) => (
-                  <th key={title + key.title}>{key.title}</th>
-                ))}
-                <th>options</th>
-              </tr>
-            </thead>
-            <tbody>{children}</tbody>
-          </table>
+          {isLoading ? (
+            <div className="py-3">
+              <Spinner size="large" showLabel />
+            </div>
+          ) : empty ? (
+            <p className="empty-label">there is no data available yet</p>
+          ) : (
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>id</th>
+                  {keys.map((key) => (
+                    <th key={title + key.title}>{key.title}</th>
+                  ))}
+                  <th>options</th>
+                </tr>
+              </thead>
+              <tbody>{children}</tbody>
+            </table>
+          )}
         </div>
-        <div className="d-flex justify-content-center align-items-center mt-4 gap-3">
+        <div
+          className={classNames(
+            "d-flex justify-content-center align-items-center mt-4 gap-3"
+          )}
+        >
           <Link
             to={`${addPage}${window.location.search}`}
             className="btn btn-primary text-capitalize"
@@ -61,7 +77,7 @@ const CustomTable = ({
           </Link>
           <button
             className="btn btn-danger text-capitalize"
-            disabled={checkedItems.length === 0}
+            disabled={checkedItems.length === 0 || empty}
             onClick={() => deleteConfirm("multi")}
           >
             delete
@@ -69,6 +85,7 @@ const CustomTable = ({
           <button
             className="btn btn-danger text-capitalize"
             onClick={() => deleteConfirm("all")}
+            disabled={empty}
           >
             delete all
           </button>

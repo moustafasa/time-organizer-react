@@ -13,9 +13,19 @@ const server = express();
 const PORT = process.env.PORT || 3000;
 const cron = require("node-cron");
 const { clearDraft } = require("./controllers/addTasksController");
+const runinngTasksRouter = require("./routes/runningTasksRoutes");
 
 cron.schedule("0 * * * *", async () => {
   await clearDraft();
+});
+
+// Cron job to run every Saturday at midnight
+const {
+  deleteRunTasksBeforeThisSaturday,
+} = require("./controllers/runningTasksController");
+
+cron.schedule("0 0 * * 6", async () => {
+  await deleteRunTasksBeforeThisSaturday();
 });
 
 dbConnect();
@@ -29,6 +39,7 @@ server.use(authRouter);
 server.use(checkAuth);
 server.use(addTasksRouter);
 server.use(showTasksRouter);
+server.use(runinngTasksRouter);
 
 server.listen(PORT, () => {
   console.log(`server is running in port ${PORT}`);

@@ -1,8 +1,5 @@
-import React, { useEffect } from "react";
 import SelectBox from "../../../components/SelectBox/SelectBox";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchData,
   getAllHeadsEntities,
   getAllSubsEntities,
   useGetHeadsQuery,
@@ -13,9 +10,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 
 const ShowSelects = () => {
   const { page } = useParams();
-  // const heads = useSelector(getAllHeadsEntities);
-  // const subs = useSelector(getAllSubsEntities);
-  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const headValue = searchParams.get("headId") || "";

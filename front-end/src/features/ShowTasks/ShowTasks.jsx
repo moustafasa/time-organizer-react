@@ -25,11 +25,15 @@ const ShowTasks = () => {
   const [checkedItems, setCheckedItems] = useState([]);
   const deleteConfirm = useDeleteConfirm("tasks");
 
-  const { data } = useGetTasksQuery(Object.fromEntries(searchParams), {
-    selectFromResult: ({ data }) => ({
-      data: getAllDataIds(data, "tasks"),
-    }),
-  });
+  const { data, isLoading } = useGetTasksQuery(
+    Object.fromEntries(searchParams),
+    {
+      selectFromResult: ({ data, isLoading }) => ({
+        data: getAllDataIds(data, "tasks"),
+        isLoading,
+      }),
+    }
+  );
 
   // btns of show Tasks page
   const showTasksBtns = (args) => (
@@ -63,6 +67,8 @@ const ShowTasks = () => {
         deleteConfirm(type, type === "multi" ? checkedItems : data)
       }
       selectBoxes={selectBoxes}
+      empty={data.length <= 0}
+      isLoading={isLoading}
     >
       {data.map((head, ind) => (
         <TableRow

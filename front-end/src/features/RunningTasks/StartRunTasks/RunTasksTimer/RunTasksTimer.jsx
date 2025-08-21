@@ -94,7 +94,6 @@ const RunTasksTimer = () => {
           desktopNotify(
             `you done ${currentPomodoro} / ${pomodorosNum} pomodoros let's take a break`
           );
-          console.log("done");
           setDuration(breakTime);
         }
         dispatch(changeIsBreak(!isBreak));

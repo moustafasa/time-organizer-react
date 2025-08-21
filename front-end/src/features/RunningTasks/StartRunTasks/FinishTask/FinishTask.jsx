@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { modify } from "../../../../components/PopUp/PopUp";
 import classNames from "classnames";
 

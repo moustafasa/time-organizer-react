@@ -52,7 +52,6 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     addRunTasks: builder.mutation({
       query: (data) => {
-        console.log(data);
         return {
           url: "/runningTasks",
           method: "post",
@@ -99,7 +98,6 @@ export const runTasksQuerySlice = apiSlice.injectEndpoints({
     }),
     didTask: builder.mutation({
       query: ({ id, subTasksDone }) => {
-        console.log(subTasksDone);
         return {
           url: `/runningTasks/didTask/${id}`,
           method: "POST",

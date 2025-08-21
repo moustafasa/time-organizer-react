@@ -9,13 +9,14 @@ import {
   removeHead,
   updateHead,
 } from "../../AddTasksSlice";
-import { memo, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import useScrollChangeValue from "../../../../customHooks/useChangeScrollValue/useChangeScrollValue";
 import InputBox from "../../../../components/InputBox/InputBox";
 import SubInput from "../Sub/SubInput";
 import sass from "./HeadInput.module.scss";
 import { useLoaderData } from "react-router-dom";
 import AddFieldButton from "../../../../components/AddFieldButton/AddFieldButton";
+import Spinner from "../../../../components/Spinner/Spinner";
 
 const HeadInput = ({ id, index }) => {
   const head = useSelector((state) => getHeadById(state, id));
@@ -28,8 +29,13 @@ const HeadInput = ({ id, index }) => {
   const setHeadName = (value) =>
     dispatch(updateHead({ id, changes: { name: value } }));
   const headRef = useRef();
+  const headInputRef = useRef();
 
   useScrollChangeValue(id, changeCurrentHead, headRef, getCurrentHead);
+
+  useEffect(() => {
+    if (index === 1) headInputRef.current.focus();
+  }, [index]);
 
   return (
     <div className={sass.headCont} ref={headRef} id={id}>
@@ -40,10 +46,13 @@ const HeadInput = ({ id, index }) => {
         setValue={setHeadName}
         readOnly={head.readOnly}
         onFocus={() => headRef.current.scrollIntoView()}
+        ref={headInputRef}
       />
 
       <div className={sass.subjects}>
-        {subLoadingStatus && <div>loading...</div>}
+        {subLoadingStatus && (
+          <Spinner size="small" showLabel label="subs loading" />
+        )}
         {subs.map((sub, index) => (
           <SubInput
             key={sub}

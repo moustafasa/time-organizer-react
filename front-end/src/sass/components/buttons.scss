@@ -44,6 +44,10 @@ button {
     color: $yellow-color;
     scale: 1.1;
   }
+  &:disabled {
+    pointer-events: none;
+    background-color: $orange-disabled-btn;
+  }
 }
 
 // end add tasks buttons
