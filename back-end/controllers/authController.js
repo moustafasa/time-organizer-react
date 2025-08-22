@@ -173,55 +173,64 @@ const refresh = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  const refresh = req.cookies.refreshToken;
-  if (!refresh) {
-    res.status(204);
-  } else {
-    res.clearCookie("refreshToken", { httpOnly: true });
-    const user = await Users.findOne({ refresh });
-    if (!user) {
-      res.sendStatus(204);
+  try {
+    const refresh = req.cookies.refreshToken;
+    if (!refresh) {
+      res.status(204);
     } else {
-      user.refresh = "";
-      try {
-        await user.save();
+      res.clearCookie("refreshToken", { httpOnly: true });
+      const user = await Users.findOne({ refresh });
+      if (!user) {
         res.sendStatus(204);
-      } catch (err) {
-        res.status(500).send("Internal server error");
+      } else {
+        user.refresh = "";
+        try {
+          await user.save();
+          res.sendStatus(204);
+        } catch (err) {
+          res.status(500).send("Internal server error");
+        }
       }
     }
+  } catch (err) {
+    res.sendStatus(500);
   }
 };
 
 // // A middleware to check the authorization header for a valid token
 const checkAuth = (req, res, next) => {
-  // Get the authorization header from the request
-  const authorization = req.headers.authorization || req.headers.Authorization;
+  try {
+    // Get the authorization header from the request
+    const authorization =
+      req.headers.authorization || req.headers.Authorization;
 
-  if (req.path !== "/refresh") {
-    // Check if the authorization header is present and has the format 'Bearer token'
-    if (authorization && authorization.split(" ")[0] === "Bearer") {
-      // Get the token from the authorization header
-      const token = authorization.split(" ")[1];
+    if (req.path !== "/refresh") {
+      // Check if the authorization header is present and has the format 'Bearer token'
+      if (authorization && authorization.split(" ")[0] === "Bearer") {
+        // Get the token from the authorization header
+        const token = authorization.split(" ")[1];
 
-      // Verify the token and get the decoded data
-      const decoded = verifyToken(token, "access");
-      // Check if the token is valid
-      if (decoded && !decoded.message) {
-        // Token is valid, set the user id and roles in the request object
-        req.userId = decoded.id;
-        req.userRoles = decoded.roles;
-        next();
+        // Verify the token and get the decoded data
+        const decoded = verifyToken(token, "access");
+        // Check if the token is valid
+        if (decoded && !decoded.message) {
+          // Token is valid, set the user id and roles in the request object
+          req.userId = decoded.id;
+          req.userRoles = decoded.roles;
+          next();
+        } else {
+          // Token is invalid, return a 401 Unauthorized response
+          res.status(401).send("Invalid token");
+        }
       } else {
-        // Token is invalid, return a 401 Unauthorized response
-        res.status(401).send("Invalid token");
+        // Authorization header is not present or has a wrong format, return a 401 Unauthorized response
+        res.status(401).send("Authorization header required");
       }
     } else {
-      // Authorization header is not present or has a wrong format, return a 401 Unauthorized response
-      res.status(401).send("Authorization header required");
+      next();
     }
-  } else {
-    next();
+  } catch (err) {
+    res.sendStatus(500);
   }
 };
 

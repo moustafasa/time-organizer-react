@@ -2,13 +2,13 @@ const RuningTasks = require("../models/RuningTasks");
 const Tasks = require("../models/Tasks");
 
 const setRunningTasks = async (req, res) => {
-  const data = req.body;
-  const foundRuningTask = await RuningTasks.findOne({
-    taskId: data.taskId,
-    day: data.day,
-  });
-
   try {
+    const data = req.body;
+    const foundRuningTask = await RuningTasks.findOne({
+      taskId: data.taskId,
+      day: data.day,
+    });
+
     if (!foundRuningTask) {
       await RuningTasks.create({
         day: data.day,
@@ -41,31 +41,35 @@ const refinedRunTasks = (task) => {
 };
 
 const getRunningTasksByDay = async (req, res) => {
-  let unRefinedTasks;
-  if (req.params.day === "all") {
-    unRefinedTasks = await RuningTasks.find({
-      userId: req.userId,
-    }).populate({
-      path: "taskId",
-      populate: [
-        { path: "headId", select: "name" },
-        { path: "subId", select: "name" },
-      ],
-    });
-  } else {
-    unRefinedTasks = await RuningTasks.find({
-      userId: req.userId,
-      day: req.params.day,
-    }).populate({
-      path: "taskId",
-      populate: [
-        { path: "headId", select: "name" },
-        { path: "subId", select: "name" },
-      ],
-    });
+  try {
+    let unRefinedTasks;
+    if (req.params.day === "all") {
+      unRefinedTasks = await RuningTasks.find({
+        userId: req.userId,
+      }).populate({
+        path: "taskId",
+        populate: [
+          { path: "headId", select: "name" },
+          { path: "subId", select: "name" },
+        ],
+      });
+    } else {
+      unRefinedTasks = await RuningTasks.find({
+        userId: req.userId,
+        day: req.params.day,
+      }).populate({
+        path: "taskId",
+        populate: [
+          { path: "headId", select: "name" },
+          { path: "subId", select: "name" },
+        ],
+      });
+    }
+    const tasks = unRefinedTasks.map(refinedRunTasks);
+    res.send(tasks);
+  } catch (err) {
+    res.sendStatus(500);
   }
-  const tasks = unRefinedTasks.map(refinedRunTasks);
-  res.send(tasks);
 };
 
 // delete multi
@@ -80,23 +84,29 @@ const deleteMultiRunTasks = async (req, res) => {
 };
 
 const doRunTask = async (req, res) => {
-  const { id } = req.params;
-  const { subTasksDone } = req.body;
+  try {
+    const { id } = req.params;
+    const { subTasksDone } = req.body;
 
-  const runTask = await RuningTasks.findById(id).populate("taskId");
-  const task = runTask.taskId;
-  if (task.subTasksNum - task.subTasksDone >= subTasksDone) {
-    runTask.done = true;
-    await runTask.save();
-    await Tasks.updateOne(
-      { _id: task._id },
-      { $inc: { subTasksDone: subTasksDone } }
-    );
-    res.sendStatus(200);
-  } else {
-    res
-      .status(422)
-      .send("the number of done subTasks is more than the number of subTasks");
+    const runTask = await RuningTasks.findById(id).populate("taskId");
+    const task = runTask.taskId;
+    if (task.subTasksNum - task.subTasksDone >= subTasksDone) {
+      runTask.done = true;
+      await runTask.save();
+      await Tasks.updateOne(
+        { _id: task._id },
+        { $inc: { subTasksDone: subTasksDone } }
+      );
+      res.sendStatus(200);
+    } else {
+      res
+        .status(422)
+        .send(
+          "the number of done subTasks is more than the number of subTasks"
+        );
+    }
+  } catch (err) {
+    res.sendStatus(500);
   }
 };
 
